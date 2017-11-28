@@ -1,0 +1,20 @@
+package com.randioo.compare_collections_server.protocol;
+import "Entity.proto";
+
+//获取用户信息请求
+message LoginGetRoleDataRequest{
+	optional string account=1;
+    optional string uuid = 2;//mac地址
+    optional string headImageUrl = 3;
+    optional string nickname = 4;//昵称
+}
+
+message LoginGetRoleDataResponse{
+	optional int32 errorCode=1 [default = 1];
+	optional RoleData roleData = 2;
+}
+
+//异地登录通知
+message SCLoginOtherSide{
+	
+}

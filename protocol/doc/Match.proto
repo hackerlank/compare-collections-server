@@ -1,0 +1,117 @@
+package com.randioo.compare_collections_server.protocol;
+
+import "Entity.proto";
+//创建游戏请求
+message MatchCreateGameRequest {
+    optional GameConfigData gameConfigData = 1;
+}
+message MatchCreateGameResponse {
+    optional int32 errorCode = 1 [default = 1];
+    optional string roomId = 2; //房间号
+    optional GameConfigData gameConfigData = 3; //房间配置
+    optional GameRoleData gameRoleData = 4;
+    optional int32 needMoney = 5; //需要的钱
+}
+
+//预加入房间请求
+message MatchPreJoinRequest {
+    optional string roomId = 1;
+}
+message MatchPreJoinResponse {
+    optional int32 errorCode = 1 [default = 1];
+    optional string roomId = 2;
+}
+//加入房间请求
+message MatchJoinGameRequest {
+    optional string roomId = 1;
+}
+message MatchJoinGameResponse {
+    optional int32 errorCode = 1 [default = 1];
+    optional RoundVideoData RoundVideoData = 2; //所有推送数据
+    optional GameConfigData gameConfigData = 3; //房间配置
+    optional string roomId = 4;
+}
+
+//扯旋加入房间
+message MatchJoinInGameRequest {
+    optional string roomId = 1;
+}
+message MatchJoinInGameResponse {
+    optional int32 errorCode = 1 [default = 1];
+    repeated GameRoleData gameRoleData = 2;
+    optional GameConfigData gameConfigData = 3; //房间配置
+    optional string roomId = 4;
+    optional int32 myIndex = 5;
+}
+message SCMatchJoinInGame {
+    optional GameRoleData gameRoleData = 1;
+}
+//加入房间数据
+message SCMatchJoinGame {
+    optional GameRoleData gameRoleData = 1;
+    optional bool isMe = 2;
+}
+
+message SCMatchMineInfo {
+    optional GameRoleData gameRoleData = 1;
+}
+//创建房间
+message SCMatchCreateGame {
+    optional string roomId = 1;
+    optional int32 roomType = 2;
+    optional int32 roundNum = 3; //回合数
+    optional GameRoleData gameRoleData = 4;
+}
+
+message MatchCheckRoomRequest {
+    optional string roomId = 1;
+}
+
+message MatchCheckRoomResponse {
+    optional bool exist = 1;
+}
+
+message SCMatchStartGame {
+    optional int32 seat = 1;
+}
+
+//比赛开始退出游戏
+message MatchExitGameRequest {
+}
+message MatchExitGameResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+message SCMatchExitGame {
+    optional int32 seat = 1;
+}
+//被踢出房间
+message SCMatchKickGame {
+    optional int32 reason = 1; //被踢出的原因
+}
+//匹配超时
+message SCMatchOutOfTime {
+}
+
+message MatchRequest {
+    optional int32 matchParameter = 1;
+}
+
+message MatchResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+
+//匹配结果
+message SCMatchResult {
+    optional CxReconnectedData cxReconnectData = 1;
+    optional ZjhReconnectedData zjhReconnectedData = 2;
+    optional SdbReconnectedData sdbReconnectedData = 3;
+}
+
+
+message MatchCancelRequest {
+
+}
+
+message MatchCancelResponse {
+    optional int32 errorCode = 1 [default = 1];
+}

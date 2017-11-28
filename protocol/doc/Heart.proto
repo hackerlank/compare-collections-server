@@ -1,0 +1,18 @@
+package com.randioo.compare_collections_server.protocol;
+import "Entity.proto";
+
+message HeartRequest{
+	
+}
+
+message HeartResponse{
+	
+}
+
+message SCHeart{
+	
+}
+
+message CSHeart{
+	
+}

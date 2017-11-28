@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd 
+    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd 
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd 
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<bean id="ioAcceptor" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor">
+		<!--绑定自己实现的handler -->
+		<property name="handler" ref="gameServerHandler" />
+		<!--声明过滤器的集合 -->
+		<property name="filterChainBuilder" ref="filterChainBuilder" />
+		<property name="reuseAddress" value="true" />
+	</bean>
+
+	<bean id="sessionConfig" factory-bean="ioAcceptor" factory-method="getSessionConfig">
+		<property name="sendBufferSize" value="4096" />
+		<property name="tcpNoDelay" value="true" />
+		<property name="readBufferSize" value="4096" />
+		<property name="bothIdleTime" value="10" />
+	</bean>
+
+	<bean id="filterChainBuilder" class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+		<property name="filters">
+			<map>
+				<!--mina自带的线程池filter -->
+				<entry key="threadpool" value-ref="executorFilter" />
+				<!--自己实现的编解码器filter -->
+				<entry key="codec" value-ref="codecFilter" />
+				<!--心跳filter -->
+				<entry key="keepAliveFilter" value-ref="keepAliveFilter" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- executorFilter多线程处理 -->
+	<bean id="executorFilter" class="org.apache.mina.filter.executor.ExecutorFilter">
+		<constructor-arg index="0">
+			<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" p:staticMethod="java.util.concurrent.Executors.newCachedThreadPool" />
+		</constructor-arg>
+	</bean>
+
+	<!--编解码 -->
+	<bean id="codecFilter" class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+		<constructor-arg>
+			<!-- <bean class="com.randioo.randioo_server_base.protocol.protobuf.ProtoCodecFactory"> -->
+			<bean class="com.randioo.randioo_server_base.protocol.websocket.mina.protobuf.WebSocketProtobufCodecFactory">
+				<constructor-arg>
+					<bean p:staticMethod="${proj.package}.protocol.ClientMessage.CS.getDefaultInstance" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" />
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<!-- 心跳协议工厂 -->
+	<!-- <bean id="protobufHeartObjectFactory" class="com.randioo.compare_collections_server.util.ProtobufHeartObjectFactory" /> <bean id="heartRequest" factory-bean="protobufHeartObjectFactory" factory-method="getRequest" /> <bean id="heartResponse" factory-bean="protobufHeartObjectFactory" factory-method="getResponse" /> <bean id="sc" factory-bean="protobufHeartObjectFactory" factory-method="getSC" /> <bean id="cs" factory-bean="protobufHeartObjectFactory" factory-method="getCS" /> -->
+
+	<!-- 心跳工厂 -->
+	<!-- <bean id="protoHeartFactory" class="com.randioo.randioo_server_base.heart.ProtoHeartFactory"> <property name="heartRequest" ref="heartRequest" /> <property name="heartResponse" ref="heartResponse" /> <property name="scHeart" ref="sc" /> <property name="csHeart" ref="cs" /> </bean> -->
+
+	<!-- 心跳超时回调 -->
+	<!-- <bean id="heartTimeOutHandler" class="${proj.package}.handler.HeartTimeOutHandler" /> -->
+
+	<!--心跳检测filter -->
+	<bean id="keepAliveFilter" class="org.apache.mina.filter.keepalive.KeepAliveFilter">
+		<!-- 构造函数的第一个参数传入自己实现的工厂 -->
+		<!-- <constructor-arg ref="protoHeartFactory" /> -->
+		<constructor-arg>
+			<bean class="${proj.package}.entity.po.ProtoHeartFactory" />
+		</constructor-arg>
+		<!-- 第二个参数需要的是IdleStatus对象，value值设置为读写空闲 -->
+		<constructor-arg type="org.apache.mina.core.session.IdleStatus" value="BOTH_IDLE" />
+		<!-- 心跳频率，不设置则默认60s -->
+		<property name="requestInterval" value="10" />
+		<!-- 心跳超时时间，不设置则默认30s -->
+		<property name="requestTimeout" value="10" />
+		<!-- 不设置默认false -->
+		<property name="forwardEvent" value="false" />
+		<!-- 心跳超时回调 -->
+		<property name="requestTimeoutHandler">
+			<bean class="${proj.package}.handler.HeartTimeOutHandler" />
+		</property>
+	</bean>
+
+
+</beans>

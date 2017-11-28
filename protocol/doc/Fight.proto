@@ -1,0 +1,428 @@
+package com.randioo.compare_collections_server.protocol;
+
+import "Entity.proto";
+
+//比赛前退出游戏
+message FightExitGameRequest { //
+}
+
+message FightExitGameResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+
+message SCFightExitGame {
+    optional int32 seat = 1; //退出人的座位号
+    repeated string account = 2; //剩余人的account
+    optional string exitAccount = 3; //退出人的account
+    optional string gameRoleId = 4; //退出人的gameRoleId
+}
+//申请退出游戏
+message FightApplyExitGameRequest {
+}
+
+message FightApplyExitGameResponse {
+    optional int32 errorCode = 1 [default = 1];
+    repeated GameRoleData gameRoleData = 2;
+}
+
+/**房间解散*/
+message SCFightRoomDismiss {
+
+}
+
+/**确认游戏结束*/
+message FightConfirmGameOverRequest {
+
+}
+
+message FightConfirmGameOverResponse {
+
+}
+
+message SCFightApplyExitGame {
+    optional int32 seat = 1;
+    repeated GameRoleData gameRoleData = 2;
+    optional int32 countDown = 3;
+    optional int32 applyExitId = 4; //投票箱id
+}
+
+message FightAgreeExitGameRequest {
+    optional int32 fightVoteApplyExit = 1;
+    optional int32 applyExitId = 2; //申请的id
+}
+
+message FightAgreeExitGameResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+
+message SCFightApplyExitResult {
+    repeated int32 rejectSeat = 1;
+    repeated int32 agreeSeat = 2;
+    optional ResultGameOverData resultGameOverData = 3;
+}
+
+message SCFightNoticeAgreeExit {
+    optional int32 seat = 1;
+    optional int32 vote = 2;
+}
+
+message SCFightClearRoomId {
+
+}
+
+message SCFightLoadResource {
+
+}
+
+message FightReadyRequest { //
+}
+
+message FightReadyResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+
+message SCFightNoticeReady {
+}
+
+message SCFightReady {
+    optional int32 seat = 1;
+}
+
+message FightGetlastRoundRequest {
+}
+
+message FightGetlastRoundResponse {
+    optional int32 errorCode = 1 [default = 1];
+    repeated Record records = 2;
+}
+//比赛开始
+message FightGameStartRequest {
+
+}
+message FightGameStartResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+message SCFightStart {
+    optional int32 remainCardCount = 2;
+    optional int32 zhuangSeat = 3;
+    optional int32 startBet = 4;
+    optional int32 currentRoundNum = 7; //当前局数
+    optional int32 maxRound = 8; //总局数
+    optional int32 maxCount = 9; //最大开局人数
+    optional int32 minCount = 10; //最小开局人数
+}
+message SCFightRoundOver {
+    repeated RoleRoundOverInfoData roleRoundOverInfoData = 3;
+    optional string roomId = 4; //房间号
+    optional int32 finishRoundCount = 5; //打完的局数
+    optional int32 maxRoundCount = 6; //最大局数
+    optional ResultGameOverData resultGameOverData = 7;
+}
+
+message SCFightGameOver {
+    repeated RoleGameOverInfoData roleGameOverInfoData = 1;
+    optional string roomId = 2; //房间号
+    optional int32 finishRoundCount = 3; //打完的局数
+    optional int32 maxRoundCount = 4; //最大局数
+}
+
+message SCFightNoticeSendCard {
+    optional int32 seat = 1;
+}
+
+message FightSendCardRequest {
+    optional int32 card = 1;
+    optional bool isTouchCard = 2 [default = false];
+}
+
+message FightSendCardResponse { //
+                                optional int32 errorCode = 1 [default = 1];
+}
+
+message SCFightSendCard {
+    optional int32 card = 1;
+    optional int32 seat = 2;
+    optional bool isTouchCard = 3;
+}
+
+message SCFightTouchCard {
+    optional int32 seat = 1;
+    optional int32 touchCard = 2;
+    optional int32 remainCardCount = 3;
+}
+
+message SCFightCountdown {
+    optional int32 countdown = 1;
+}
+
+message FightGuoRequest {
+    optional int32 tempGameCount = 1;
+}
+
+message FightGuoResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+
+message SCFightGuo {
+    optional int32 seat = 1;
+}
+
+message FightBetAllRequest {
+    optional int32 tempGameCount = 1;
+    optional int32 money = 2;
+}
+
+message FightBetAllResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+
+message SCFightBetAll {
+    optional int32 seat = 1;
+    optional int32 bets = 2;
+}
+
+message SCFightPointSeat {
+    optional int32 seat = 1;
+    optional int32 tempGameCount = 2;
+}
+
+message SCFightDisconnect {
+    optional int32 seat = 1;
+}
+
+message SCFightScore {
+    repeated ScoreData scoreData = 1;
+}
+
+message FightQueryGameConfigRequest {
+}
+
+message FightQueryGameConfigResponse {
+    optional int32 errorCode = 1 [default = 1];
+    optional GameConfigData gameConfigData = 2;
+    optional int32 currentRoundNumber = 3;
+}
+
+message FightClientDispatchRequest {
+    repeated ClientCard cards = 1;
+}
+
+message FightClientDispatchResponse {
+    optional int32 errorCode = 1;
+}
+
+message FightClientTouchCardRequest {
+    optional int32 card = 1;
+}
+
+message FightClientTouchCardResponse {
+    optional int32 errorCode = 1;
+}
+
+message SCFightNoticeBet {
+    optional int32 seat = 1;
+}
+
+message FightBetRequest {
+    optional int32 score = 1;
+}
+
+message FightBetResponse {
+    optional int32 errorCode = 1;
+}
+
+//通知押注
+message SCFightBetScore {
+    optional int32 seat = 1; //座位号
+    optional int32 score = 2; //押注的分数
+}
+
+message SCFightDispatch {
+    repeated RoleCardData roleCardData = 1;
+}
+
+//通知所有人谁补牌了
+message SCFightAddCard {
+    optional int32 seat = 1;
+    repeated int32 card = 2;
+}
+
+//通知选择补牌
+message SCFightChooseAddCard {
+    optional int32 seat = 1;
+}
+
+//选择补牌请求
+message FightChooseAddCardRequest {
+    optional bool isAddCard = 1;
+}
+
+message FightChooseAddCardResponse {
+    optional int32 errorCode = 1;
+}
+
+//扎金花
+//跟注
+message FightGenRequest {
+    optional int32 tempGameCount = 1;
+    optional int32 stall = 2; //叫的档位
+}
+message FightGenResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+message SCFightGen {
+    optional int32 seat = 1;
+    optional int32 bets = 2;
+}
+//加注
+message FightBiggerRequest {
+    optional int32 tempGameCount = 1;
+    optional int32 stall = 2; //叫的档位
+}
+message FightBiggerResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+message SCFightBigger {
+    optional int32 seat = 1;
+    optional int32 bets = 2;
+}
+//弃牌
+message FightGiveUpRequest {
+    optional int32 tempGameCount = 1;
+}
+message FightGiveUpResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+message SCFightGiveUp {
+    optional int32 seat = 1;
+}
+//看牌
+message FightLookPaiRequest {
+    optional int32 tempGameCount = 1;
+}
+message FightLookPaiResponse {
+    optional int32 errorCode = 1 [default = 1];
+    repeated int32 cards = 2;
+}
+message SCFightWatchCards {
+    optional int32 seat = 1;
+}
+//开局自动押注
+message SCFightAutoBet {
+    optional int32 cash = 1;
+    optional int32 seat = 2;
+}
+//通知加注按钮变灰
+message SCFightBiggerButton {
+    optional int32 stall = 1;
+}
+//两人比赛
+message FightTwoRequest {
+    optional int32 tempGameCount = 1;
+    optional int32 seat = 2;
+}
+message FightTwoResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+message SCFightTwo {
+    repeated int32 allSeat = 1;
+    optional int32 seat = 2;
+    optional int32 pay = 3;
+    optional int32 firstSeat = 4;
+}
+
+message SCFightMingPai {
+    optional int32 seat = 1;
+    repeated int32 cards = 2;
+}
+
+message SCFightNoticeBattle {
+    repeated int32 seat = 1; //在场比赛的玩家座位
+}
+
+message SCFightAllSeat {
+    optional int32 seat = 1;
+}
+//通知比赛局数
+message SCFightRoundCount {
+    optional int32 count = 1;
+}
+//按钮关闭
+message SCFightButtonDisappear {
+}
+//玩家分牌
+message SCFightCutCards {
+    optional int32 seat = 1;
+}
+//分牌请求
+message FightCutCardsRequest {
+    repeated int32 cards = 1;
+}
+message FightCutCardsResponse {
+    optional int32 errorCode = 1 [default = 1];
+}
+//开牌结果
+message SCFightOpenCardsResult {
+    optional int32 seat = 1;
+    repeated int32 cards = 2;
+}
+
+message SCFightRoundOverScore {
+    optional int32 seat = 1;
+    optional int32 score = 2; //得分结算
+    optional int32 finishRoundCount = 3; //打完的局数
+    optional int32 maxRoundCount = 4; //最大局数
+}
+message SCFightPlayTalk {
+    optional int32 seat = 1;
+}
+message SCFightNoticeCallType {
+    repeated int32 types = 1;
+    optional int32 seat = 2;
+}
+
+message SCFightPublicScore {
+    optional int32 score = 1;
+}
+
+message SCFightCardType {
+    optional int32 seat = 1;
+    optional int32 cardType = 2;
+}
+
+message FightGetRoomDataRequest {
+
+}
+
+message FightGetRoomDataResponse {
+    optional int32 errorCode = 1 [default = 1];
+    optional GameConfigData gameConfigData = 2;
+    optional string gameJson = 3;
+    optional bytes lastestCommand = 4;
+}
+
+message FightReconnectDataRequest {
+
+}
+
+message FightReconnectDataResponse {
+    optional int32 errorCode = 1;
+    optional CxReconnectedData cxReconnectData = 2;
+    optional ZjhReconnectedData zjhReconnectedData = 3;
+    optional SdbReconnectedData sdbReconnectedData = 4;
+}
+//场上最大注数
+message SCFightMaxBet {
+    optional int32 maxbets = 1;
+}
+
+/**玩家信息*/
+message SCFightGameRoleData {
+    repeated GameRoleData gameRoleData = 1;
+}
+
+//扎金花推送比牌结果
+message SCFightBattleOutCards{
+	repeated int32 playerCards = 1;//卡牌
+	optional int32 seat = 2;//玩家
+}

@@ -1,0 +1,136 @@
+package com.randioo.compare_collections_server.protocol;
+import "Login.proto";
+import "Role.proto";
+import "Match.proto";
+import "Fight.proto";
+import "Settings.proto";
+import "Race.proto";
+import "Heart.proto";
+import "Gm.proto";
+
+message SC {
+    optional HeartResponse HeartResponse = 1;//心跳回馈
+    optional SCHeart SCHeart = 2;//心跳主推
+
+    optional LoginGetRoleDataResponse LoginGetRoleDataResponse = 3;
+    optional SCLoginOtherSide SCLoginOtherSide = 4;
+
+    optional RoleRenameResponse RoleRenameResponse = 5;
+    optional RoleGetRoleDataResponse RoleGetRoleDataResponse = 6;
+    optional SCRoleRandiooCoinChange SCRoleRandiooCoinChange = 7;//燃点币变化
+    //创建游戏相关
+    optional MatchCreateGameResponse MatchCreateGameResponse = 8;
+    optional MatchJoinGameResponse MatchJoinGameResponse = 9;
+    optional SCMatchJoinGame SCMatchJoinGame = 10;
+    optional SCMatchMineInfo SCMatchMineInfo = 11;
+    optional SCMatchCreateGame SCMatchCreateGame = 12;
+    optional MatchPreJoinResponse MatchPreJoinResponse = 13;//预加入房间
+
+    optional SCFightNoticeReady SCFightNoticeReady = 14;
+    optional FightReadyResponse FightReadyResponse = 15;//准备(只有好友对战用)
+    optional SCFightReady SCFightReady = 16;//某玩家进行准备
+    optional SCFightStart SCFightStart = 17;//游戏开始
+    optional FightExitGameResponse FightExitGameResponse = 18;//游戏退出
+    optional SCFightExitGame SCFightExitGame = 19;//某玩家游戏退出
+    optional SCFightClearRoomId SCFightClearRoomId = 20;//清除房间号
+    optional SCFightLoadResource SCFightLoadResource = 21;//游戏资源加载(用于匹配)
+    optional SCFightNoticeSendCard SCFightNoticeSendCard = 22;//通知出牌
+    optional FightSendCardResponse FightSendCardResponse = 23;
+
+    //申请解散
+    optional FightApplyExitGameResponse FightApplyExitGameResponse = 24;
+    optional SCFightApplyExitGame SCFightApplyExitGame = 25;//某玩家申请游戏退出
+    optional FightAgreeExitGameResponse FightAgreeExitGameResponse = 26;//同意游戏退出
+    optional SCFightNoticeAgreeExit SCFightNoticeAgreeExit = 27;//通知其他玩家该人的投票结果
+    optional SCFightApplyExitResult SCFightApplyExitResult = 28;//申请退出的结果
+
+    optional SCFightSendCard SCFightSendCard = 29;
+    optional SCFightRoundOver SCFightRoundOver = 30;
+    optional SCFightGameOver SCFightGameOver = 31;
+    optional FightGetlastRoundResponse FightGetlastRoundResponse = 32;
+    optional SCFightTouchCard SCFightTouchCard = 33;//摸一张牌
+
+    optional FightGuoResponse FightGuoResponse = 34;
+    optional SCFightGuo SCFightGuo = 35;
+    optional SCFightCountdown SCFightCountdown = 36;
+    optional SCFightPointSeat SCFightPointSeat = 37;
+    optional SCFightDisconnect SCFightDisconnect = 38;//通知玩家断连
+    optional SCFightPublicScore SCFightPublicScore = 39;//公共分改变
+    optional SCFightScore SCFightScore = 40;//分数改变
+    optional FightQueryGameConfigResponse FightQueryGameConfigResponse = 41;//查询游戏配置
+    optional FightClientDispatchResponse FightClientDispatchResponse = 42;//客户端调试配牌
+    optional FightClientTouchCardResponse FightClientTouchCardResponse = 43;//客户端调试摸牌
+    optional SCFightRoomDismiss SCFightRoomDismiss = 44;//通知房间解散
+    optional FightConfirmGameOverResponse FightConfirmGameOverResponse = 45;//确认游戏结束
+    optional FightGetRoomDataResponse FightGetRoomDataResponse = 46;//获得重连数据
+
+    optional SettingsResponse SettingsResponse = 47;//设置
+    optional SettingsShowResponse SettingsShowResponse = 48;//设置
+
+    optional RaceJoinRaceResponse RaceJoinRaceResponse = 49;
+    optional SCRaceJoinRace SCRaceJoinRace = 50;
+    optional RaceShowQueueResponse RaceShowQueueResponse = 51;
+    optional SCRaceQueueChange SCRaceQueueChange = 52;
+
+    optional MatchCheckRoomResponse MatchCheckRoomResponse = 53;// 检查房间号
+
+    optional SCFightNoticeBet SCFightNoticeBet = 54;//通知押注
+    optional FightBetResponse FightBetResponse = 55;
+    optional SCFightBetScore SCFightBetScore = 56;//通知一个人押注的分数
+    optional SCFightDispatch SCFightDispatch = 57;//通知发牌
+    optional SCFightAddCard SCFightAddCard = 58;//通知补到了一张新牌
+    optional SCFightChooseAddCard SCFightChooseAddCard = 59;//通知选择要不要牌
+    optional FightChooseAddCardResponse FightChooseAddCardResponse = 60;//
+    optional SCFightCardType SCFightCardType = 61;//爆牌或十点半时通知所有人
+
+    optional GmEnvVarsResponse GmEnvVarsResponse = 62;
+    optional GmGameInfoResponse GmGameInfoResponse = 63;
+    optional GmDispatchCardResponse GmDispatchCardResponse = 64;
+    optional GmRoundResponse GmRoundResponse = 65;
+    //新加
+    optional SCFightWatchCards SCFightWatchCards = 66;//看牌
+    optional FightLookPaiResponse FightLookPaiResponse = 67;
+    optional FightGenResponse FightGenResponse = 68;
+    optional SCFightAutoBet SCFightAutoBet = 69;
+    optional SCFightBigger SCFightBigger = 70;
+    optional FightBiggerResponse FightBiggerResponse = 71;
+    optional FightGiveUpResponse FightGiveUpResponse = 72;
+    optional FightTwoResponse FightTwoResponse = 73;
+    optional SCFightTwo SCFightTwo = 74;
+    optional SCFightGiveUp SCFightGiveUp = 75;
+    optional SCFightGen SCFightGen = 76;
+    optional SCFightButtonDisappear SCFightButtonDisappear = 77;
+    optional SCFightMingPai SCFightMingPai = 78;
+    optional SCFightAllSeat SCFightAllSeat = 79;
+    optional SCFightBiggerButton SCFightBiggerButton = 80;
+    optional SCFightRoundCount SCFightRoundCount = 81;
+    //扯旋
+    optional SCMatchExitGame SCMatchExitGame = 82;
+    optional MatchExitGameResponse MatchExitGameResponse = 83;
+    optional SCMatchJoinInGame SCMatchJoinInGame = 84;
+    optional MatchJoinInGameResponse MatchJoinInGameResponse = 85;
+    optional SCFightBetAll SCFightBetAll = 86;
+    optional FightBetAllResponse FightBetAllResponse = 87;
+    optional FightGameStartResponse FightGameStartResponse = 88;//游戏开始请求
+    optional SCFightPlayTalk SCFightPlayTalk = 89;
+    optional SCFightNoticeCallType SCFightNoticeCallType = 90;
+    optional FightCutCardsResponse FightCutCardsResponse = 91;//分牌结束
+    optional SCFightCutCards SCFightCutCards = 92;
+    optional SCFightOpenCardsResult SCFightOpenCardsResult = 93;//开牌结果
+    optional SCFightRoundOverScore SCFightRoundOverScore = 94;//分数轮数
+    //扎金花
+    optional SCFightNoticeBattle SCFightNoticeBattle = 95;//推送所有可以参加比赛的玩家
+
+    optional FightReconnectDataResponse FightReconnectDataResponse = 96;
+    optional SCFightMaxBet SCFightMaxBet = 97;
+
+    optional MatchResponse MatchResponse = 98;
+    optional MatchCancelResponse MatchCancelResponse = 99;
+
+    optional SCFightGameRoleData SCFightGameRoleData = 100;
+    optional SCMatchResult SCMatchResult = 101;//匹配结果
+    optional SCMatchKickGame SCMatchKickGame = 102;
+    optional SCFightBattleOutCards SCFightBattleOutCards = 103;
+} // 103
+	
+    

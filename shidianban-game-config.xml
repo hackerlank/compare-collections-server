@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <param type="int" key="round_count">4</param>
+    <param type="int" key="min_count">2</param>
+    <param type="int" key="max_count">5</param>
+    <param type="int" key="zhuang_type">3</param>
+    <!--一局打完后开始的时间-->
+    <param type="int" key="start_time">5</param>
+    <!--默认等待的时间-->
+    <param type="int" key="wait_time">10</param>
+    <!--匹配顺序-->
+    <param type="int" key="match_sort1">4</param>
+    <param type="int" key="match_sort2">3</param>
+    <param type="int" key="match_sort3">2</param>
+</config>

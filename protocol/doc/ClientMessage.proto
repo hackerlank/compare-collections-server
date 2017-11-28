@@ -1,0 +1,66 @@
+package com.randioo.compare_collections_server.protocol;
+import "Login.proto";
+import "Role.proto";
+import "Match.proto";
+import "Fight.proto";
+import "Settings.proto";
+import "Race.proto";
+import "Heart.proto";
+import "Gm.proto";
+
+message CS {
+    optional HeartRequest HeartRequest = 1;
+    optional CSHeart CSHeart = 2;
+
+    optional LoginGetRoleDataRequest LoginGetRoleDataRequest = 3;
+
+    optional RoleRenameRequest RoleRenameRequest = 4;
+    optional RoleGetRoleDataRequest RoleGetRoleDataRequest = 5;
+
+    optional MatchCreateGameRequest MatchCreateGameRequest = 6;
+    optional MatchPreJoinRequest MatchPreJoinRequest = 7;//预加入房间
+    optional MatchJoinGameRequest MatchJoinGameRequest = 8;
+    optional MatchCheckRoomRequest MatchCheckRoomRequest = 9;
+    optional MatchJoinInGameRequest MatchJoinInGameRequest = 10;
+    optional MatchExitGameRequest MatchExitGameRequest = 11;
+
+
+    optional FightReadyRequest FightReadyRequest = 12;
+    optional FightExitGameRequest FightExitGameRequest = 13;
+    optional FightApplyExitGameRequest FightApplyExitGameRequest = 14;//申请退出
+    optional FightAgreeExitGameRequest FightAgreeExitGameRequest = 15;
+    optional FightSendCardRequest FightSendCardRequest = 16;
+    optional FightGetlastRoundRequest FightGetlastRoundRequest = 17;
+    optional FightGuoRequest FightGuoRequest = 18;//过
+    optional FightGenRequest FightGenRequest = 19;//跟
+    optional FightBiggerRequest FightBiggerRequest = 20;//加
+    optional FightGiveUpRequest FightGiveUpRequest = 21;//弃
+    optional FightBetAllRequest FightBetAllRequest = 22;//敲
+    optional FightCutCardsRequest FightCutCardsRequest = 23;//分牌结束请求
+    optional FightQueryGameConfigRequest FightQueryGameConfigRequest = 24;//查询游戏配置
+    optional FightClientDispatchRequest FightClientDispatchRequest = 25;//客户端调试配牌
+    optional FightClientTouchCardRequest FightClientTouchCardRequest = 26;//客户端调试摸牌
+    optional FightConfirmGameOverRequest FightConfirmGameOverRequest = 27;//确认游戏结束
+    optional FightGameStartRequest FightGameStartRequest = 28;
+    optional FightBetRequest FightBetRequest = 29;//押注请求
+    optional FightChooseAddCardRequest FightChooseAddCardRequest = 30;//选择补牌请求
+    optional FightGetRoomDataRequest FightGetRoomDataRequest = 31;//获得重连数据
+    optional FightLookPaiRequest FightLookPaiRequest = 32;//玩家看牌
+    optional FightTwoRequest FightTwoRequest = 33;
+    optional RaceJoinRaceRequest RaceJoinRaceRequest = 34;
+    optional RaceShowQueueRequest RaceShowQueueRequest = 35;
+
+
+    optional GmEnvVarsRequest GmEnvVarsRequest = 36;
+    optional GmGameInfoRequest GmGameInfoRequest = 37;
+    optional GmDispatchCardRequest GmDispatchCardRequest = 38;
+    optional GmRoundRequest GmRoundRequest = 39;
+
+    optional FightReconnectDataRequest FightReconnectDataRequest = 40;//重连请求
+
+
+    optional MatchRequest MatchRequest = 41;//请求匹配
+    optional MatchCancelRequest MatchCancelRequest = 42;//取消匹配
+
+
+} // 42

@@ -1,0 +1,260 @@
+package com.randioo.compare_collections_server.protocol;
+
+message RoleData {
+    optional int32 roleId = 1;
+    optional string roomId = 2;
+    optional int32 point = 3; //积分
+    optional int32 sex = 4;
+    optional int32 serverTime = 5; //服务器时间
+    optional string name = 6;
+    optional string headImageUrl = 7;
+    optional bytes gameOverSC = 8; //
+    optional int32 randiooCoin = 9; //元宝
+    optional int32 gold = 10; //金币
+    optional int32 roomCard = 11; //房卡
+}
+/** 游戏配置 **/
+message GameConfigData {
+    optional int32 roundCount = 1; //局数
+    optional int32 maxCount = 2;
+    optional int32 roomCard = 3; //房卡
+    optional string roomId = 4; //房间id
+    //  optional ZhuangType zhuangType = 5; //庄类型
+    optional int32 zhuangType = 5; //庄类型
+    optional int32 outLookCount = 6; //焖牌轮数
+    optional int32 topCount = 7; //封顶轮数
+    optional int32 fightRound = 8; //比赛轮数
+    optional int32 bet = 9; //皮底
+    optional int32 betMax = 10; //下注上限
+    optional int32 minCount = 11;
+    optional int32 cardsPay = 12; //消耗的房卡
+    //optional PayMode payMode = 13; //付费模式
+    optional int32 payMode = 13; //付费模式
+    optional int32 gameType = 14; //游戏类型
+	repeated int32 battleList = 16;//扎金花加注列表
+}
+
+/**付费模式*/
+enum PayMode {
+    MASTER_MODE = 1; //房主模式
+    AA_MODE = 2; //AA模式
+}
+/**庄家类型*/
+enum ZhuangType {
+    ZHUANG_FREEDOM = 1; //(自由抢庄)
+    ZHUANG_ROOM_OWNER = 2; //(房主庄家)
+    ZHUANG_ORDER = 3; //轮流坐庄
+}
+/**游戏结束的方式*/
+enum SpecialCardType {
+    SHUNZI = 1; //(顺子牛)
+    WUHUA = 2; //(五花牛)
+    TONGHUA = 3; //(同花牛)
+    HULU = 4; //(葫芦牛)
+    ZHADAN = 5; //(炸弹牛)
+}
+
+/**游戏结束的方式*/
+enum GameOverMethod {
+    GAME_OVER_TIME = 1;
+    GAME_OVER_ROUND = 2;
+}
+message PaiNum {
+    optional int32 seat = 1;
+    optional int32 num = 3;
+}
+
+message ScoreData {
+    optional int32 seat = 1;
+    optional int32 score = 2;
+    optional int32 chipMoney = 3;
+}
+
+message Record {
+    optional int32 seat = 1;
+    repeated int32 pai = 2;
+}
+
+enum GameType {
+    GAME_TYPE_MATCH = 1;
+    GAME_TYPE_FRIEND = 2; //房卡模式
+    GAME_TYPE_GOLD = 3; //金币模式
+}
+
+message GameRoleData {
+    optional string gameRoleId = 1;
+    optional string name = 2;
+    optional int32 seat = 3; //座位号
+    optional bool ready = 4;
+    optional string headImgUrl = 5;
+    optional int32 money = 6;
+    optional int32 point = 7;
+    optional int32 sex = 8;
+    optional bool online = 9;
+    optional string platformRoleId = 10;
+    optional bool master = 11; //是不是房主
+}
+
+enum GameState {
+    GAME_STATE_PREPARE = 1; //刚创建没开始游戏
+    GAME_STATE_START = 2; //游戏进行中
+    GAME_STATE_END = 3; //游戏销毁
+    GAME_STATE_WAIT = 4; //打完一小局,没有开始下一局
+}
+
+enum KickReason {
+    GOLD_NOT_ENOUGH = 1; //金币不够
+    NOT_IN_GAME = 2; //不在这个游戏中
+    NOT_ONLINE = 3; //离线
+
+}
+
+message RoleRoundOverInfoData {
+    optional GameRoleData gameRoleData = 1;
+    optional CardData cardData = 2;
+    //optional OverMethod overMethod = 3;
+    optional int32 overMethod = 3;
+    optional int32 roundScore = 4; //一局分数
+    optional int32 chipMoney = 5; //筹码数量
+    optional bool zhuang = 6; //是不是庄主
+    optional int32 betMoney = 7; //押的注
+    optional int32 roleId = 8;
+}
+message CardData {
+    repeated int32 cards = 1; //手牌
+    optional int32 cardType = 2; //牌型
+}
+
+enum OverMethod {
+    LOSS = 0; //输
+    WIN = 1;
+}
+
+message RoleCardData {
+    repeated int32 card = 1; //手牌
+    optional int32 seat = 2;
+}
+
+message GameData {
+    optional string roomId = 1;
+    repeated GameRoleData gameRoleData = 2;
+}
+
+message AudienceData {
+    optional string name = 1;
+    optional int32 score = 2;
+}
+
+enum FightVoteApplyExit {
+    VOTE_IDLE = 0;
+    VOTE_AGREE = 1;
+    VOTE_REJECT = 2;
+}
+
+message RoundVideoData {
+    repeated bytes sc = 1;
+}
+message GameVideoData {
+    repeated RoundVideoData roundVideoData = 1;
+}
+
+message ClientCard {
+    repeated int32 cards = 1;
+}
+
+/** 环境变量数据 */
+message EnvVarsData {
+    optional string key = 1;
+    optional string value = 2;
+    optional string type = 3;
+}
+
+message RoleGameOverInfoData {
+    optional GameRoleData gameRoleData = 1;
+    optional int32 score = 2; //一局分数
+    optional int32 chipMoney = 3; //筹码数量
+    optional int32 winCount = 4;
+    optional int32 lossCount = 5;
+    optional bool master = 6;
+    optional int32 roleId = 7;
+}
+
+message ResultGameOverData {
+    repeated RoleGameOverInfoData roleGameOverInfoData = 1;
+    optional GameConfigData gameConfigData = 2;
+    optional string gameOverTimestamp = 3;
+}
+
+/**扯玄重连数据*/
+message CxReconnectedData {
+    optional int32 mySeat = 1;
+    repeated GameRoleData gameRoleData = 2;
+    repeated RoleCardData roleCardData = 3;
+    repeated ScoreData tableChips = 4;
+    repeated ScoreData roleChips = 5;
+    repeated int32 callTypes = 6;
+    optional int32 callSeat = 7;
+    optional GameConfigData gameConfigData = 8;
+    optional int32 finishRoundCount = 9;
+    optional ResultGameOverData ResultGameOverData = 10;
+    repeated int32 giveUpSeat = 11;
+    optional int32 cutCardsState = 12; //0.未开始分牌 1.正在分牌 2.分牌完成
+    optional int32 basePool = 13; //底池
+
+    /**申请退出*/
+    optional int32 applyExitSeat = 14; //申请退出的玩家id
+    repeated int32 rejectSeat = 15;
+    repeated int32 agreeSeat = 16;
+
+    /**回合结束*/
+    repeated RoleRoundOverInfoData roleRoundOverInfoData = 17;
+    optional int32 exitApplyId = 18; //解散Id
+}
+
+/**扎金花重连数据*/
+message ZjhReconnectedData {
+    optional int32 mySeat = 1; //位置
+    repeated GameRoleData gameRoleData = 2; //游戏玩家数据
+    repeated RoleCardData roleCardData = 3; //玩家纸牌
+    repeated ScoreData tableChips = 4; //桌面上的筹码
+    repeated ScoreData roleChips = 5; //玩家积分
+    repeated int32 callTypes = 6; //喊话类型
+    optional int32 callSeat = 7; //喊话位置
+    optional GameConfigData gameConfigData = 8; //游戏配置数据
+    optional int32 finishRoundCount = 9; //结束的轮数
+    optional ResultGameOverData ResultGameOverData = 10; //比赛结束的数据
+    repeated int32 giveUpSeat = 11; //放弃玩家的位置
+    repeated int32 ficeGiveUpSeat = 12; //被迫放弃玩家的位置
+    repeated int32 LookCardsSeat = 13; //看牌玩家的位置
+    optional int32 stepState = 14; //开牌阶段
+    optional int32 basePool = 15; //底池
+    /**申请退出*/
+    optional int32 applyExitSeat = 16; //申请退出的玩家id
+    repeated int32 rejectSeat = 17;
+    repeated int32 agreeSeat = 18; //同意结算的位置
+    /**回合结束*/
+    repeated RoleRoundOverInfoData roleRoundOverInfoData = 19;
+    optional int32 exitApplyId = 20; //解散Id
+}
+//十点半重连
+message SdbReconnectedData {
+    optional int32 mySeat = 1; //位置
+    repeated GameRoleData gameRoleData = 2; //游戏玩家数据
+    repeated RoleCardData roleCardData = 3; //玩家纸牌
+    repeated ScoreData scoreData = 4; //分数信息
+    optional int32 currentSeat = 5; //当前喊话的人
+    optional ResultGameOverData ResultGameOverData = 6; //比赛结束的数据
+    optional int32 finishRoundCount = 7;
+    optional GameConfigData gameConfigData = 8; //游戏配置数据
+    optional int32 callType = 9; // 1：选择押注 2：选择要不要牌  3：不在喊话
+    optional int32 zhuangSeat = 10; //庄家
+    /**申请退出*/
+    optional int32 applyExitSeat = 16; //申请退出的玩家id
+    repeated int32 rejectSeat = 17;
+    repeated int32 agreeSeat = 18; //同意结算的位置
+    /**回合结束*/
+    repeated RoleRoundOverInfoData roleRoundOverInfoData = 19;
+    optional int32 exitApplyId = 20; //解散Id
+
+}
+

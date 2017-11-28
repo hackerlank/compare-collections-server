@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd 
+    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd 
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd 
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <bean id="databaseInitialization" class="com.randioo.randioo_server_base.db.DatabaseInitialization">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="databaseName" value="${jdbc.db.name}"></property>
+        <property name="sqls">
+            <list>
+                <value>
+                    CREATE TABLE IF NOT EXISTS {database}.`role` (
+                    `roleId` int(11) COMMENT '玩家id',
+                    `account` varchar(255) DEFAULT NULL COMMENT '帐号',
+                    `name` varchar(255) DEFAULT NULL COMMENT '名称',
+                    `money` int(11) DEFAULT NULL COMMENT '游戏币（欢乐豆）',
+                    `sex` int(2) DEFAULT NULL COMMENT '性别',
+                    `moneyExchangeNum` int(11) DEFAULT NULL COMMENT '游戏币（欢乐豆）兑换数量',
+                    `volume` int(4) DEFAULT NULL COMMENT '音效音量',
+                    `musicVolume` int(4) DEFAULT NULL COMMENT '音乐音量',
+                    `loginTimeStr` varchar(255) DEFAULT NULL COMMENT '登陆时间',
+                    `offlineTimeStr` varchar(255) DEFAULT NULL COMMENT '离线时间',
+                    `createTimeStr` varchar(255) DEFAULT NULL COMMENT '创建时间',
+                    `loadTimeStr` varchar(255) DEFAULT NULL COMMENT '加载时间',
+                    `moneyExchangeTimeStr` varchar(255) DEFAULT NULL COMMENT '游戏币兑换时间',
+                    PRIMARY KEY (`roleId`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+                </value>
+                <value>
+                    CREATE TABLE IF NOT EXISTS {database}.`video` (
+                    `ID` int(11) AUTO_INCREMENT COMMENT '录像id',
+                    `roleId` int(11) DEFAULT NULL COMMENT '玩家id',
+                    `gameId` int(11) DEFAULT NULL COMMENT '游戏id',
+                    `data` blob DEFAULT NULL COMMENT '录像',
+                    `time` datetime DEFAULT NULL COMMENT '时间',
+                    PRIMARY KEY (`ID`)
+                    )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+                </value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="schedulerManager" class="com.randioo.randioo_server_base.scheduler.SchedulerManager">
+        <property name="schedulers">
+            <list>
+                <ref bean="eventScheduler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="serviceManager" class="com.randioo.randioo_server_base.service.ServiceManager">
+        <property name="basePackage" value="${proj.package}.module"/>
+    </bean>
+
+    <!-- 双缓冲时间定时器 -->
+    <bean id="eventScheduler" class="com.randioo.randioo_server_base.scheduler.EventScheduler">
+        <property name="slowTime" value="3"/>
+        <property name="quickTime" value="1"/>
+        <property name="handlerService">
+            <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+                  p:staticMethod="java.util.concurrent.Executors.newCachedThreadPool"/>
+        </property>
+    </bean>
+
+    <!--quartz定时器-->
+    <bean id="quartzScheduler" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+          p:staticMethod="org.quartz.impl.StdSchedulerFactory.getDefaultScheduler"/>
+
+    <!-- 匹配模块 -->
+    <bean id="matchModelService" class="com.randioo.randioo_server_base.module.match.MatchModelServiceImpl"/>
+
+    <!-- 钥匙库 -->
+    <bean id="keyStore" class="com.randioo.randioo_server_base.module.key.KeyStore"/>
+
+    <!-- 燃点平台包 -->
+    <bean id="yiyaPlatformSdk" class="com.yiya.yiya_platform_sdk.YiyaPlatformSdk">
+        <property name="accountUrl" value="${randioo.platform.account}"/>
+        <property name="moneyUrl" value="${randioo.platform.money}"/>
+        <property name="activeUrl" value="${randioo.platform.active}"/>
+        <property name="roundOverUrl" value="${randioo.platform.roundOver}"/>
+    </bean>
+
+
+    <!-- 异步 -->
+    <bean id="asyncEventBus" class="com.google.common.eventbus.AsyncEventBus">
+        <constructor-arg index="0">
+            <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+                  p:staticMethod="java.util.concurrent.Executors.newCachedThreadPool"/>
+        </constructor-arg>
+    </bean>
+    <!-- 同步 -->
+    <bean id="eventBus" class="com.google.common.eventbus.EventBus"/>
+    <bean id="listenerManager" class="com.randioo.randioo_server_base.service.EventBusManager" p:eventBus-ref="eventBus"
+          p:asyncEventBus-ref="asyncEventBus">
+        <property name="basePackage" value="${proj.package}.listener">
+        </property>
+    </bean>
+
+    <bean id="gameServer" class="${proj.package}.init.MinaGameServer"/>
+
+    <!-- 通信接口包装类 -->
+    <bean p:staticMethod="com.randioo.randioo_server_base.template.Session.addISession"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="arguments">
+            <list>
+                <bean id="minaSession" class="com.randioo.randioo_server_base.session.MinaSession"/>
+                <!-- <bean id="nettySession" class="com.randioo.randioo_server_base.session.NettySession" /> -->
+            </list>
+        </property>
+    </bean>
+
+    <!-- 后置器 -->
+    <!-- <bean id="randiooPlatformSdkPost" class="${proj.package}.util.post.RandiooPlatformSdkPost" /> <bean id="serviceManagerPost" class="${proj.package}.util.post.ServiceManagerPost" /> <bean id="schedulerManagerPost" class="${proj.package}.util.post.SchedulerManagerPost" /> <bean id="nioMinaBindPortPost" class="${proj.package}.util.post.NioMinaBindPortPost" /> -->
+</beans>
