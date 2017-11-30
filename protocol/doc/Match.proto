@@ -83,7 +83,7 @@ message MatchExitGameResponse {
 }
 message SCMatchExitGame {
     optional int32 seat = 1;
-	optional KickReason code = 2;
+	optional int32 code = 2;
 }
 //被踢出房间
 message SCMatchKickGame {

@@ -259,6 +259,6 @@ message SdbReconnectedData {
     optional int32 exitApplyId = 20; //解散Id
 
     optional int32 countdown = 21; //倒计时
-
+    optional int32 gameState =22;//游戏状态
 }
 

@@ -88,7 +88,6 @@ public class ZJHRule implements ICompareGameRule<Game> {
     private ZjhGiveUp zjhGiveUp;
     @Autowired
     private ZjhBattle zjhBattle;
-
     @Override
     public List<String> afterCommandExecute(Game game, String flowName, String[] params) {
         List<String> list = new ArrayList<>();
@@ -203,7 +202,6 @@ public class ZJHRule implements ICompareGameRule<Game> {
             int seat = game.actionSeat.get(runningTag).get(0);// 获取当前喊话的人
             game.actionSeat.get(watchCardsTag).add(seat);// 他看牌了，将当前的看牌人加到看牌队列里面去
             verifyManager.reset(roleGameInfoManager.current(game).verify);
-//            roleGameInfoManager.current(game).actionVerifyId = game.actionVerifyId;
             list.add(WAIT);
         }
             break;
@@ -289,6 +287,7 @@ public class ZJHRule implements ICompareGameRule<Game> {
                     list.add("FlowExitGame");
                     list.add("FlowAddAudience " + audienceManager.getAudiences(game.getGameId()).size());
                     list.add("FlowNoticeGameRoleData");
+                    initDataStructure(game);
                     list.add("FlowTimedStart");
                 }
                 list.add("FlowNoticeReady");

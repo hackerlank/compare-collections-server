@@ -80,4 +80,14 @@ public class GameManager {
         return game.countdown == 0 ? -1 : TimeUtils.getNowTime() - game.countdown;
     }
 
+    /**
+     * 当前游戏有几个人
+     *
+     * @param game
+     * @return
+     */
+    public int roleCount(Game game) {
+        return game.getRoleIdMap().size();
+    }
+
 }

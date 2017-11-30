@@ -3,8 +3,11 @@ package com.randioo.compare_collections_server.module.close.service;
 import com.randioo.compare_collections_server.cache.local.GameCache;
 import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
+import com.randioo.compare_collections_server.module.exit.service.ExitService;
+import com.randioo.compare_collections_server.module.fight.component.manager.GameManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.RoleGameInfoManager;
 import com.randioo.compare_collections_server.module.match.component.MatchSystem;
+import com.randioo.compare_collections_server.protocol.Entity.GameState;
 import com.randioo.compare_collections_server.protocol.Entity.GameType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,9 +43,14 @@ public class CloseServiceImpl extends BaseService implements CloseService {
     @Autowired
     private MatchService matchService;
 
+    @Autowired
+    private GameManager gameManager;
 
     @Autowired
     private RoleGameInfoManager roleGameInfoManager;
+
+    @Autowired
+    private ExitService exitService;
 
     @Override
     public void beforeCloseHandle(Role role) {
@@ -54,7 +62,10 @@ public class CloseServiceImpl extends BaseService implements CloseService {
         if (game.getGameType() == GameType.GAME_TYPE_GOLD) {
             RoleGameInfo roleGameInfo = roleGameInfoManager.getByRoleId(game, role.getRoleId());
             if (roleGameInfo != null) {
-                //roleGameInfo.leave = true;
+                //只有一个人，解散这个游戏
+                if (gameManager.roleCount(game) == 1 && game.getRoleIdMap().containsValue(roleGameInfo)) {
+                    exitService.dismissGame(game);
+                }
             }
         }
     }

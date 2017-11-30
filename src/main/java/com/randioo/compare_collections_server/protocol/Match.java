@@ -5779,6 +5779,13 @@ public final class Match {
     public boolean hasSeat() { return hasSeat; }
     public int getSeat() { return seat_; }
     
+    // optional int32 code = 2;
+    public static final int CODE_FIELD_NUMBER = 2;
+    private boolean hasCode;
+    private int code_ = 0;
+    public boolean hasCode() { return hasCode; }
+    public int getCode() { return code_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -5790,6 +5797,9 @@ public final class Match {
       getSerializedSize();
       if (hasSeat()) {
         output.writeInt32(1, getSeat());
+      }
+      if (hasCode()) {
+        output.writeInt32(2, getCode());
       }
       getUnknownFields().writeTo(output);
     }
@@ -5803,6 +5813,10 @@ public final class Match {
       if (hasSeat()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, getSeat());
+      }
+      if (hasCode()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, getCode());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5965,6 +5979,9 @@ public final class Match {
         if (other.hasSeat()) {
           setSeat(other.getSeat());
         }
+        if (other.hasCode()) {
+          setCode(other.getCode());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -5994,6 +6011,10 @@ public final class Match {
               setSeat(input.readInt32());
               break;
             }
+            case 16: {
+              setCode(input.readInt32());
+              break;
+            }
           }
         }
       }
@@ -6014,6 +6035,24 @@ public final class Match {
       public Builder clearSeat() {
         result.hasSeat = false;
         result.seat_ = 0;
+        return this;
+      }
+      
+      // optional int32 code = 2;
+      public boolean hasCode() {
+        return result.hasCode();
+      }
+      public int getCode() {
+        return result.getCode();
+      }
+      public Builder setCode(int value) {
+        result.hasCode = true;
+        result.code_ = value;
+        return this;
+      }
+      public Builder clearCode() {
+        result.hasCode = false;
+        result.code_ = 0;
         return this;
       }
       
@@ -8271,20 +8310,20 @@ public final class Match {
       "sponse\022\r\n\005exist\030\001 \001(\010\" \n\020SCMatchStartGam" +
       "e\022\014\n\004seat\030\001 \001(\005\"\026\n\024MatchExitGameRequest\"" +
       "-\n\025MatchExitGameResponse\022\024\n\terrorCode\030\001 " +
-      "\001(\005:\0011\"\037\n\017SCMatchExitGame\022\014\n\004seat\030\001 \001(\005\"" +
-      "!\n\017SCMatchKickGame\022\016\n\006reason\030\001 \001(\005\"\022\n\020SC" +
-      "MatchOutOfTime\"&\n\014MatchRequest\022\026\n\016matchP" +
-      "arameter\030\001 \001(\005\"%\n\rMatchResponse\022\024\n\terror" +
-      "Code\030\001 \001(\005:\0011\"\256\002\n\rSCMatchResult\022[\n\017cxRec",
-      "onnectData\030\001 \001(\0132B.com.randioo.compare_c" +
-      "ollections_server.protocol.CxReconnected" +
-      "Data\022_\n\022zjhReconnectedData\030\002 \001(\0132C.com.r" +
-      "andioo.compare_collections_server.protoc" +
-      "ol.ZjhReconnectedData\022_\n\022sdbReconnectedD" +
-      "ata\030\003 \001(\0132C.com.randioo.compare_collecti" +
-      "ons_server.protocol.SdbReconnectedData\"\024" +
-      "\n\022MatchCancelRequest\"+\n\023MatchCancelRespo" +
-      "nse\022\024\n\terrorCode\030\001 \001(\005:\0011"
+      "\001(\005:\0011\"-\n\017SCMatchExitGame\022\014\n\004seat\030\001 \001(\005\022" +
+      "\014\n\004code\030\002 \001(\005\"!\n\017SCMatchKickGame\022\016\n\006reas" +
+      "on\030\001 \001(\005\"\022\n\020SCMatchOutOfTime\"&\n\014MatchReq" +
+      "uest\022\026\n\016matchParameter\030\001 \001(\005\"%\n\rMatchRes" +
+      "ponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"\256\002\n\rSCMatchR",
+      "esult\022[\n\017cxReconnectData\030\001 \001(\0132B.com.ran" +
+      "dioo.compare_collections_server.protocol" +
+      ".CxReconnectedData\022_\n\022zjhReconnectedData" +
+      "\030\002 \001(\0132C.com.randioo.compare_collections" +
+      "_server.protocol.ZjhReconnectedData\022_\n\022s" +
+      "dbReconnectedData\030\003 \001(\0132C.com.randioo.co" +
+      "mpare_collections_server.protocol.SdbRec" +
+      "onnectedData\"\024\n\022MatchCancelRequest\"+\n\023Ma" +
+      "tchCancelResponse\022\024\n\terrorCode\030\001 \001(\005:\0011"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -8432,7 +8471,7 @@ public final class Match {
           internal_static_com_randioo_compare_collections_server_protocol_SCMatchExitGame_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_SCMatchExitGame_descriptor,
-              new java.lang.String[] { "Seat", },
+              new java.lang.String[] { "Seat", "Code", },
               com.randioo.compare_collections_server.protocol.Match.SCMatchExitGame.class,
               com.randioo.compare_collections_server.protocol.Match.SCMatchExitGame.Builder.class);
           internal_static_com_randioo_compare_collections_server_protocol_SCMatchKickGame_descriptor =

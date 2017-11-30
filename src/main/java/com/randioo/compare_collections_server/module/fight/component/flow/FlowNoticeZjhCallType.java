@@ -1,11 +1,5 @@
 package com.randioo.compare_collections_server.module.fight.component.flow;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.component.Flow;
@@ -20,10 +14,15 @@ import com.randioo.randioo_server_base.config.GlobleClass;
 import com.randioo.randioo_server_base.scheduler.EventScheduler;
 import com.randioo.randioo_server_base.utils.SessionUtils;
 import com.randioo.randioo_server_base.utils.TimeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 主推玩家可以操作的按钮
- * 
+ *
  * @author ji.zhang(1024696326@qq.com)
  * @version sin2.0
  */
@@ -55,7 +54,7 @@ public class FlowNoticeZjhCallType implements Flow {
 
         if (gameManager.isGoldMode(game)) {
             GiveUpEvent event = new GiveUpEvent(game, current.gameRoleId, current.verify.verifyId);
-            event.setEndTime(TimeUtils.getNowTime() + 15);
+            event.setEndTime(TimeUtils.getNowTime() + 8);
             eventScheduler.addEvent(event);
 
             SessionUtils.sc(current.roleId, countdownProtoParser.parse(GlobleClass._G.wait_time));
