@@ -11,8 +11,6 @@ public class YiyaAutoBetConfig{
 	public int id;
 	/** 底注 */
 	public int autoBet;
-	/** 游戏类型 */
-	public int gameType;
 	/** 加注1 */
 	public int bet1;
 	/** 加注2 */
@@ -30,7 +28,6 @@ public class YiyaAutoBetConfig{
 			YiyaAutoBetConfig config = new YiyaAutoBetConfig();
 			config.id=buffer.getInt();
 			config.autoBet=buffer.getInt();
-			config.gameType=buffer.getInt();
 			config.bet1=buffer.getInt();
 			config.bet2=buffer.getInt();
 			config.bet3=buffer.getInt();

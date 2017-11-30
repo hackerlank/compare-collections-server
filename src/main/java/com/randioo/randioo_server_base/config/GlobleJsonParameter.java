@@ -13,13 +13,13 @@ public class GlobleJsonParameter {
      * need_gold : 0
      * min_count : 2
      * max_count : 5
-     * wait_time : 5
+     * wait_time : 8
      * zhuang_type : 4
      * match_sort : [4,3,2,1]
      * start_time : 8
      * round_count : 4
      * sdb : {"default_bet_score":1,"defalut_choose_card":false,"bet_list":[1,5,10]}
-     * zjh : {"out_look_count":0,"fight_round":1,"top_count":15}
+     * zjh : {"default_follow_bet":0,"default_bigger_bet":0,"default_battle":0,"default_give_up":0,"out_look_count":0,"fight_round":1,"top_count":15}
      * cx : {"bet_max":20}
      */
 
@@ -49,11 +49,19 @@ public class GlobleJsonParameter {
 
     public static class ZjhBean {
         /**
+         * default_follow_bet : 0
+         * default_bigger_bet : 0
+         * default_battle : 0
+         * default_give_up : 0
          * out_look_count : 0
          * fight_round : 1
          * top_count : 15
          */
 
+        public int default_follow_bet;
+        public int default_bigger_bet;
+        public int default_battle;
+        public int default_give_up;
         public int out_look_count;
         public int fight_round;
         public int top_count;

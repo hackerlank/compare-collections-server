@@ -61,4 +61,7 @@ enum ErrorCode {
     GAME_STATE_ERROER = 39;//游戏状态错误
 
     NO_GOLD = 40;//没有金币
-} // 40
+
+    IN_GAME = 41;//在一局游戏中，请等待结束
+    ERROR= 42;
+} // 42

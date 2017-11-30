@@ -1440,13 +1440,6 @@ public final class Entity {
     public boolean hasGameType() { return hasGameType; }
     public int getGameType() { return gameType_; }
     
-    // optional int32 goldId = 15;
-    public static final int GOLDID_FIELD_NUMBER = 15;
-    private boolean hasGoldId;
-    private int goldId_ = 0;
-    public boolean hasGoldId() { return hasGoldId; }
-    public int getGoldId() { return goldId_; }
-    
     // repeated int32 battleList = 16;
     public static final int BATTLELIST_FIELD_NUMBER = 16;
     private java.util.List<java.lang.Integer> battleList_ =
@@ -1509,9 +1502,6 @@ public final class Entity {
       }
       if (hasGameType()) {
         output.writeInt32(14, getGameType());
-      }
-      if (hasGoldId()) {
-        output.writeInt32(15, getGoldId());
       }
       for (int element : getBattleListList()) {
         output.writeInt32(16, element);
@@ -1580,10 +1570,6 @@ public final class Entity {
       if (hasGameType()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(14, getGameType());
-      }
-      if (hasGoldId()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(15, getGoldId());
       }
       {
         int dataSize = 0;
@@ -1798,9 +1784,6 @@ public final class Entity {
         if (other.hasGameType()) {
           setGameType(other.getGameType());
         }
-        if (other.hasGoldId()) {
-          setGoldId(other.getGoldId());
-        }
         if (!other.battleList_.isEmpty()) {
           if (result.battleList_.isEmpty()) {
             result.battleList_ = new java.util.ArrayList<java.lang.Integer>();
@@ -1886,10 +1869,6 @@ public final class Entity {
             }
             case 112: {
               setGameType(input.readInt32());
-              break;
-            }
-            case 120: {
-              setGoldId(input.readInt32());
               break;
             }
             case 128: {
@@ -2162,24 +2141,6 @@ public final class Entity {
       public Builder clearGameType() {
         result.hasGameType = false;
         result.gameType_ = 0;
-        return this;
-      }
-      
-      // optional int32 goldId = 15;
-      public boolean hasGoldId() {
-        return result.hasGoldId();
-      }
-      public int getGoldId() {
-        return result.getGoldId();
-      }
-      public Builder setGoldId(int value) {
-        result.hasGoldId = true;
-        result.goldId_ = value;
-        return this;
-      }
-      public Builder clearGoldId() {
-        result.hasGoldId = false;
-        result.goldId_ = 0;
         return this;
       }
       
@@ -3383,6 +3344,13 @@ public final class Entity {
     public boolean hasMaster() { return hasMaster; }
     public boolean getMaster() { return master_; }
     
+    // optional bool audience = 12;
+    public static final int AUDIENCE_FIELD_NUMBER = 12;
+    private boolean hasAudience;
+    private boolean audience_ = false;
+    public boolean hasAudience() { return hasAudience; }
+    public boolean getAudience() { return audience_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -3424,6 +3392,9 @@ public final class Entity {
       }
       if (hasMaster()) {
         output.writeBool(11, getMaster());
+      }
+      if (hasAudience()) {
+        output.writeBool(12, getAudience());
       }
       getUnknownFields().writeTo(output);
     }
@@ -3477,6 +3448,10 @@ public final class Entity {
       if (hasMaster()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(11, getMaster());
+      }
+      if (hasAudience()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(12, getAudience());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3669,6 +3644,9 @@ public final class Entity {
         if (other.hasMaster()) {
           setMaster(other.getMaster());
         }
+        if (other.hasAudience()) {
+          setAudience(other.getAudience());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -3736,6 +3714,10 @@ public final class Entity {
             }
             case 88: {
               setMaster(input.readBool());
+              break;
+            }
+            case 96: {
+              setAudience(input.readBool());
               break;
             }
           }
@@ -3950,6 +3932,24 @@ public final class Entity {
       public Builder clearMaster() {
         result.hasMaster = false;
         result.master_ = false;
+        return this;
+      }
+      
+      // optional bool audience = 12;
+      public boolean hasAudience() {
+        return result.hasAudience();
+      }
+      public boolean getAudience() {
+        return result.getAudience();
+      }
+      public Builder setAudience(boolean value) {
+        result.hasAudience = true;
+        result.audience_ = value;
+        return this;
+      }
+      public Builder clearAudience() {
+        result.hasAudience = false;
+        result.audience_ = false;
         return this;
       }
       
@@ -8530,6 +8530,13 @@ public final class Entity {
     public boolean hasExitApplyId() { return hasExitApplyId; }
     public int getExitApplyId() { return exitApplyId_; }
     
+    // optional int32 countdown = 19;
+    public static final int COUNTDOWN_FIELD_NUMBER = 19;
+    private boolean hasCountdown;
+    private int countdown_ = 0;
+    public boolean hasCountdown() { return hasCountdown; }
+    public int getCountdown() { return countdown_; }
+    
     private void initFields() {
       gameConfigData_ = com.randioo.compare_collections_server.protocol.Entity.GameConfigData.getDefaultInstance();
       resultGameOverData_ = com.randioo.compare_collections_server.protocol.Entity.ResultGameOverData.getDefaultInstance();
@@ -8594,6 +8601,9 @@ public final class Entity {
       }
       if (hasExitApplyId()) {
         output.writeInt32(18, getExitApplyId());
+      }
+      if (hasCountdown()) {
+        output.writeInt32(19, getCountdown());
       }
       getUnknownFields().writeTo(output);
     }
@@ -8695,6 +8705,10 @@ public final class Entity {
       if (hasExitApplyId()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(18, getExitApplyId());
+      }
+      if (hasCountdown()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(19, getCountdown());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8971,6 +8985,9 @@ public final class Entity {
         if (other.hasExitApplyId()) {
           setExitApplyId(other.getExitApplyId());
         }
+        if (other.hasCountdown()) {
+          setCountdown(other.getCountdown());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -9122,6 +9139,10 @@ public final class Entity {
             }
             case 144: {
               setExitApplyId(input.readInt32());
+              break;
+            }
+            case 152: {
+              setCountdown(input.readInt32());
               break;
             }
           }
@@ -9717,6 +9738,24 @@ public final class Entity {
       public Builder clearExitApplyId() {
         result.hasExitApplyId = false;
         result.exitApplyId_ = 0;
+        return this;
+      }
+      
+      // optional int32 countdown = 19;
+      public boolean hasCountdown() {
+        return result.hasCountdown();
+      }
+      public int getCountdown() {
+        return result.getCountdown();
+      }
+      public Builder setCountdown(int value) {
+        result.hasCountdown = true;
+        result.countdown_ = value;
+        return this;
+      }
+      public Builder clearCountdown() {
+        result.hasCountdown = false;
+        result.countdown_ = 0;
         return this;
       }
       
@@ -11456,6 +11495,20 @@ public final class Entity {
     public boolean hasExitApplyId() { return hasExitApplyId; }
     public int getExitApplyId() { return exitApplyId_; }
     
+    // optional int32 countdown = 21;
+    public static final int COUNTDOWN_FIELD_NUMBER = 21;
+    private boolean hasCountdown;
+    private int countdown_ = 0;
+    public boolean hasCountdown() { return hasCountdown; }
+    public int getCountdown() { return countdown_; }
+    
+    // optional int32 gameState = 22;
+    public static final int GAMESTATE_FIELD_NUMBER = 22;
+    private boolean hasGameState;
+    private int gameState_ = 0;
+    public boolean hasGameState() { return hasGameState; }
+    public int getGameState() { return gameState_; }
+    
     private void initFields() {
       resultGameOverData_ = com.randioo.compare_collections_server.protocol.Entity.ResultGameOverData.getDefaultInstance();
       gameConfigData_ = com.randioo.compare_collections_server.protocol.Entity.GameConfigData.getDefaultInstance();
@@ -11511,6 +11564,12 @@ public final class Entity {
       }
       if (hasExitApplyId()) {
         output.writeInt32(20, getExitApplyId());
+      }
+      if (hasCountdown()) {
+        output.writeInt32(21, getCountdown());
+      }
+      if (hasGameState()) {
+        output.writeInt32(22, getGameState());
       }
       getUnknownFields().writeTo(output);
     }
@@ -11590,6 +11649,14 @@ public final class Entity {
       if (hasExitApplyId()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(20, getExitApplyId());
+      }
+      if (hasCountdown()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(21, getCountdown());
+      }
+      if (hasGameState()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(22, getGameState());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -11836,6 +11903,12 @@ public final class Entity {
         if (other.hasExitApplyId()) {
           setExitApplyId(other.getExitApplyId());
         }
+        if (other.hasCountdown()) {
+          setCountdown(other.getCountdown());
+        }
+        if (other.hasGameState()) {
+          setGameState(other.getGameState());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -11955,6 +12028,14 @@ public final class Entity {
             }
             case 160: {
               setExitApplyId(input.readInt32());
+              break;
+            }
+            case 168: {
+              setCountdown(input.readInt32());
+              break;
+            }
+            case 176: {
+              setGameState(input.readInt32());
               break;
             }
           }
@@ -12434,6 +12515,42 @@ public final class Entity {
         return this;
       }
       
+      // optional int32 countdown = 21;
+      public boolean hasCountdown() {
+        return result.hasCountdown();
+      }
+      public int getCountdown() {
+        return result.getCountdown();
+      }
+      public Builder setCountdown(int value) {
+        result.hasCountdown = true;
+        result.countdown_ = value;
+        return this;
+      }
+      public Builder clearCountdown() {
+        result.hasCountdown = false;
+        result.countdown_ = 0;
+        return this;
+      }
+      
+      // optional int32 gameState = 22;
+      public boolean hasGameState() {
+        return result.hasGameState();
+      }
+      public int getGameState() {
+        return result.getGameState();
+      }
+      public Builder setGameState(int value) {
+        result.hasGameState = true;
+        result.gameState_ = value;
+        return this;
+      }
+      public Builder clearGameState() {
+        result.hasGameState = false;
+        result.gameState_ = 0;
+        return this;
+      }
+      
       // @@protoc_insertion_point(builder_scope:com.randioo.compare_collections_server.protocol.SdbReconnectedData)
     }
     
@@ -12561,131 +12678,133 @@ public final class Entity {
       "\001(\005\022\013\n\003sex\030\004 \001(\005\022\022\n\nserverTime\030\005 \001(\005\022\014\n\004" +
       "name\030\006 \001(\t\022\024\n\014headImageUrl\030\007 \001(\t\022\022\n\ngame" +
       "OverSC\030\010 \001(\014\022\023\n\013randiooCoin\030\t \001(\005\022\014\n\004gol" +
-      "d\030\n \001(\005\022\020\n\010roomCard\030\013 \001(\005\"\260\002\n\016GameConfig" +
+      "d\030\n \001(\005\022\020\n\010roomCard\030\013 \001(\005\"\240\002\n\016GameConfig" +
       "Data\022\022\n\nroundCount\030\001 \001(\005\022\020\n\010maxCount\030\002 \001" +
       "(\005\022\020\n\010roomCard\030\003 \001(\005\022\016\n\006roomId\030\004 \001(\t\022\022\n\n" +
       "zhuangType\030\005 \001(\005\022\024\n\014outLookCount\030\006 \001(\005\022\020",
       "\n\010topCount\030\007 \001(\005\022\022\n\nfightRound\030\010 \001(\005\022\013\n\003" +
       "bet\030\t \001(\005\022\016\n\006betMax\030\n \001(\005\022\020\n\010minCount\030\013 " +
       "\001(\005\022\020\n\010cardsPay\030\014 \001(\005\022\017\n\007payMode\030\r \001(\005\022\020" +
-      "\n\010gameType\030\016 \001(\005\022\016\n\006goldId\030\017 \001(\005\022\022\n\nbatt" +
-      "leList\030\020 \003(\005\"#\n\006PaiNum\022\014\n\004seat\030\001 \001(\005\022\013\n\003" +
-      "num\030\003 \001(\005\";\n\tScoreData\022\014\n\004seat\030\001 \001(\005\022\r\n\005" +
-      "score\030\002 \001(\005\022\021\n\tchipMoney\030\003 \001(\005\"#\n\006Record" +
-      "\022\014\n\004seat\030\001 \001(\005\022\013\n\003pai\030\002 \003(\005\"\304\001\n\014GameRole" +
-      "Data\022\022\n\ngameRoleId\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\014" +
-      "\n\004seat\030\003 \001(\005\022\r\n\005ready\030\004 \001(\010\022\022\n\nheadImgUr",
-      "l\030\005 \001(\t\022\r\n\005money\030\006 \001(\005\022\r\n\005point\030\007 \001(\005\022\013\n" +
-      "\003sex\030\010 \001(\005\022\016\n\006online\030\t \001(\010\022\026\n\016platformRo" +
-      "leId\030\n \001(\t\022\016\n\006master\030\013 \001(\010\"\246\002\n\025RoleRound" +
-      "OverInfoData\022S\n\014gameRoleData\030\001 \001(\0132=.com" +
-      ".randioo.compare_collections_server.prot" +
-      "ocol.GameRoleData\022K\n\010cardData\030\002 \001(\01329.co" +
-      "m.randioo.compare_collections_server.pro" +
-      "tocol.CardData\022\022\n\noverMethod\030\003 \001(\005\022\022\n\nro" +
-      "undScore\030\004 \001(\005\022\021\n\tchipMoney\030\005 \001(\005\022\016\n\006zhu" +
-      "ang\030\006 \001(\010\022\020\n\010betMoney\030\007 \001(\005\022\016\n\006roleId\030\010 ",
-      "\001(\005\"+\n\010CardData\022\r\n\005cards\030\001 \003(\005\022\020\n\010cardTy" +
-      "pe\030\002 \001(\005\"*\n\014RoleCardData\022\014\n\004card\030\001 \003(\005\022\014" +
-      "\n\004seat\030\002 \001(\005\"o\n\010GameData\022\016\n\006roomId\030\001 \001(\t" +
-      "\022S\n\014gameRoleData\030\002 \003(\0132=.com.randioo.com" +
-      "pare_collections_server.protocol.GameRol" +
-      "eData\"+\n\014AudienceData\022\014\n\004name\030\001 \001(\t\022\r\n\005s" +
-      "core\030\002 \001(\005\"\034\n\016RoundVideoData\022\n\n\002sc\030\001 \003(\014" +
-      "\"h\n\rGameVideoData\022W\n\016roundVideoData\030\001 \003(" +
-      "\0132?.com.randioo.compare_collections_serv" +
-      "er.protocol.RoundVideoData\"\033\n\nClientCard",
-      "\022\r\n\005cards\030\001 \003(\005\"7\n\013EnvVarsData\022\013\n\003key\030\001 " +
-      "\001(\t\022\r\n\005value\030\002 \001(\t\022\014\n\004type\030\003 \001(\t\"\322\001\n\024Rol" +
-      "eGameOverInfoData\022S\n\014gameRoleData\030\001 \001(\0132" +
-      "=.com.randioo.compare_collections_server" +
-      ".protocol.GameRoleData\022\r\n\005score\030\002 \001(\005\022\021\n" +
-      "\tchipMoney\030\003 \001(\005\022\020\n\010winCount\030\004 \001(\005\022\021\n\tlo" +
-      "ssCount\030\005 \001(\005\022\016\n\006master\030\006 \001(\010\022\016\n\006roleId\030" +
-      "\007 \001(\005\"\355\001\n\022ResultGameOverData\022c\n\024roleGame" +
-      "OverInfoData\030\001 \003(\0132E.com.randioo.compare" +
-      "_collections_server.protocol.RoleGameOve",
-      "rInfoData\022W\n\016gameConfigData\030\002 \001(\0132?.com." +
-      "randioo.compare_collections_server.proto" +
-      "col.GameConfigData\022\031\n\021gameOverTimestamp\030" +
-      "\003 \001(\t\"\334\006\n\021CxReconnectedData\022\016\n\006mySeat\030\001 " +
-      "\001(\005\022S\n\014gameRoleData\030\002 \003(\0132=.com.randioo." +
-      "compare_collections_server.protocol.Game" +
-      "RoleData\022S\n\014roleCardData\030\003 \003(\0132=.com.ran" +
-      "dioo.compare_collections_server.protocol" +
-      ".RoleCardData\022N\n\ntableChips\030\004 \003(\0132:.com." +
-      "randioo.compare_collections_server.proto",
-      "col.ScoreData\022M\n\troleChips\030\005 \003(\0132:.com.r" +
-      "andioo.compare_collections_server.protoc" +
-      "ol.ScoreData\022\021\n\tcallTypes\030\006 \003(\005\022\020\n\010callS" +
-      "eat\030\007 \001(\005\022W\n\016gameConfigData\030\010 \001(\0132?.com." +
-      "randioo.compare_collections_server.proto" +
-      "col.GameConfigData\022\030\n\020finishRoundCount\030\t" +
-      " \001(\005\022_\n\022ResultGameOverData\030\n \001(\0132C.com.r" +
-      "andioo.compare_collections_server.protoc" +
-      "ol.ResultGameOverData\022\022\n\ngiveUpSeat\030\013 \003(" +
-      "\005\022\025\n\rcutCardsState\030\014 \001(\005\022\020\n\010basePool\030\r \001",
-      "(\005\022\025\n\rapplyExitSeat\030\016 \001(\005\022\022\n\nrejectSeat\030" +
-      "\017 \003(\005\022\021\n\tagreeSeat\030\020 \003(\005\022e\n\025roleRoundOve" +
-      "rInfoData\030\021 \003(\0132F.com.randioo.compare_co" +
-      "llections_server.protocol.RoleRoundOverI" +
-      "nfoData\022\023\n\013exitApplyId\030\022 \001(\005\"\210\007\n\022ZjhReco" +
-      "nnectedData\022\016\n\006mySeat\030\001 \001(\005\022S\n\014gameRoleD" +
-      "ata\030\002 \003(\0132=.com.randioo.compare_collecti" +
-      "ons_server.protocol.GameRoleData\022S\n\014role" +
-      "CardData\030\003 \003(\0132=.com.randioo.compare_col" +
-      "lections_server.protocol.RoleCardData\022N\n",
-      "\ntableChips\030\004 \003(\0132:.com.randioo.compare_" +
-      "collections_server.protocol.ScoreData\022M\n" +
-      "\troleChips\030\005 \003(\0132:.com.randioo.compare_c" +
-      "ollections_server.protocol.ScoreData\022\021\n\t" +
-      "callTypes\030\006 \003(\005\022\020\n\010callSeat\030\007 \001(\005\022W\n\016gam" +
-      "eConfigData\030\010 \001(\0132?.com.randioo.compare_" +
-      "collections_server.protocol.GameConfigDa" +
-      "ta\022\030\n\020finishRoundCount\030\t \001(\005\022_\n\022ResultGa" +
-      "meOverData\030\n \001(\0132C.com.randioo.compare_c" +
-      "ollections_server.protocol.ResultGameOve",
-      "rData\022\022\n\ngiveUpSeat\030\013 \003(\005\022\026\n\016ficeGiveUpS" +
-      "eat\030\014 \003(\005\022\025\n\rLookCardsSeat\030\r \003(\005\022\021\n\tstep" +
-      "State\030\016 \001(\005\022\020\n\010basePool\030\017 \001(\005\022\025\n\rapplyEx" +
-      "itSeat\030\020 \001(\005\022\022\n\nrejectSeat\030\021 \003(\005\022\021\n\tagre" +
-      "eSeat\030\022 \003(\005\022e\n\025roleRoundOverInfoData\030\023 \003" +
-      "(\0132F.com.randioo.compare_collections_ser" +
-      "ver.protocol.RoleRoundOverInfoData\022\023\n\013ex" +
-      "itApplyId\030\024 \001(\005\"\346\005\n\022SdbReconnectedData\022\016" +
-      "\n\006mySeat\030\001 \001(\005\022S\n\014gameRoleData\030\002 \003(\0132=.c" +
-      "om.randioo.compare_collections_server.pr",
-      "otocol.GameRoleData\022S\n\014roleCardData\030\003 \003(" +
+      "\n\010gameType\030\016 \001(\005\022\022\n\nbattleList\030\020 \003(\005\"#\n\006" +
+      "PaiNum\022\014\n\004seat\030\001 \001(\005\022\013\n\003num\030\003 \001(\005\";\n\tSco" +
+      "reData\022\014\n\004seat\030\001 \001(\005\022\r\n\005score\030\002 \001(\005\022\021\n\tc" +
+      "hipMoney\030\003 \001(\005\"#\n\006Record\022\014\n\004seat\030\001 \001(\005\022\013" +
+      "\n\003pai\030\002 \003(\005\"\326\001\n\014GameRoleData\022\022\n\ngameRole" +
+      "Id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\014\n\004seat\030\003 \001(\005\022\r\n\005" +
+      "ready\030\004 \001(\010\022\022\n\nheadImgUrl\030\005 \001(\t\022\r\n\005money",
+      "\030\006 \001(\005\022\r\n\005point\030\007 \001(\005\022\013\n\003sex\030\010 \001(\005\022\016\n\006on" +
+      "line\030\t \001(\010\022\026\n\016platformRoleId\030\n \001(\t\022\016\n\006ma" +
+      "ster\030\013 \001(\010\022\020\n\010audience\030\014 \001(\010\"\246\002\n\025RoleRou" +
+      "ndOverInfoData\022S\n\014gameRoleData\030\001 \001(\0132=.c" +
+      "om.randioo.compare_collections_server.pr" +
+      "otocol.GameRoleData\022K\n\010cardData\030\002 \001(\01329." +
+      "com.randioo.compare_collections_server.p" +
+      "rotocol.CardData\022\022\n\noverMethod\030\003 \001(\005\022\022\n\n" +
+      "roundScore\030\004 \001(\005\022\021\n\tchipMoney\030\005 \001(\005\022\016\n\006z" +
+      "huang\030\006 \001(\010\022\020\n\010betMoney\030\007 \001(\005\022\016\n\006roleId\030",
+      "\010 \001(\005\"+\n\010CardData\022\r\n\005cards\030\001 \003(\005\022\020\n\010card" +
+      "Type\030\002 \001(\005\"*\n\014RoleCardData\022\014\n\004card\030\001 \003(\005" +
+      "\022\014\n\004seat\030\002 \001(\005\"o\n\010GameData\022\016\n\006roomId\030\001 \001" +
+      "(\t\022S\n\014gameRoleData\030\002 \003(\0132=.com.randioo.c" +
+      "ompare_collections_server.protocol.GameR" +
+      "oleData\"+\n\014AudienceData\022\014\n\004name\030\001 \001(\t\022\r\n" +
+      "\005score\030\002 \001(\005\"\034\n\016RoundVideoData\022\n\n\002sc\030\001 \003" +
+      "(\014\"h\n\rGameVideoData\022W\n\016roundVideoData\030\001 " +
+      "\003(\0132?.com.randioo.compare_collections_se" +
+      "rver.protocol.RoundVideoData\"\033\n\nClientCa",
+      "rd\022\r\n\005cards\030\001 \003(\005\"7\n\013EnvVarsData\022\013\n\003key\030" +
+      "\001 \001(\t\022\r\n\005value\030\002 \001(\t\022\014\n\004type\030\003 \001(\t\"\322\001\n\024R" +
+      "oleGameOverInfoData\022S\n\014gameRoleData\030\001 \001(" +
       "\0132=.com.randioo.compare_collections_serv" +
-      "er.protocol.RoleCardData\022M\n\tscoreData\030\004 " +
-      "\003(\0132:.com.randioo.compare_collections_se" +
-      "rver.protocol.ScoreData\022\023\n\013currentSeat\030\005" +
-      " \001(\005\022_\n\022ResultGameOverData\030\006 \001(\0132C.com.r" +
+      "er.protocol.GameRoleData\022\r\n\005score\030\002 \001(\005\022" +
+      "\021\n\tchipMoney\030\003 \001(\005\022\020\n\010winCount\030\004 \001(\005\022\021\n\t" +
+      "lossCount\030\005 \001(\005\022\016\n\006master\030\006 \001(\010\022\016\n\006roleI" +
+      "d\030\007 \001(\005\"\355\001\n\022ResultGameOverData\022c\n\024roleGa" +
+      "meOverInfoData\030\001 \003(\0132E.com.randioo.compa" +
+      "re_collections_server.protocol.RoleGameO",
+      "verInfoData\022W\n\016gameConfigData\030\002 \001(\0132?.co" +
+      "m.randioo.compare_collections_server.pro" +
+      "tocol.GameConfigData\022\031\n\021gameOverTimestam" +
+      "p\030\003 \001(\t\"\357\006\n\021CxReconnectedData\022\016\n\006mySeat\030" +
+      "\001 \001(\005\022S\n\014gameRoleData\030\002 \003(\0132=.com.randio" +
+      "o.compare_collections_server.protocol.Ga" +
+      "meRoleData\022S\n\014roleCardData\030\003 \003(\0132=.com.r" +
       "andioo.compare_collections_server.protoc" +
-      "ol.ResultGameOverData\022\030\n\020finishRoundCoun" +
-      "t\030\007 \001(\005\022W\n\016gameConfigData\030\010 \001(\0132?.com.ra" +
-      "ndioo.compare_collections_server.protoco",
-      "l.GameConfigData\022\020\n\010callType\030\t \001(\005\022\022\n\nzh" +
-      "uangSeat\030\n \001(\005\022\025\n\rapplyExitSeat\030\020 \001(\005\022\022\n" +
-      "\nrejectSeat\030\021 \003(\005\022\021\n\tagreeSeat\030\022 \003(\005\022e\n\025" +
-      "roleRoundOverInfoData\030\023 \003(\0132F.com.randio" +
-      "o.compare_collections_server.protocol.Ro" +
-      "leRoundOverInfoData\022\023\n\013exitApplyId\030\024 \001(\005" +
-      "*\'\n\007PayMode\022\017\n\013MASTER_MODE\020\001\022\013\n\007AA_MODE\020" +
-      "\002*I\n\nZhuangType\022\022\n\016ZHUANG_FREEDOM\020\001\022\025\n\021Z" +
-      "HUANG_ROOM_OWNER\020\002\022\020\n\014ZHUANG_ORDER\020\003*K\n\017" +
-      "SpecialCardType\022\n\n\006SHUNZI\020\001\022\t\n\005WUHUA\020\002\022\013",
-      "\n\007TONGHUA\020\003\022\010\n\004HULU\020\004\022\n\n\006ZHADAN\020\005*9\n\016Gam" +
-      "eOverMethod\022\022\n\016GAME_OVER_TIME\020\001\022\023\n\017GAME_" +
-      "OVER_ROUND\020\002*I\n\010GameType\022\023\n\017GAME_TYPE_MA" +
-      "TCH\020\001\022\024\n\020GAME_TYPE_FRIEND\020\002\022\022\n\016GAME_TYPE" +
-      "_GOLD\020\003*b\n\tGameState\022\026\n\022GAME_STATE_PREPA" +
-      "RE\020\001\022\024\n\020GAME_STATE_START\020\002\022\022\n\016GAME_STATE" +
-      "_END\020\003\022\023\n\017GAME_STATE_WAIT\020\004*B\n\nKickReaso" +
-      "n\022\023\n\017GOLD_NOT_ENOUGH\020\001\022\017\n\013NOT_IN_GAME\020\002\022" +
-      "\016\n\nNOT_ONLINE\020\003*\037\n\nOverMethod\022\010\n\004LOSS\020\000\022" +
-      "\007\n\003WIN\020\001*D\n\022FightVoteApplyExit\022\r\n\tVOTE_I",
-      "DLE\020\000\022\016\n\nVOTE_AGREE\020\001\022\017\n\013VOTE_REJECT\020\002"
+      "ol.RoleCardData\022N\n\ntableChips\030\004 \003(\0132:.co" +
+      "m.randioo.compare_collections_server.pro",
+      "tocol.ScoreData\022M\n\troleChips\030\005 \003(\0132:.com" +
+      ".randioo.compare_collections_server.prot" +
+      "ocol.ScoreData\022\021\n\tcallTypes\030\006 \003(\005\022\020\n\010cal" +
+      "lSeat\030\007 \001(\005\022W\n\016gameConfigData\030\010 \001(\0132?.co" +
+      "m.randioo.compare_collections_server.pro" +
+      "tocol.GameConfigData\022\030\n\020finishRoundCount" +
+      "\030\t \001(\005\022_\n\022ResultGameOverData\030\n \001(\0132C.com" +
+      ".randioo.compare_collections_server.prot" +
+      "ocol.ResultGameOverData\022\022\n\ngiveUpSeat\030\013 " +
+      "\003(\005\022\025\n\rcutCardsState\030\014 \001(\005\022\020\n\010basePool\030\r",
+      " \001(\005\022\025\n\rapplyExitSeat\030\016 \001(\005\022\022\n\nrejectSea" +
+      "t\030\017 \003(\005\022\021\n\tagreeSeat\030\020 \003(\005\022e\n\025roleRoundO" +
+      "verInfoData\030\021 \003(\0132F.com.randioo.compare_" +
+      "collections_server.protocol.RoleRoundOve" +
+      "rInfoData\022\023\n\013exitApplyId\030\022 \001(\005\022\021\n\tcountd" +
+      "own\030\023 \001(\005\"\210\007\n\022ZjhReconnectedData\022\016\n\006mySe" +
+      "at\030\001 \001(\005\022S\n\014gameRoleData\030\002 \003(\0132=.com.ran" +
+      "dioo.compare_collections_server.protocol" +
+      ".GameRoleData\022S\n\014roleCardData\030\003 \003(\0132=.co" +
+      "m.randioo.compare_collections_server.pro",
+      "tocol.RoleCardData\022N\n\ntableChips\030\004 \003(\0132:" +
+      ".com.randioo.compare_collections_server." +
+      "protocol.ScoreData\022M\n\troleChips\030\005 \003(\0132:." +
+      "com.randioo.compare_collections_server.p" +
+      "rotocol.ScoreData\022\021\n\tcallTypes\030\006 \003(\005\022\020\n\010" +
+      "callSeat\030\007 \001(\005\022W\n\016gameConfigData\030\010 \001(\0132?" +
+      ".com.randioo.compare_collections_server." +
+      "protocol.GameConfigData\022\030\n\020finishRoundCo" +
+      "unt\030\t \001(\005\022_\n\022ResultGameOverData\030\n \001(\0132C." +
+      "com.randioo.compare_collections_server.p",
+      "rotocol.ResultGameOverData\022\022\n\ngiveUpSeat" +
+      "\030\013 \003(\005\022\026\n\016ficeGiveUpSeat\030\014 \003(\005\022\025\n\rLookCa" +
+      "rdsSeat\030\r \003(\005\022\021\n\tstepState\030\016 \001(\005\022\020\n\010base" +
+      "Pool\030\017 \001(\005\022\025\n\rapplyExitSeat\030\020 \001(\005\022\022\n\nrej" +
+      "ectSeat\030\021 \003(\005\022\021\n\tagreeSeat\030\022 \003(\005\022e\n\025role" +
+      "RoundOverInfoData\030\023 \003(\0132F.com.randioo.co" +
+      "mpare_collections_server.protocol.RoleRo" +
+      "undOverInfoData\022\023\n\013exitApplyId\030\024 \001(\005\"\214\006\n" +
+      "\022SdbReconnectedData\022\016\n\006mySeat\030\001 \001(\005\022S\n\014g" +
+      "ameRoleData\030\002 \003(\0132=.com.randioo.compare_",
+      "collections_server.protocol.GameRoleData" +
+      "\022S\n\014roleCardData\030\003 \003(\0132=.com.randioo.com" +
+      "pare_collections_server.protocol.RoleCar" +
+      "dData\022M\n\tscoreData\030\004 \003(\0132:.com.randioo.c" +
+      "ompare_collections_server.protocol.Score" +
+      "Data\022\023\n\013currentSeat\030\005 \001(\005\022_\n\022ResultGameO" +
+      "verData\030\006 \001(\0132C.com.randioo.compare_coll" +
+      "ections_server.protocol.ResultGameOverDa" +
+      "ta\022\030\n\020finishRoundCount\030\007 \001(\005\022W\n\016gameConf" +
+      "igData\030\010 \001(\0132?.com.randioo.compare_colle",
+      "ctions_server.protocol.GameConfigData\022\020\n" +
+      "\010callType\030\t \001(\005\022\022\n\nzhuangSeat\030\n \001(\005\022\025\n\ra" +
+      "pplyExitSeat\030\020 \001(\005\022\022\n\nrejectSeat\030\021 \003(\005\022\021" +
+      "\n\tagreeSeat\030\022 \003(\005\022e\n\025roleRoundOverInfoDa" +
+      "ta\030\023 \003(\0132F.com.randioo.compare_collectio" +
+      "ns_server.protocol.RoleRoundOverInfoData" +
+      "\022\023\n\013exitApplyId\030\024 \001(\005\022\021\n\tcountdown\030\025 \001(\005" +
+      "\022\021\n\tgameState\030\026 \001(\005*\'\n\007PayMode\022\017\n\013MASTER" +
+      "_MODE\020\001\022\013\n\007AA_MODE\020\002*I\n\nZhuangType\022\022\n\016ZH" +
+      "UANG_FREEDOM\020\001\022\025\n\021ZHUANG_ROOM_OWNER\020\002\022\020\n",
+      "\014ZHUANG_ORDER\020\003*K\n\017SpecialCardType\022\n\n\006SH" +
+      "UNZI\020\001\022\t\n\005WUHUA\020\002\022\013\n\007TONGHUA\020\003\022\010\n\004HULU\020\004" +
+      "\022\n\n\006ZHADAN\020\005*9\n\016GameOverMethod\022\022\n\016GAME_O" +
+      "VER_TIME\020\001\022\023\n\017GAME_OVER_ROUND\020\002*I\n\010GameT" +
+      "ype\022\023\n\017GAME_TYPE_MATCH\020\001\022\024\n\020GAME_TYPE_FR" +
+      "IEND\020\002\022\022\n\016GAME_TYPE_GOLD\020\003*b\n\tGameState\022" +
+      "\026\n\022GAME_STATE_PREPARE\020\001\022\024\n\020GAME_STATE_ST" +
+      "ART\020\002\022\022\n\016GAME_STATE_END\020\003\022\023\n\017GAME_STATE_" +
+      "WAIT\020\004*B\n\nKickReason\022\023\n\017GOLD_NOT_ENOUGH\020" +
+      "\001\022\017\n\013NOT_IN_GAME\020\002\022\016\n\nNOT_ONLINE\020\003*\037\n\nOv",
+      "erMethod\022\010\n\004LOSS\020\000\022\007\n\003WIN\020\001*D\n\022FightVote" +
+      "ApplyExit\022\r\n\tVOTE_IDLE\020\000\022\016\n\nVOTE_AGREE\020\001" +
+      "\022\017\n\013VOTE_REJECT\020\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -12705,7 +12824,7 @@ public final class Entity {
           internal_static_com_randioo_compare_collections_server_protocol_GameConfigData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_GameConfigData_descriptor,
-              new java.lang.String[] { "RoundCount", "MaxCount", "RoomCard", "RoomId", "ZhuangType", "OutLookCount", "TopCount", "FightRound", "Bet", "BetMax", "MinCount", "CardsPay", "PayMode", "GameType", "GoldId", "BattleList", },
+              new java.lang.String[] { "RoundCount", "MaxCount", "RoomCard", "RoomId", "ZhuangType", "OutLookCount", "TopCount", "FightRound", "Bet", "BetMax", "MinCount", "CardsPay", "PayMode", "GameType", "BattleList", },
               com.randioo.compare_collections_server.protocol.Entity.GameConfigData.class,
               com.randioo.compare_collections_server.protocol.Entity.GameConfigData.Builder.class);
           internal_static_com_randioo_compare_collections_server_protocol_PaiNum_descriptor =
@@ -12737,7 +12856,7 @@ public final class Entity {
           internal_static_com_randioo_compare_collections_server_protocol_GameRoleData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_GameRoleData_descriptor,
-              new java.lang.String[] { "GameRoleId", "Name", "Seat", "Ready", "HeadImgUrl", "Money", "Point", "Sex", "Online", "PlatformRoleId", "Master", },
+              new java.lang.String[] { "GameRoleId", "Name", "Seat", "Ready", "HeadImgUrl", "Money", "Point", "Sex", "Online", "PlatformRoleId", "Master", "Audience", },
               com.randioo.compare_collections_server.protocol.Entity.GameRoleData.class,
               com.randioo.compare_collections_server.protocol.Entity.GameRoleData.Builder.class);
           internal_static_com_randioo_compare_collections_server_protocol_RoleRoundOverInfoData_descriptor =
@@ -12833,7 +12952,7 @@ public final class Entity {
           internal_static_com_randioo_compare_collections_server_protocol_CxReconnectedData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_CxReconnectedData_descriptor,
-              new java.lang.String[] { "MySeat", "GameRoleData", "RoleCardData", "TableChips", "RoleChips", "CallTypes", "CallSeat", "GameConfigData", "FinishRoundCount", "ResultGameOverData", "GiveUpSeat", "CutCardsState", "BasePool", "ApplyExitSeat", "RejectSeat", "AgreeSeat", "RoleRoundOverInfoData", "ExitApplyId", },
+              new java.lang.String[] { "MySeat", "GameRoleData", "RoleCardData", "TableChips", "RoleChips", "CallTypes", "CallSeat", "GameConfigData", "FinishRoundCount", "ResultGameOverData", "GiveUpSeat", "CutCardsState", "BasePool", "ApplyExitSeat", "RejectSeat", "AgreeSeat", "RoleRoundOverInfoData", "ExitApplyId", "Countdown", },
               com.randioo.compare_collections_server.protocol.Entity.CxReconnectedData.class,
               com.randioo.compare_collections_server.protocol.Entity.CxReconnectedData.Builder.class);
           internal_static_com_randioo_compare_collections_server_protocol_ZjhReconnectedData_descriptor =
@@ -12849,7 +12968,7 @@ public final class Entity {
           internal_static_com_randioo_compare_collections_server_protocol_SdbReconnectedData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_SdbReconnectedData_descriptor,
-              new java.lang.String[] { "MySeat", "GameRoleData", "RoleCardData", "ScoreData", "CurrentSeat", "ResultGameOverData", "FinishRoundCount", "GameConfigData", "CallType", "ZhuangSeat", "ApplyExitSeat", "RejectSeat", "AgreeSeat", "RoleRoundOverInfoData", "ExitApplyId", },
+              new java.lang.String[] { "MySeat", "GameRoleData", "RoleCardData", "ScoreData", "CurrentSeat", "ResultGameOverData", "FinishRoundCount", "GameConfigData", "CallType", "ZhuangSeat", "ApplyExitSeat", "RejectSeat", "AgreeSeat", "RoleRoundOverInfoData", "ExitApplyId", "Countdown", "GameState", },
               com.randioo.compare_collections_server.protocol.Entity.SdbReconnectedData.class,
               com.randioo.compare_collections_server.protocol.Entity.SdbReconnectedData.Builder.class);
           return null;

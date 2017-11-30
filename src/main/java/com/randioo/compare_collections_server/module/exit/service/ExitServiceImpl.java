@@ -28,7 +28,6 @@ import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
 import com.randioo.compare_collections_server.util.vote.VoteBox;
 import com.randioo.compare_collections_server.util.vote.VoteBox.VoteResult;
 import com.randioo.randioo_server_base.annotation.BaseServiceAnnotation;
-import com.randioo.randioo_server_base.cache.RoleCache;
 import com.randioo.randioo_server_base.cache.SessionCache;
 import com.randioo.randioo_server_base.scheduler.EventScheduler;
 import com.randioo.randioo_server_base.scheduler.TimeEvent;
@@ -166,7 +165,7 @@ public class ExitServiceImpl extends ObserveBaseService implements ExitService {
         // 如果游戏没有开始则可以随时退出,如果是好友对战,并且是房主,则解散
         // 若是房主，则直接解散
         if (game.getMasterRoleId() == role.getRoleId()) {
-            dismissGame(game, role);
+            dismissGame(game);
         } else {
             normalexitGame(game,role);
         }
@@ -192,7 +191,7 @@ public class ExitServiceImpl extends ObserveBaseService implements ExitService {
         } else {
             if (game.getRoleIdMap().size() <= 1) {
                 //只剩一个人了
-                dismissGame(game, role);
+                dismissGame(game);
             } else {
                 normalexitGame(game,role);
             }
@@ -209,27 +208,22 @@ public class ExitServiceImpl extends ObserveBaseService implements ExitService {
         RoleGameInfo roleGameInfo = roleGameInfoManager.getByRoleId(game, role.getRoleId());
         int seat = roleGameInfo.seat;
         // 该玩家直接退出
-        Builder scFightExitGame = Fight.SCFightExitGame.newBuilder().setSeat(seat)
-                .setGameRoleId(roleGameInfo.gameRoleId);
+        Builder scFightExitGame = Fight.SCFightExitGame.newBuilder().setSeat(seat);
 
-        // 座位号重新排序
-        for (int i = seat + 1; i < game.getRoleIdMap().size(); i++) {
-            RoleGameInfo otherRoleGameInfo = roleGameInfoManager.get(game, i);
-            otherRoleGameInfo.seat -= 1;
-        }
         // 移除
-        game.getRoleIdMap().remove(gameRoleId);
+        gameManager.remove(game, gameRoleId);
+
         game.getSeatMap().clear();
-        game.getRoleIdList().remove(gameRoleId);
-        // 玩家退出后，通知剩余人的account
-        for (RoleGameInfo info : game.getRoleIdMap().values()) {
-            game.getSeatMap().put(info.seat, info);
-            String account = RoleCache.getRoleById(info.roleId).getAccount();
-            scFightExitGame.addAccount(account);
+        // 座位号重新排序
+        game.getSeatMap().clear();
+        for (int i = 0; i < game.getRoleIdList().size(); i++) {
+            String tempGameRoleId = game.getRoleIdList().get(i);
+            RoleGameInfo tempInfo = game.getRoleIdMap().get(tempGameRoleId);
+            tempInfo.seat = i;
+            game.getSeatMap().put(i, tempInfo);
         }
-        scFightExitGame.setExitAccount(RoleCache.getRoleById(roleGameInfo.roleId).getAccount());
+
         gameBroadcast.broadcast(game, SC.newBuilder().setSCFightExitGame(scFightExitGame).build());
-        role.setGameId(0);
     }
     /**
      * 游戏解散
@@ -238,15 +232,18 @@ public class ExitServiceImpl extends ObserveBaseService implements ExitService {
      * @param game
      * @param role
      */
-    private void dismissGame(Game game,Role role){
+    @Override
+    public void dismissGame(Game game){
         // 标记比赛结束
-        game.setGameState(GameState.GAME_STATE_END);
-        VideoCache.getVideoMap().remove(game.getGameId()); // 同时删除视频
-        SCFightRoomDismiss scFightRoomDismiss = SCFightRoomDismiss.newBuilder().build();
-        SC scFightRoomDismissSC = SC.newBuilder().setSCFightRoomDismiss(scFightRoomDismiss).build();
-        // 通知房间解散
-        gameBroadcast.broadcast(game, scFightRoomDismissSC);
-        gameManager.destroyGame(game);
+        synchronized (game) {
+            game.setGameState(GameState.GAME_STATE_END);
+            VideoCache.getVideoMap().remove(game.getGameId()); // 同时删除视频
+            SCFightRoomDismiss scFightRoomDismiss = SCFightRoomDismiss.newBuilder().build();
+            SC scFightRoomDismissSC = SC.newBuilder().setSCFightRoomDismiss(scFightRoomDismiss).build();
+            // 通知房间解散
+            gameBroadcast.broadcast(game, scFightRoomDismissSC);
+            gameManager.destroyGame(game);
+        }
     }
 
     @Override

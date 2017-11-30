@@ -39,6 +39,7 @@ public class ZjhRoundOverCalculator implements RoundOverCaculator {
 				gameOverResult.score -= point;
 				gameOverResult.lossCount++;
 			}
+			roundResultMap.put(info.seat, roundInfo);
 		}
 		return roundResultMap;
 	}

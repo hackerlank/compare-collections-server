@@ -20,6 +20,7 @@ import com.randioo.randioo_server_base.template.IActionSupport;
 public class FightReconnctDataAction implements IActionSupport {
     @Autowired
     private FightService fightService;
+
     @Override
     public void execute(Object data, Object session) {
         Role role = RoleCache.getRoleBySession(session);

@@ -3,12 +3,6 @@
  */
 package com.randioo.compare_collections_server.module.fight.component.round.tenhalf;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.component.round.GameOverResult;
@@ -16,6 +10,11 @@ import com.randioo.compare_collections_server.module.fight.component.round.Round
 import com.randioo.compare_collections_server.module.fight.component.round.RoundOverCaculator;
 import com.randioo.compare_collections_server.module.fight.component.tenhalf.CardComparator;
 import com.randioo.compare_collections_server.module.fight.component.tenhalf.CardTypeGetter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zsy
@@ -36,7 +35,7 @@ public class TenHalfRoundOverCalculator implements RoundOverCaculator {
         Map<Integer, RoundInfo> roundResultMap = new HashMap<>();
         for (RoleGameInfo info : game.getRoleIdMap().values()) {
             TenHalfRoundInfo roundInfo = (TenHalfRoundInfo) game.roundInfoMap.getRoundInfo(info.gameRoleId);
-			roundInfo.betMoney = info.betScore;
+            roundInfo.betMoney = info.betScore;
 			roundInfo.cards = info.cards;
 
 			roundInfo.cardType = cardTypeGetter.get(info.cards);

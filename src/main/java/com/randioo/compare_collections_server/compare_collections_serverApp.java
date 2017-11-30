@@ -2,8 +2,8 @@ package com.randioo.compare_collections_server;
 
 import com.randioo.randioo_server_base.config.ConfigLoader;
 import com.randioo.randioo_server_base.config.GlobleArgsLoader;
-import com.randioo.randioo_server_base.config.GlobleXmlLoader;
 import com.randioo.randioo_server_base.config.GlobleJsonLoader;
+import com.randioo.randioo_server_base.config.GlobleXmlLoader;
 import com.randioo.randioo_server_base.init.GameServer;
 import com.randioo.randioo_server_base.log.LogSystem;
 import com.randioo.randioo_server_base.sensitive.SensitiveWordDictionary;

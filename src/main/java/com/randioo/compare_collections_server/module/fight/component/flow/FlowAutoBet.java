@@ -8,10 +8,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.randioo.compare_collections_server.cache.file.YiyaAutoBetConfigCache;
 import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.component.Flow;
 import com.randioo.compare_collections_server.module.fight.component.broadcast.GameBroadcast;
+import com.randioo.compare_collections_server.module.fight.component.manager.GameManager;
 import com.randioo.compare_collections_server.protocol.Fight.SCFightAutoBet;
 import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
 
@@ -27,9 +29,14 @@ public class FlowAutoBet implements Flow {
     @Autowired
     private GameBroadcast gameBroadcast;
 
+    @Autowired
+    private GameManager gameManager;
+
     @Override
     public void execute(Game game, String[] params) {
-        int baseScore = game.getGameConfig().getBet();
+        // 金币场去配置表里读
+        int baseScore = gameManager.isGoldMode(game) ? YiyaAutoBetConfigCache.getYiYaAutoBetMap().get(
+                game.matchParameter).autoBet : game.getGameConfig().getBet();
         boolean playerBetScoreRecord = Boolean.parseBoolean(params[0]);
         for (Map.Entry<String, RoleGameInfo> entrySet : game.getRoleIdMap().entrySet()) {
             RoleGameInfo roleGameInfo = entrySet.getValue();

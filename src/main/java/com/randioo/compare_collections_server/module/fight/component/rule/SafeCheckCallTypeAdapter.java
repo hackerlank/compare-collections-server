@@ -20,9 +20,4 @@ public class SafeCheckCallTypeAdapter implements ISafeCheckCallType {
         return false;
     }
 
-    @Override
-    public boolean isCallSafe(Game game, RoleGameInfo roleGameInfo) {
-        return game.actionVerifyId == roleGameInfo.actionVerifyId;
-    }
-
 }

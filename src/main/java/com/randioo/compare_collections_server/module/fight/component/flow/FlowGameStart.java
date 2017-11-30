@@ -4,6 +4,7 @@ import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.component.Flow;
 import com.randioo.compare_collections_server.module.fight.component.round.GameOverResult;
+import com.randioo.compare_collections_server.module.fight.component.rule.zjh.ZJHRule;
 import com.randioo.compare_collections_server.protocol.Entity.GameState;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ public class FlowGameStart implements Flow {
 		game.maxChipMoney = 0;
 		game.loop = 0;
 		game.getBattleMap().clear();
+		game.countdown = 0;
 		// 设置回合结算的实现类
 		game.roundInfoMap.setRoundInfoClazz(game.getRule().getRoundInfoClass());
 
@@ -34,7 +36,11 @@ public class FlowGameStart implements Flow {
 			// 叫分标记
 			info.isCalled = false;
 			// 最大筹码
-			info.chipMoney = baseChipMoney;
+			if (game.getRule() instanceof ZJHRule) {
+				info.chipMoney = 0;
+			} else {
+				info.chipMoney = baseChipMoney;
+			}
 			// 叫的分数清空
 			info.betScore = 0;
 			// 下注的记录清空

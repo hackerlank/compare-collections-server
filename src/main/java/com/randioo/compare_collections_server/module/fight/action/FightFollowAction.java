@@ -24,9 +24,7 @@ public class FightFollowAction implements IActionSupport {
 
 	@Override
 	public void execute(Object data, Object session) {
-		FightGenRequest request = FightGenRequest.newBuilder().build();
-		int money = request.getStall();
 		Role role = RoleCache.getRoleBySession(session);
-		fightService.follow(role, money);
+		fightService.follow(role);
 	}
 }

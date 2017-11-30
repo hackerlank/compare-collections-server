@@ -1,25 +1,11 @@
 package com.randioo.compare_collections_server.module.match.service;
 
-import java.lang.reflect.Field;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import com.randioo.compare_collections_server.protocol.Match.*;
-import com.randioo.randioo_server_base.config.GlobleClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
-
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.protobuf.Message;
 import com.randioo.compare_collections_server.GlobleConstant;
 import com.randioo.compare_collections_server.cache.file.GameRoundConfigCache;
 import com.randioo.compare_collections_server.cache.local.GameCache;
+import com.randioo.compare_collections_server.cache.local.MatchCache;
 import com.randioo.compare_collections_server.entity.bo.Role;
 import com.randioo.compare_collections_server.entity.file.GameRoundConfig;
 import com.randioo.compare_collections_server.entity.po.Game;
@@ -39,23 +25,20 @@ import com.randioo.compare_collections_server.module.fight.component.rule.tenhal
 import com.randioo.compare_collections_server.module.fight.component.rule.zjh.ZJHRule;
 import com.randioo.compare_collections_server.module.login.service.LoginService;
 import com.randioo.compare_collections_server.module.match.MatchConstant;
+import com.randioo.compare_collections_server.module.match.component.MatchInfo;
 import com.randioo.compare_collections_server.module.match.component.MatchSystem;
 import com.randioo.compare_collections_server.module.role.service.RoleService;
-import com.randioo.compare_collections_server.protocol.Entity.CxReconnectedData;
-import com.randioo.compare_collections_server.protocol.Entity.GameConfigData;
-import com.randioo.compare_collections_server.protocol.Entity.GameRoleData;
+import com.randioo.compare_collections_server.protocol.Entity.*;
 import com.randioo.compare_collections_server.protocol.Entity.GameRoleData.Builder;
-import com.randioo.compare_collections_server.protocol.Entity.GameState;
-import com.randioo.compare_collections_server.protocol.Entity.GameType;
-import com.randioo.compare_collections_server.protocol.Entity.SdbReconnectedData;
-import com.randioo.compare_collections_server.protocol.Entity.ZjhReconnectedData;
 import com.randioo.compare_collections_server.protocol.Error.ErrorCode;
+import com.randioo.compare_collections_server.protocol.Match.*;
 import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
 import com.randioo.compare_collections_server.util.vote.OneRejectEndExceptApplyerStrategy;
 import com.randioo.compare_collections_server.util.vote.VoteBox.VoteResult;
 import com.randioo.randioo_server_base.annotation.BaseServiceAnnotation;
 import com.randioo.randioo_server_base.cache.RoleCache;
 import com.randioo.randioo_server_base.cache.SessionCache;
+import com.randioo.randioo_server_base.config.GlobleClass;
 import com.randioo.randioo_server_base.config.GlobleMap;
 import com.randioo.randioo_server_base.db.IdClassCreator;
 import com.randioo.randioo_server_base.log.LoggerProxy;
@@ -72,6 +55,18 @@ import com.randioo.randioo_server_base.utils.SessionUtils;
 import com.randioo.randioo_server_base.utils.SpringContext;
 import com.randioo.randioo_server_base.utils.StringUtils;
 import com.randioo.randioo_server_base.utils.TimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Field;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @BaseServiceAnnotation("matchService")
 @Service("matchService")
@@ -199,6 +194,13 @@ public class MatchServiceImpl extends ObserveBaseService implements MatchService
     public void createRoom(Role role, GameConfigData gameConfigData) {
         // 检查配置是否可以创建游戏
         gameConfigData = addPropGameConfigData(gameConfigData);
+        if (role.getGameId() != 0) {
+            MatchCreateGameResponse response = MatchCreateGameResponse.newBuilder()
+                    .setErrorCode(ErrorCode.IN_GAME.getNumber()).build();
+            SC sc = SC.newBuilder().setMatchCreateGameResponse(response).build();
+            SessionUtils.sc(role.getRoleId(), sc);
+            return;
+        }
         if (!this.checkConfig(gameConfigData)) {
             MatchCreateGameResponse response = MatchCreateGameResponse.newBuilder()
                     .setErrorCode(ErrorCode.CREATE_FAILED.getNumber()).build();
@@ -384,7 +386,10 @@ public class MatchServiceImpl extends ObserveBaseService implements MatchService
 
         roleGameInfo.seat = game.getRoleIdList().size();
         game.getRoleIdList().add(gameRoleId);
+
+        game.logger.info("加入前 {}",game.getSeatMap());
         game.getSeatMap().put(roleGameInfo.seat, roleGameInfo);
+        game.logger.info("加入后 {}",game.getSeatMap());
 
         if (roleId != 0) {
             Role role = loginService.getRoleById(roleId);
@@ -456,21 +461,6 @@ public class MatchServiceImpl extends ObserveBaseService implements MatchService
         }
     }
 
-    // @Subscribe
-    // public void matchSucess(MatchSucessEvent event){
-    // GameConfigData gameConfigData = gameConfigProtoParser.parse(null);
-    // Game game =
-    // createGameByGameConfig(gameConfigData,GameType.GAME_TYPE_GOLD);
-    // game.setGameType(GameType.GAME_TYPE_GOLD);
-    // for (Role role : event.MatchInfoList) {
-    // role.setMatch(false);
-    // matchJoinGame(role, game.getGameConfig().getRoomId());
-    // }
-    // game.logger.info("开了一个房, 房间号: {}", game.getGameId());
-    //
-    // processor.push(game, "wait");
-    // processor.nextProcess(game,"role_game_start");
-    // }
 
     @Override
     public void match(Role role, int matchParameter) {
@@ -480,25 +470,17 @@ public class MatchServiceImpl extends ObserveBaseService implements MatchService
                     .setMatchResponse(MatchResponse.newBuilder().setErrorCode(ErrorCode.NO_GOLD.getNumber())).build());
             return;
         }
+        MatchInfo matchInfo = new MatchInfo(role.getRoleId(), matchParameter);
+        if (MatchCache.getWaitQueue().contains(matchInfo)) {
+            SessionUtils.sc(role.getRoleId(), SC.newBuilder()
+                    .setMatchResponse(MatchResponse.newBuilder().setErrorCode(ErrorCode.ERROR.getNumber())).build());
+            return;
+        }
 
-        SessionUtils.sc(role.getRoleId(), SC.newBuilder()
-                .setMatchResponse(MatchResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber())).build());
+            SessionUtils.sc(role.getRoleId(), SC.newBuilder()
+                    .setMatchResponse(MatchResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber())).build());
 
-        matchSystem.match(role, matchParameter);
-        // role.setMatch(true);
-        // Game game = null;
-        // try {
-        // game = goldModeMatchStrategy.getGame(role);
-        // } catch (ExecutionException | InterruptedException e) {
-        // e.printStackTrace();
-        // }
-        //
-        // if (game != null) {
-        // role.setMatch(false);
-        // System.out.println("join old room");
-        // matchJoinGame(role, game.getGameConfig().getRoomId());
-        // }
-
+        matchSystem.match(role, matchInfo);
     }
 
     @Override
@@ -526,8 +508,8 @@ public class MatchServiceImpl extends ObserveBaseService implements MatchService
         // 如果是机器人，则都是上线状态
         if (info.roleId <= 0) {
             GameRoleData aiGameRoleData = GameRoleData.newBuilder().setGameRoleId(info.gameRoleId).setReady(ready)
-                    .setSeat(index).setName(ServiceConstant.ROBOT_PREFIX_NAME + info.gameRoleId).setOnline(true)
-                    .build();
+                    .setAudience(false).setSeat(index).setName(ServiceConstant.ROBOT_PREFIX_NAME + info.gameRoleId)
+                    .setOnline(true).build();
             return aiGameRoleData;
         }
         Role role = loginService.getRoleById(info.roleId);
@@ -541,9 +523,10 @@ public class MatchServiceImpl extends ObserveBaseService implements MatchService
         String platformRoleId = role == null ? ServiceConstant.ROBOT_PLATFORM_ID : role.getAccount();
 
         Builder builder = GameRoleData.newBuilder().setGameRoleId(info.gameRoleId).setReady(ready).setSeat(index)
-                .setName(role.getName()).setHeadImgUrl(StringUtils.handleMaybeNullString(role.getHeadImgUrl()))
-                .setMoney(role.getRandiooMoney()).setSex(role.getSex()).setPoint(role.getPoint()).setOnline(online)
-                .setPlatformRoleId(platformRoleId).setMaster(role.getIsMaster());
+                .setAudience(false).setName(role.getName())
+                .setHeadImgUrl(StringUtils.handleMaybeNullString(role.getHeadImgUrl())).setMoney(role.getRandiooMoney())
+                .setSex(role.getSex()).setPoint(role.getPoint()).setOnline(online).setPlatformRoleId(platformRoleId)
+                .setMaster(role.getIsMaster());
 
         return builder.build();
     }
@@ -600,6 +583,12 @@ public class MatchServiceImpl extends ObserveBaseService implements MatchService
     public void joinInRoom(Role role, String lockString) {// lockString==roomId
         MatchJoinInGameResponse.Builder responseBuilder = MatchJoinInGameResponse.newBuilder();
         Integer gameId = GameCache.getGameLockStringMap().get(lockString);
+        if (role.getGameId() != 0) {
+            MatchJoinInGameResponse response = MatchJoinInGameResponse.newBuilder()
+                    .setErrorCode(ErrorCode.IN_GAME.getNumber()).build();
+            SessionUtils.sc(role.getRoleId(), SC.newBuilder().setMatchJoinInGameResponse(response).build());
+            return;
+        }
         if (gameId == null) {
             MatchJoinInGameResponse response = MatchJoinInGameResponse.newBuilder()
                     .setErrorCode(ErrorCode.GAME_JOIN_ERROR.getNumber()).build();
@@ -704,8 +693,8 @@ public class MatchServiceImpl extends ObserveBaseService implements MatchService
 
         Builder builder = GameRoleData.newBuilder().setReady(false).setSeat(seat).setName(role.getName())
                 .setHeadImgUrl(StringUtils.handleMaybeNullString(role.getHeadImgUrl())).setMoney(role.getRandiooMoney())
-                .setSex(role.getSex()).setPoint(role.getPoint()).setOnline(online).setPlatformRoleId(role.getAccount())
-                .setMaster(role.getIsMaster());
+                .setSex(role.getSex()).setPoint(role.getPoint()).setOnline(online).setAudience(true)
+                .setPlatformRoleId(role.getAccount()).setMaster(role.getIsMaster());
         return builder.build();
     }
 

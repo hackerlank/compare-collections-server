@@ -12,9 +12,6 @@ message FightExitGameResponse {
 
 message SCFightExitGame {
     optional int32 seat = 1; //退出人的座位号
-    repeated string account = 2; //剩余人的account
-    optional string exitAccount = 3; //退出人的account
-    optional string gameRoleId = 4; //退出人的gameRoleId
 }
 //申请退出游戏
 message FightApplyExitGameRequest {
@@ -419,10 +416,15 @@ message SCFightMaxBet {
 /**玩家信息*/
 message SCFightGameRoleData {
     repeated GameRoleData gameRoleData = 1;
+    optional int32 mySeat = 2;
 }
 
 //扎金花推送比牌结果
-message SCFightBattleOutCards{
-	repeated int32 playerCards = 1;//卡牌
-	optional int32 seat = 2;//玩家
+message SCFightBattleOutCards {
+    repeated int32 playerCards = 1; //卡牌
+    optional int32 seat = 2; //玩家
+}
+
+message SCFightGameStartCountdown {
+    optional int32 countdown = 1;
 }

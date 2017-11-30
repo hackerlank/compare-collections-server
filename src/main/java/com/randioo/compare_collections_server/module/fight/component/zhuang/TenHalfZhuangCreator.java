@@ -38,6 +38,9 @@ public class TenHalfZhuangCreator implements ZhuangCreator {
             int zhuangType = game.getGameConfig().getZhuangType();
 
             if (zhuangType == FightConstant.ZHUANG_GOLD) {
+                game.logger.info("产生庄家时roleMap: {}", game.getRoleIdMap());
+                game.logger.info("产生庄家时seatMap: {}",game.getSeatMap());
+                game.logger.info("上一局庄家为: {}",game.getZhuangSeat());
                 Set<Integer> seats = game.getSeatMap().keySet();
                 List<Integer> seatList = new ArrayList<>(seats);
                 //移除上一把的庄家

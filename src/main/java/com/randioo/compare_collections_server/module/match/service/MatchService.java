@@ -28,7 +28,7 @@ public interface MatchService extends ObserveBaseServiceInterface {
      */
     void joinInRoom(Role role, String lockString);
 
-    void match(Role role,int matchParameter);
+    void match(Role role, int matchParameter);
 
     Game createGame(int roleId, GameConfigData gameConfigData);
 

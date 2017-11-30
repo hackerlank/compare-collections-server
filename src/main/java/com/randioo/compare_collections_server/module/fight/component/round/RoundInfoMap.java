@@ -1,10 +1,10 @@
 package com.randioo.compare_collections_server.module.fight.component.round;
 
+import com.randioo.randioo_server_base.utils.ReflectUtils;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.randioo.randioo_server_base.utils.ReflectUtils;
 
 /**
  * 回合结算表
@@ -16,6 +16,15 @@ public class RoundInfoMap {
     private int currentRoundCount;
     private Class<? extends RoundInfo> roundInfoClazz;
     private Map<Integer, Map<String, RoundInfo>> roundMap = new HashMap<>();
+
+    /**
+     * 移除一个回合的信息
+     *
+     * @param round
+     */
+    public void remove(int round) {
+        roundMap.remove(round);
+    }
 
     public Map<String, RoundInfo> getCurrentRoundMap() {
         initRoundMap(currentRoundCount);

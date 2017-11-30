@@ -1,6 +1,7 @@
 package com.randioo.compare_collections_server.module.exit.service;
 
 import com.randioo.compare_collections_server.entity.bo.Role;
+import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.randioo_server_base.service.ObserveBaseServiceInterface;
 
 public interface ExitService extends ObserveBaseServiceInterface {
@@ -29,5 +30,12 @@ public interface ExitService extends ObserveBaseServiceInterface {
 	 * @param role
 	 */
 	void exitGame(Role role);
+
+    /**
+     * 解散游戏
+     *
+     * @param game
+     */
+    void dismissGame(Game game);
 
 }

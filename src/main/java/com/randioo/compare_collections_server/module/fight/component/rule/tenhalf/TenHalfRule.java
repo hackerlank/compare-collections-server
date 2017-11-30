@@ -3,6 +3,14 @@
  */
 package com.randioo.compare_collections_server.module.fight.component.rule.tenhalf;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.google.protobuf.Message;
 import com.randioo.compare_collections_server.cache.file.TenHalfCardConfigCache;
 import com.randioo.compare_collections_server.entity.bo.Role;
@@ -14,7 +22,7 @@ import com.randioo.compare_collections_server.module.fight.FightConstant;
 import com.randioo.compare_collections_server.module.fight.component.manager.AudienceManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.RoleGameInfoManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.SeatManager;
-import com.randioo.compare_collections_server.module.fight.component.parser.ScoreProtoParser;
+import com.randioo.compare_collections_server.module.fight.component.manager.VerifyManager;
 import com.randioo.compare_collections_server.module.fight.component.round.RoundInfo;
 import com.randioo.compare_collections_server.module.fight.component.round.RoundOverCaculator;
 import com.randioo.compare_collections_server.module.fight.component.round.tenhalf.TenHalfRoundInfo;
@@ -34,13 +42,6 @@ import com.randioo.compare_collections_server.module.fight.service.FightService;
 import com.randioo.compare_collections_server.protocol.Entity;
 import com.randioo.compare_collections_server.protocol.Entity.GameType;
 import com.randioo.compare_collections_server.protocol.Entity.RoleRoundOverInfoData.Builder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author zsy
@@ -77,13 +78,16 @@ public class TenHalfRule extends CompareGameRuleAdapter<Game> {
     private TenHalfZhuangCreator tenHalfZhuangCreator;
 
     @Autowired
-    private ScoreProtoParser scoreProtoParser;
+    private TenHalfSafeCheckCallType tenHalfSafeCheckCallType;
 
     @Autowired
     private AudienceManager audienceManager;
 
     @Autowired
     private TenHalfReconnector tenHalfReconnector;
+
+    @Autowired
+    private VerifyManager verifyManager;
 
     private List<String> noticeBetProcess = Arrays.asList(//
             "FlowNoticeBet", //
@@ -172,10 +176,17 @@ public class TenHalfRule extends CompareGameRuleAdapter<Game> {
             list.add("FlowGameStart");
             list.add("FlowNoticeScore");
             list.add("FlowNoticeGameStart");
-            list.add("FlowSeat 1");
-            list.addAll(noticeBetProcess);
+            if (game.getGameType() == GameType.GAME_TYPE_GOLD) {
+                list.add("FlowGoldModeNoticeBet");
+                list.add("FlowDispatch " + game.getRoleIdMap().size() + " 1 true false true false");
+                list.addAll(nextAddCardProcess);
+            } else {
+                list.add("FlowSeat 1");
+                list.addAll(noticeBetProcess);
+            }
             break;
         case "role_bet":// 玩家押注后
+            verifyManager.accumlate(roleGameInfoManager.current(game).verify);
             if (!checkAllBet(game)) {
                 list.add("FlowSeat 1");
                 list.addAll(noticeBetProcess);
@@ -190,6 +201,8 @@ public class TenHalfRule extends CompareGameRuleAdapter<Game> {
 
         case "role_choose_add_card":// 玩家选择了是否要牌
             RoleGameInfo roleGameInfo = roleGameInfoManager.current(game);
+
+            verifyManager.accumlate(roleGameInfo.verify);
             boolean needCard = roleGameInfo.needCard;
             if (needCard) {
                 list.add("FlowAddCard " + roleGameInfo.seat + " 1");
@@ -234,8 +247,9 @@ public class TenHalfRule extends CompareGameRuleAdapter<Game> {
                     list.add("FlowAddAudience " + audienceManager.getAudiences(game.getGameId()).size());
                     list.add("FlowNoticeGameRoleData");
                     list.add("FlowTimedStart");
+                } else {
+                    list.add(WAIT);
                 }
-                list.add(WAIT);
             }
             break;
         }
@@ -308,7 +322,7 @@ public class TenHalfRule extends CompareGameRuleAdapter<Game> {
 
     @Override
     public ISafeCheckCallType getSafeCheckCallType() {
-        return null;
+        return tenHalfSafeCheckCallType;
     }
 
     @Override

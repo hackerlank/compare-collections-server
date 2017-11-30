@@ -1,25 +1,21 @@
 package com.randioo.compare_collections_server.module.fight.component.flow;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.component.Flow;
-import com.randioo.compare_collections_server.module.fight.component.broadcast.GameBroadcast;
 import com.randioo.compare_collections_server.module.match.service.MatchService;
 import com.randioo.compare_collections_server.protocol.Entity.GameRoleData;
 import com.randioo.compare_collections_server.protocol.Fight.SCFightGameRoleData;
 import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
+import com.randioo.randioo_server_base.utils.SessionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class FlowNoticeGameRoleData implements Flow {
 
     @Autowired
     private MatchService matchService;
-
-    @Autowired
-    private GameBroadcast gameBroadcast;
 
     @Override
     public void execute(Game game, String[] params) {
@@ -28,8 +24,12 @@ public class FlowNoticeGameRoleData implements Flow {
             GameRoleData gameRoleData = matchService.parseGameRoleData(roleGameInfo, game);
             builder.addGameRoleData(gameRoleData);
         }
+        SCFightGameRoleData scFightGameRoleData = builder.build();
 
-        gameBroadcast.broadcast(game, SC.newBuilder().setSCFightGameRoleData(builder).build());
+        for (RoleGameInfo roleGameInfo : game.getRoleIdMap().values()) {
+            SessionUtils.sc(roleGameInfo.roleId, SC.newBuilder()
+                    .setSCFightGameRoleData(scFightGameRoleData.toBuilder().setMySeat(roleGameInfo.seat)).build());
+        }
     }
 
 }

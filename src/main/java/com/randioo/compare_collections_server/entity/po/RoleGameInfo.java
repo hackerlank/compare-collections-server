@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.randioo.randioo_server_base.entity.Verify;
+
 public class RoleGameInfo {
     /**
      * 游戏中的玩家id
@@ -73,10 +75,12 @@ public class RoleGameInfo {
      * 是不是房主
      */
     public boolean isMaster;
-    //离开状态
+    // 离开状态
     public boolean leave;
 
     public Map<String, Boolean> isWatchCards;
+
+    public Verify verify = new Verify();
 
     public String print() {
         StringBuilder builder = new StringBuilder();

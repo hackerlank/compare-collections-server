@@ -22,28 +22,30 @@ public class GameConfigProtoParser implements Parser<GameConfigData, Integer> {
 	@Override
 	public GameConfigData parse(Integer matchParameter) {
 		Map<Integer, YiyaAutoBetConfig> cardMap = YiyaAutoBetConfigCache.getYiYaAutoBetMap();
-		GameConfigData.Builder configData = GameConfigData.newBuilder()
+		GameConfigData.Builder gameConfig = GameConfigData.newBuilder()
                 .setRoundCount(GlobleClass._G.round_count)
 				.setZhuangType(GlobleClass._G.zhuang_type)// 庄类型
 				.setMaxCount(GlobleClass._G.max_count)// 最大 人数
-				// 扎金花
-				.setOutLookCount(GlobleClass._G.zjh.out_look_count)// 看牌 轮数
-				.setFightRound(GlobleClass._G.zjh.fight_round)// 比赛 轮数
-				.setTopCount(GlobleClass._G.zjh.top_count)// 开牌轮数
-				//
-				.setMinCount(GlobleClass._G.min_count)// 最小 人数
-				.setGameType(GameType.GAME_TYPE_GOLD.getNumber())// 金币场
-				// 十点半
+                .setMinCount(GlobleClass._G.min_count)// 最小 人数
+                .setGameType(GameType.GAME_TYPE_GOLD.getNumber())// 金币场
+                // 扎金花
+                .setOutLookCount(GlobleClass._G.zjh.out_look_count)// 看牌 轮数
+                .setFightRound(GlobleClass._G.zjh.fight_round)// 比赛 轮数
+                .setTopCount(GlobleClass._G.zjh.top_count)// 开牌轮数
+                //
 				.setBetMax(GlobleClass._G.cx.bet_max);//
+
         YiyaAutoBetConfig config = cardMap.get(matchParameter);
-        configData.setBet(config.autoBet);
+        gameConfig.setBet(config.autoBet);
 		List<Integer> list = new ArrayList<>();
 		list.add(config.bet1);
 		list.add(config.bet2);
 		list.add(config.bet3);
 		list.add(config.bet4);
 		list.add(config.bet5);
-		configData.addAllBattleList(list);
-		return configData.build();
+
+		gameConfig.addAllBattleList(list);
+
+		return gameConfig.build();
 	}
 }

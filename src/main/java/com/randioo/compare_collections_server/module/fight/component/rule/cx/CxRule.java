@@ -16,8 +16,10 @@ import com.randioo.compare_collections_server.entity.file.CXCardListConfig;
 import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.component.manager.AudienceManager;
+import com.randioo.compare_collections_server.module.fight.component.manager.GameManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.RoleGameInfoManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.SeatManager;
+import com.randioo.compare_collections_server.module.fight.component.manager.VerifyManager;
 import com.randioo.compare_collections_server.module.fight.component.round.RoundInfo;
 import com.randioo.compare_collections_server.module.fight.component.round.RoundOverCaculator;
 import com.randioo.compare_collections_server.module.fight.component.round.cx.CXRoundOverCaculator;
@@ -37,9 +39,9 @@ import com.randioo.compare_collections_server.module.fight.component.zhuang.TenH
 import com.randioo.compare_collections_server.module.fight.component.zhuang.ZhuangCreator;
 import com.randioo.compare_collections_server.module.fight.service.FightService;
 import com.randioo.compare_collections_server.protocol.Entity;
-import com.randioo.compare_collections_server.protocol.Entity.GameRoleData;
 import com.randioo.compare_collections_server.protocol.Entity.GameType;
 import com.randioo.compare_collections_server.protocol.Entity.RoleRoundOverInfoData.Builder;
+import com.randioo.randioo_server_base.cache.RoleCache;
 import com.randioo.randioo_server_base.collections8.Maps8;
 
 /**
@@ -86,6 +88,12 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
 
     @Autowired
     private AudienceManager audienceManager;
+
+    @Autowired
+    private GameManager gameManager;
+
+    @Autowired
+    private VerifyManager verifyManager;
 
     public static String candidatesTag = "candidates";
     public static String guoTag = "guo";
@@ -152,6 +160,16 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
             list.add("FlowNoticePublicScore");
             list.add("FlowDispatch " + game.getRoleIdMap().size() + " 2 false false true false");// 发牌,每个人发2张牌,并且不排序
             list.add("FlowSeat 1");// 下一个人
+            break;
+        case "FlowGameStart": {
+            // 金币场时筹码就是玩家自己所有的金币
+            if (gameManager.isGoldMode(game)) {
+                for (RoleGameInfo roleGameInfo : game.getRoleIdMap().values()) {
+                    Role role = RoleCache.getRoleById(roleGameInfo.roleId);
+                    roleGameInfo.chipMoney = role.getGold();
+                }
+            }
+        }
             break;
         case "FlowSeat":
             if (params[0].equals("1")) {
@@ -284,7 +302,7 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
             }
             break;
         case "flow_choose_call_type":// 已经做出了选择
-            game.actionVerifyId++;// 标记+1
+            verifyManager.accumlate(roleGameInfoManager.current(game).verify);
 
             String callTypeEnumStr = params[0];
             CallTypeEnum callTypeEnum = CallTypeEnum.valueOf(callTypeEnumStr);
@@ -378,6 +396,8 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
             List<Integer> step = game.actionSeat.get(stepTag);
             // 头牌必须比尾牌大
             this.checkHeadBigger(game, cutCardSeat);
+            // 已经操作
+            verifyManager.accumlate(roleGameInfoManager.get(game, cutCardSeat).verify);
 
             if (cutCards.contains(cutCardSeat)) {// 如果此人已经分牌则不再进行操作
                 list.add(WAIT);
@@ -422,7 +442,7 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
             // }
             if (!isGameOver(game)) {
                 // 如果是金币场,则永远不会结束，添加流程
-                if (game.getGameType() == GameType.GAME_TYPE_GOLD) {
+                if (gameManager.isGoldMode(game)) {
                     list.add("FlowKickByGold");
                     list.add("FlowAddAudience " + audienceManager.getAudiences(game.getGameId()).size());
                     list.add("FlowNoticeGameRoleData");

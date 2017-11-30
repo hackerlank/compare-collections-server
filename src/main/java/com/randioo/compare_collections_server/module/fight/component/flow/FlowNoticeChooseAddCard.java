@@ -1,20 +1,24 @@
 package com.randioo.compare_collections_server.module.fight.component.flow;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.google.common.eventbus.EventBus;
 import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.component.Flow;
 import com.randioo.compare_collections_server.module.fight.component.broadcast.GameBroadcast;
+import com.randioo.compare_collections_server.module.fight.component.manager.GameManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.RoleGameInfoManager;
+import com.randioo.compare_collections_server.module.fight.component.manager.VerifyManager;
+import com.randioo.compare_collections_server.module.fight.component.parser.CountdownProtoParser;
 import com.randioo.compare_collections_server.module.fight.component.rule.base.calltype_enum.CallTypeEnum;
+import com.randioo.compare_collections_server.module.fight.component.timeevent.ChooseAddCardEvent;
+import com.randioo.compare_collections_server.protocol.Entity.GameType;
 import com.randioo.compare_collections_server.protocol.Fight.SCFightChooseAddCard;
 import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
-import com.randioo.compare_collections_server.quartz.QuartzManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.randioo.randioo_server_base.config.GlobleClass;
+import com.randioo.randioo_server_base.scheduler.EventScheduler;
 
 /**
  * @author zsy
@@ -33,7 +37,16 @@ public class FlowNoticeChooseAddCard implements Flow {
     private EventBus eventBus;
 
     @Autowired
-    private QuartzManager quartzManager;
+    private CountdownProtoParser countdownProtoParser;
+
+    @Autowired
+    private EventScheduler eventScheduler;
+
+    @Autowired
+    private GameManager gameManager;
+
+    @Autowired
+    private VerifyManager verifyManager;
 
     @Override
     public void execute(Game game, String[] params) {
@@ -43,17 +56,17 @@ public class FlowNoticeChooseAddCard implements Flow {
         game.callTypeList.clear();
         game.callTypeList.add(CallTypeEnum.CHOOSE_ADD_CARD);
 
-        gameBroadcast.broadcast(game, SC.newBuilder()
-                .setSCFightChooseAddCard(SCFightChooseAddCard.newBuilder().setSeat(roleGameInfo.seat)).build());
+        verifyManager.reset(roleGameInfo.verify);
 
-        // if (game.getGameType() == GameType.GAME_TYPE_GOLD) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("game", game);
-        map.put("roleGameInfo", roleGameInfo);
-        map.put("seat", roleGameInfo.seat);
-      //  quartzManager.addJob(ChooseAddCardJob.class, GlobleClass._G.wait_time, roleGameInfo.gameRoleId, map);
-        //     }
-
+        if (game.getGameType() == GameType.GAME_TYPE_GOLD) {
+            eventScheduler.addEvent(new ChooseAddCardEvent(game, roleGameInfo.gameRoleId, roleGameInfo.verify.verifyId));
+            gameManager.recordCountdown(game);
+            gameBroadcast.broadcast(game, countdownProtoParser.parse(GlobleClass._G.wait_time));
+        }
+        gameBroadcast.broadcast(game,
+                SC.newBuilder()
+                        .setSCFightChooseAddCard(SCFightChooseAddCard.newBuilder().setSeat(roleGameInfo.seat))
+                        .build());
     }
 
 }

@@ -54,7 +54,7 @@ public class CloseServiceImpl extends BaseService implements CloseService {
         if (game.getGameType() == GameType.GAME_TYPE_GOLD) {
             RoleGameInfo roleGameInfo = roleGameInfoManager.getByRoleId(game, role.getRoleId());
             if (roleGameInfo != null) {
-                roleGameInfo.leave = true;
+                //roleGameInfo.leave = true;
             }
         }
     }

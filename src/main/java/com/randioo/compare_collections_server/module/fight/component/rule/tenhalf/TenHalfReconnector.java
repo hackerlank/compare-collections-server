@@ -1,17 +1,12 @@
 package com.randioo.compare_collections_server.module.fight.component.rule.tenhalf;
 
-import java.util.LinkedList;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.google.protobuf.Message;
 import com.randioo.compare_collections_server.cache.local.RoundOverSCCache;
 import com.randioo.compare_collections_server.entity.bo.Role;
 import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.component.manager.AudienceManager;
+import com.randioo.compare_collections_server.module.fight.component.manager.GameManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.RoleGameInfoManager;
 import com.randioo.compare_collections_server.module.fight.component.parser.ScoreProtoParser;
 import com.randioo.compare_collections_server.module.fight.component.rule.IReconnector;
@@ -25,6 +20,11 @@ import com.randioo.compare_collections_server.protocol.Entity.SdbReconnectedData
 import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
 import com.randioo.compare_collections_server.util.vote.VoteBox;
 import com.randioo.randioo_server_base.cache.RoleCache;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * @author zsy
@@ -45,6 +45,9 @@ public class TenHalfReconnector implements IReconnector<Game, Role, Message> {
 	@Autowired
 	private AudienceManager audienceManager;
 
+	@Autowired
+    private GameManager gameManager;
+
 	@Override
 	public Message getReconnectData(Game game, Role role) {
 		boolean audience = audienceManager.isAudience(role.getRoleId(), game.getGameId());
@@ -54,14 +57,17 @@ public class TenHalfReconnector implements IReconnector<Game, Role, Message> {
 			seat = audienceManager.getSeat(role.getRoleId(), game);
 		} else {
 			seat = roleGameInfo.seat;
-		}
+            roleGameInfo.leave = false;
+        }
 
         Builder data = SdbReconnectedData.newBuilder()
                 .setMySeat(seat)
                 .setCurrentSeat(game.getCurrentSeat())
                 .setFinishRoundCount(game.getFinishRoundCount())
                 .setZhuangSeat(game.getZhuangSeat())
-                .setGameConfigData(game.getGameConfig());
+                .setGameConfigData(game.getGameConfig())
+                .setGameState(game.getGameState().getNumber())
+                .setCountdown(gameManager.getCountdown(game));
 
 		for (Map.Entry<String, RoleGameInfo> entrySet : game.getRoleIdMap().entrySet()) {
 			RoleGameInfo info = entrySet.getValue();

@@ -3,15 +3,6 @@
  */
 package com.randioo.compare_collections_server.module.fight.component.flow;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.randioo.compare_collections_server.cache.file.ZJHCardConfigCache;
 import com.randioo.compare_collections_server.entity.file.ZJHCardConfig;
 import com.randioo.compare_collections_server.entity.po.Game;
@@ -28,6 +19,10 @@ import com.randioo.compare_collections_server.protocol.Fight.SCFightDispatch;
 import com.randioo.compare_collections_server.protocol.Fight.SCFightDispatch.Builder;
 import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
 import com.randioo.randioo_server_base.utils.SessionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 /**
  * @author zsy
@@ -62,6 +57,8 @@ public class FlowDispatch implements Flow {
 		dispatcher = randomDispatcher;
 
 		List<CardPart> cardParts = dispatcher.dispatch(remainCards, partCount, everyPartCount);
+		game.logger.info("发牌时roleMap: {}",game.getRoleIdMap());
+		game.logger.info("要发{}份牌",cardParts.size());
 		for (int i = 0; i < game.getRoleIdMap().size(); i++) {
 			RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, i);
 			CardPart cardPart = cardParts.get(i);

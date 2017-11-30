@@ -80,7 +80,6 @@
 		code="YiyaAutoBetConfig">
 		<item type="int" name="id" code="id" />
 		<item type="int" name="底注" code="autoBet" />
-		<item type="int" name="游戏类型" code="gameType" />
 		<item type="int" name="加注1" code="bet1" />
 		<item type="int" name="加注2" code="bet2" />
 		<item type="int" name="加注3" code="bet3" />

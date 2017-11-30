@@ -21,7 +21,7 @@
 	<!-- 平台接口调试 -->
 	<param type="boolean" key="platform">true</param>
 	<!-- 平台游戏包名 -->
-	<param type="string" key="platformPackageName">com.randioo.zhajinhua</param>
+	<param type="string" key="platformPackageName">com.randioo.chexuan</param>
 	<!-- 使用开发服日志服务器 -->
 	<param type="string" key="logurl">http://10.0.51.18/APPadmin/gateway/PhpServices/Log/insertGameLog.php</param>
 

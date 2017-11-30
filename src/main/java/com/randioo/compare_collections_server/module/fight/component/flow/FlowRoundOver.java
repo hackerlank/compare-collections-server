@@ -3,8 +3,11 @@
  */
 package com.randioo.compare_collections_server.module.fight.component.flow;
 
+import com.randioo.compare_collections_server.module.fight.component.manager.GameManager;
+import com.randioo.compare_collections_server.module.fight.component.manager.VerifyManager;
 import com.randioo.compare_collections_server.protocol.Entity.GameState;
 import com.randioo.compare_collections_server.protocol.Entity.GameType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,76 +36,96 @@ import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
 @Component
 public class FlowRoundOver implements Flow {
 
-	@Autowired
-	RoleGameInfoManager roleGameInfoManager;
+    @Autowired
+    RoleGameInfoManager roleGameInfoManager;
 
-	@Autowired
-	private MatchService matchService;
+    @Autowired
+    private MatchService matchService;
 
-	@Autowired
-	GameBroadcast gameBroadcast;
+    @Autowired
+    GameBroadcast gameBroadcast;
 
-	@Autowired
-	private EventBus eventBus;
+    @Autowired
+    private EventBus eventBus;
 
-	@Autowired
-	private GameOverProtoParser gameOverProtoParser;
+    @Autowired
+    private GameOverProtoParser gameOverProtoParser;
 
-	@Override
-	public void execute(Game game, String[] params) {
-	    game.setGameState(GameState.GAME_STATE_WAIT);
-		// 回合数+1
-		int finishRoundCount = game.getFinishRoundCount() + 1;
-		game.setFinishRoundCount(finishRoundCount);
+    @Autowired
+    private GameManager gameManager;
 
-		ICompareGameRule<Game> rule = game.getRule();
+    @Autowired
+    private VerifyManager verifyManager;
 
-		game.roundInfoMap.setCurrentRoundCount(finishRoundCount);
-		game.roundInfoMap.initRoundInfo(game.getRoleIdMap().keySet());
+    @Override
+    public void execute(Game game, String[] params) {
 
-		rule.getRoundResult(game).getRoundResult(game);
+        // 所有人校验器设置过期
+        for (RoleGameInfo roleGameInfo : game.getRoleIdMap().values()) {
+            verifyManager.accumlate(roleGameInfo.verify);
+        }
+        game.setGameState(GameState.GAME_STATE_WAIT);
+        // 回合数+1
+        int finishRoundCount = game.getFinishRoundCount() + 1;
+        game.setFinishRoundCount(finishRoundCount);
 
-		// 回合信息
-		Builder scFightRoundOver = SCFightRoundOver.newBuilder();
+        ICompareGameRule<Game> rule = game.getRule();
 
-		for (RoleGameInfo info : game.getRoleIdMap().values()) {
-			RoundInfo roundInfo = game.roundInfoMap.getRoundInfo(info.gameRoleId);
-			int betMax = game.getGameConfig().getBetMax();
-			// int chipMoney = roundInfo.score + info.chipMoney - betMax;
-			int chipMoney = roundInfo.score;
-			// System.out.println(RoleCache.getRoleById(info.roleId).getAccount()
-			// + " 归还后的值:" + roundInfo.score
-			// + " 手上没有下的注：" + info.chipMoney + " 配置表最大赌注：" + betMax + " =" +
-			// chipMoney);
-			int roundScore = game.getStatisticResultMap().get(info.gameRoleId).score;
-			// 每个人回合信息
-			RoleRoundOverInfoData.Builder roleRoundOverInfoDataRuilder = RoleRoundOverInfoData.newBuilder()
-					.setGameRoleData(matchService.parseGameRoleData(info, game))
-					.setRoleId(info.roleId)
-					.setBetMoney(info.betScoreRecord)
-					.setCardData(CardData.newBuilder().addAllCards(roundInfo.cards).setCardType(roundInfo.cardTpyeId))
-					.setOverMethod(roundInfo.overMethod).setRoundScore(roundScore).setChipMoney(chipMoney)
-					.setZhuang(info.seat == game.getZhuangSeat());
+        game.roundInfoMap.setCurrentRoundCount(finishRoundCount);
+        game.roundInfoMap.initRoundInfo(game.getRoleIdMap().keySet());
 
-			// 设置每个游戏的特殊信息
-			rule.setRoundOverInfo(roleRoundOverInfoDataRuilder, roundInfo, game);
+        rule.getRoundResult(game).getRoundResult(game);
 
-			scFightRoundOver.addRoleRoundOverInfoData(roleRoundOverInfoDataRuilder);
-		}
+        // 回合信息
+        Builder scFightRoundOver = SCFightRoundOver.newBuilder();
 
-		// 如果是最后一局，设置二次结算
-        if (finishRoundCount == game.getGameConfig().getRoundCount() && game
-                .getGameType() == GameType.GAME_TYPE_FRIEND) {
+        for (RoleGameInfo info : game.getRoleIdMap().values()) {
+            RoundInfo roundInfo = game.roundInfoMap.getRoundInfo(info.gameRoleId);
+            int betMax = game.getGameConfig().getBetMax();
+            // int chipMoney = roundInfo.score + info.chipMoney - betMax;
+            int chipMoney = roundInfo.score;
+            // System.out.println(RoleCache.getRoleById(info.roleId).getAccount()
+            // + " 归还后的值:" + roundInfo.score
+            // + " 手上没有下的注：" + info.chipMoney + " 配置表最大赌注：" + betMax + " =" +
+            // chipMoney);
+            int roundScore = game.getStatisticResultMap().get(info.gameRoleId).score;
+            // 每个人回合信息
+            RoleRoundOverInfoData.Builder roleRoundOverInfoDataRuilder = RoleRoundOverInfoData.newBuilder()
+                    .setGameRoleData(matchService.parseGameRoleData(info, game))
+                    .setRoleId(info.roleId)
+                    .setBetMoney(info.betScoreRecord)
+                    .setCardData(CardData.newBuilder().addAllCards(roundInfo.cards).setCardType(roundInfo.cardTpyeId))
+                    .setOverMethod(roundInfo.overMethod)
+                    .setRoundScore(roundInfo.point)
+                    .setChipMoney(chipMoney)
+                    .setZhuang(info.seat == game.getZhuangSeat());
+
+            // 设置每个游戏的特殊信息
+            rule.setRoundOverInfo(roleRoundOverInfoDataRuilder, roundInfo, game);
+
+            scFightRoundOver.addRoleRoundOverInfoData(roleRoundOverInfoDataRuilder);
+        }
+
+        // 如果是最后一局，设置二次结算
+        if (finishRoundCount == game.getGameConfig().getRoundCount() && game.getGameType() == GameType.GAME_TYPE_FRIEND) {
             scFightRoundOver.setResultGameOverData(gameOverProtoParser.parse(game));
         }
         SC sc = SC.newBuilder()
-				.setSCFightRoundOver(scFightRoundOver.setRoomId(game.getGameConfig().getRoomId())
-						.setFinishRoundCount(finishRoundCount).setMaxRoundCount(game.getGameConfig().getRoundCount()))
-				.build();
+                .setSCFightRoundOver(
+                        scFightRoundOver.setRoomId(game.getGameConfig().getRoomId())
+                                .setFinishRoundCount(finishRoundCount)
+                                .setMaxRoundCount(game.getGameConfig().getRoundCount()))
+                .build();
 
-		// 发送
-		gameBroadcast.broadcast(game, sc);
-		eventBus.post(new EventNoticeRoundOver(game, sc));
-	}
+        // 发送
+        gameBroadcast.broadcast(game, sc);
+        eventBus.post(new EventNoticeRoundOver(game, sc));
+
+        // 金币模式不用存储roundInfo
+        if (gameManager.isGoldMode(game)) {
+            game.roundInfoMap.remove(finishRoundCount);
+        }
+
+    }
 
 }

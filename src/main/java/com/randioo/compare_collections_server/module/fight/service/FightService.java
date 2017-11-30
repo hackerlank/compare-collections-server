@@ -58,9 +58,8 @@ public interface FightService extends ObserveBaseServiceInterface {
      * 跟
      * 
      * @param role
-     * @author wcy 2017年10月16日
      */
-    void follow(Role role, int betMoney);
+    void follow(Role role);
 
     /**
      * 大
@@ -94,6 +93,8 @@ public interface FightService extends ObserveBaseServiceInterface {
      * @author wcy 2017年10月16日
      */
     void giveUp(Role role);
+
+    void coreGiveUp(Game game, String gameRoleId);
 
     // /**
     // * 退出游戏
@@ -136,16 +137,27 @@ public interface FightService extends ObserveBaseServiceInterface {
     void fight(Role role, int seat);
 
     /**
-     * 获得游戏序列化数据
-     * 
-     * @param role
-     * @author wcy 2017年11月9日
-     */
-    void getGameSerialize(Role role);
-
-    /**
      * 重连
+     * 
      * @param role
      */
     void reconnect(Role role);
+
+    /**
+     * 切牌核心
+     * 
+     * @param game
+     * @param gameRoleId
+     * @param cards
+     * @author wcy 2017年11月30日
+     */
+    void coreCutCards(Game game, String gameRoleId, List<Integer> cards);
+
+    /**
+     * 
+     * @param game
+     * @param gameRoleId
+     * @author wcy 2017年11月30日
+     */
+    void coreBetAll(Game game, String gameRoleId);
 }

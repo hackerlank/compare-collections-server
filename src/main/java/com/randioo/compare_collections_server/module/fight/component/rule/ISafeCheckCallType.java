@@ -16,5 +16,4 @@ public interface ISafeCheckCallType {
 
     public boolean checkGuo(RoleGameInfo roleGameInfo, Game game);
 
-    public boolean isCallSafe(Game game, RoleGameInfo roleGameInfo);
 }

@@ -221,11 +221,13 @@ public class RoleServiceImpl extends ObserveBaseService implements RoleService {
             return false;
         }
 
-//        SCRoleRandiooCoinChange scRoleAddRandiooMoney = SCRoleRandiooCoinChange.newBuilder()
-//                .setRandiooCoin(role.getRandiooMoney())
-//                .build();
-//        SC sc = SC.newBuilder().setSCRoleRandiooCoinChange(scRoleAddRandiooMoney).build();
-//        SessionUtils.sc(role.getRoleId(), sc);
+        // SCRoleRandiooCoinChange scRoleAddRandiooMoney =
+        // SCRoleRandiooCoinChange.newBuilder()
+        // .setRandiooCoin(role.getRandiooMoney())
+        // .build();
+        // SC sc =
+        // SC.newBuilder().setSCRoleRandiooCoinChange(scRoleAddRandiooMoney).build();
+        // SessionUtils.sc(role.getRoleId(), sc);
         return true;
     }
 

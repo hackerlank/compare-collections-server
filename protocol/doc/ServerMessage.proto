@@ -131,6 +131,7 @@ message SC {
     optional SCMatchResult SCMatchResult = 101;//匹配结果
     optional SCMatchKickGame SCMatchKickGame = 102;
     optional SCFightBattleOutCards SCFightBattleOutCards = 103;
-} // 103
+    optional SCFightGameStartCountdown SCFightGameStartCountdown = 104;
+} // 104
 	
     

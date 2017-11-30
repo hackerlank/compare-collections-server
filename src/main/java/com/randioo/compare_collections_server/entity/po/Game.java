@@ -62,6 +62,8 @@ public class Game extends AbstractCompareGame {
 	private Map<RoleGameInfo, RoleGameInfo> battleMap = new HashMap<>();
     //金币场匹配参数
     public int matchParameter;
+    //计时结束的时间
+    public int countdown;
 
 	public Map<RoleGameInfo, RoleGameInfo> getBattleMap() {
 		return battleMap;

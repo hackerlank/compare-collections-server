@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+import com.randioo.randioo_server_base.utils.TimeUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -228,7 +229,7 @@ public class LoginServiceImpl extends ObserveBaseService implements LoginService
         String lockString = game == null || game.getGameState() == GameState.GAME_STATE_END ? null : game.getGameConfig()
                 .getRoomId();
         RoleData.Builder builder = RoleData.newBuilder()
-                .setRoleId(role.getRoleId())
+                .setRoleId(roleId)
                 .setPoint(1000)
                 .setSex(role.getSex())
                 .setName(role.getName())
@@ -245,7 +246,6 @@ public class LoginServiceImpl extends ObserveBaseService implements LoginService
         if (lockString != null) {
             builder.setRoomId(lockString);
         }
-
         return builder.build();
     }
 

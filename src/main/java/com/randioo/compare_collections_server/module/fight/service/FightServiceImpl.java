@@ -1,7 +1,11 @@
 package com.randioo.compare_collections_server.module.fight.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.common.eventbus.EventBus;
-import com.google.gson.Gson;
 import com.google.protobuf.Message;
 import com.randioo.compare_collections_server.GlobleConstant;
 import com.randioo.compare_collections_server.cache.local.GameCache;
@@ -10,30 +14,51 @@ import com.randioo.compare_collections_server.entity.po.Game;
 import com.randioo.compare_collections_server.entity.po.RoleGameInfo;
 import com.randioo.compare_collections_server.module.fight.FightConstant;
 import com.randioo.compare_collections_server.module.fight.component.broadcast.GameBroadcast;
-import com.randioo.compare_collections_server.module.fight.component.event.*;
+import com.randioo.compare_collections_server.module.fight.component.event.EventBetAllResponse;
+import com.randioo.compare_collections_server.module.fight.component.event.EventBiggerResponse;
+import com.randioo.compare_collections_server.module.fight.component.event.EventCutCardsResponse;
+import com.randioo.compare_collections_server.module.fight.component.event.EventFollowResponse;
+import com.randioo.compare_collections_server.module.fight.component.event.EventGiveUpResponse;
+import com.randioo.compare_collections_server.module.fight.component.event.EventGuoResponse;
+import com.randioo.compare_collections_server.module.fight.component.event.EventReady;
+import com.randioo.compare_collections_server.module.fight.component.event.EventReadyResponse;
 import com.randioo.compare_collections_server.module.fight.component.manager.AudienceManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.GameManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.RoleGameInfoManager;
 import com.randioo.compare_collections_server.module.fight.component.manager.SeatManager;
+import com.randioo.compare_collections_server.module.fight.component.manager.VerifyManager;
 import com.randioo.compare_collections_server.module.fight.component.parser.ScoreProtoParser;
 import com.randioo.compare_collections_server.module.fight.component.processor.Processor;
 import com.randioo.compare_collections_server.module.fight.component.rule.IReconnector;
 import com.randioo.compare_collections_server.module.fight.component.rule.ISafeCheckCallType;
 import com.randioo.compare_collections_server.module.fight.component.rule.base.calltype_enum.CallTypeEnum;
 import com.randioo.compare_collections_server.module.match.service.MatchService;
-import com.randioo.compare_collections_server.protocol.Entity.*;
+import com.randioo.compare_collections_server.protocol.Entity.CxReconnectedData;
+import com.randioo.compare_collections_server.protocol.Entity.GameConfigData;
+import com.randioo.compare_collections_server.protocol.Entity.GameType;
+import com.randioo.compare_collections_server.protocol.Entity.SdbReconnectedData;
+import com.randioo.compare_collections_server.protocol.Entity.ZjhReconnectedData;
 import com.randioo.compare_collections_server.protocol.Error.ErrorCode;
-import com.randioo.compare_collections_server.protocol.Fight.*;
+import com.randioo.compare_collections_server.protocol.Fight.FightBetAllResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightBetResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightBiggerResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightChooseAddCardResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightCutCardsResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightGameStartResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightGenResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightGiveUpResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightGuoResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightLookPaiResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightReadyResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightReconnectDataResponse;
+import com.randioo.compare_collections_server.protocol.Fight.FightTwoResponse;
+import com.randioo.compare_collections_server.protocol.Fight.SCFightBetScore;
+import com.randioo.compare_collections_server.protocol.Fight.SCFightReady;
 import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
-import com.randioo.compare_collections_server.quartz.QuartzManager;
 import com.randioo.randioo_server_base.annotation.BaseServiceAnnotation;
 import com.randioo.randioo_server_base.config.GlobleClass;
 import com.randioo.randioo_server_base.service.ObserveBaseService;
 import com.randioo.randioo_server_base.utils.SessionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @BaseServiceAnnotation("fightService")
 @Service("fightService")
@@ -66,7 +91,7 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
     private AudienceManager audienceManager;
 
     @Autowired
-    private QuartzManager quartzManager;
+    private VerifyManager verifyManager;
 
     @Override
     public void initService() {
@@ -85,6 +110,11 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             return;
         }
         if (game.getGameType() == GameType.GAME_TYPE_GOLD) {
+            FightReadyResponse response = FightReadyResponse.newBuilder()
+                    .setErrorCode(ErrorCode.ROUND_ERROR.getNumber())
+                    .build();
+            SC responseSC = SC.newBuilder().setFightReadyResponse(response).build();
+            SessionUtils.sc(role.getRoleId(), responseSC);
             return;
         }
         String gameRoleId = roleGameInfoManager.getGameRoleId(game, role.getRoleId());
@@ -225,15 +255,25 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
     @Override
     public void bet(RoleGameInfo roleGameInfo, Game game, int score) {
         synchronized (game) {
-          //  quartzManager.cancelJob(roleGameInfo.gameRoleId);
+            game.logger.info("roleId {}, seat {}, score {}", roleGameInfo.roleId, roleGameInfo.seat, score);
+            // if (!game.getRule().getSafeCheckCallType().isCallSafe(game,
+            // roleGameInfo)) {
+            // return;
+            // }
+
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
+                return;
+            }
             roleGameInfo.isCalled = true;
             roleGameInfo.betScore = score;
             // 通知其他玩家该玩家叫的分
             int currentSeat = game.getCurrentSeat();
-            SCFightBetScore scFightCallScore = SCFightBetScore.newBuilder().setSeat(currentSeat).setScore(score).build();
+            SCFightBetScore scFightCallScore = SCFightBetScore.newBuilder()
+                    .setSeat(currentSeat)
+                    .setScore(score)
+                    .build();
             SC scCallScore = SC.newBuilder().setSCFightBetScore(scFightCallScore).build();
             gameBroadcast.broadcast(game, scCallScore);
-
             processor.nextProcess(game, "role_bet");
         }
     }
@@ -250,9 +290,12 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             SessionUtils.sc(role.getRoleId(), responseSC);
             return;
         }
-        SessionUtils.sc(role.getRoleId(), SC.newBuilder()
-                .setFightChooseAddCardResponse(FightChooseAddCardResponse.newBuilder()
-                        .setErrorCode(ErrorCode.OK.getNumber())).build());
+        SessionUtils.sc(
+                role.getRoleId(),
+                SC.newBuilder()
+                        .setFightChooseAddCardResponse(
+                                FightChooseAddCardResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
+                        .build());
 
         RoleGameInfo roleGameInfo = roleGameInfoManager.getByRoleId(game, role.getRoleId());
 
@@ -261,7 +304,16 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
 
     public void coreContinueAddCard(Game game, RoleGameInfo roleGameInfo, boolean addCard) {
         synchronized (game) {
-           // quartzManager.cancelJob(roleGameInfo.gameRoleId);
+            game.logger.info("选择要拍：seat {}, roleId {}, 要不要 {}", roleGameInfo.seat, roleGameInfo.roleId, addCard);
+            // if (!game.getRule().getSafeCheckCallType().isCallSafe(game,
+            // roleGameInfo)) {
+            // return;
+            // }
+
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
+                return;
+            }
+            // quartzManager.cancelJob(roleGameInfo.gameRoleId);
             roleGameInfo.needCard = addCard;
             processor.nextProcess(game, "role_choose_add_card");
         }
@@ -288,9 +340,6 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
         synchronized (game) {
             int seat = seatManager.getSeatByRoleId(game, role.getRoleId());
             RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
-            if (!game.getRule().getSafeCheckCallType().isCallSafe(game, roleGameInfo)) {
-                return;
-            }
             if (game.getGameConfig().getOutLookCount() > game.loop) {// 没有达到了焖牌的最大轮数可以看牌了
                 SessionUtils.sc(
                         roleGameInfo.roleId,
@@ -307,7 +356,7 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
                     .build();
             SC responseSC = SC.newBuilder().setFightLookPaiResponse(response).build();
             SessionUtils.sc(role.getRoleId(), responseSC);
-            processor.nextProcess(game, "flow_choose_call_type " + CallTypeEnum.WATCH);// 看牌
+            processor.nextProcess(game, "watch_cards");// 看牌
         }
     }
 
@@ -317,7 +366,7 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
      * @param role
      */
     @Override
-    public void follow(Role role, int betMoney) {
+    public void follow(Role role) {
         role.logger.info("follow");
         Game game = gameManager.get(role.getGameId());
         if (game == null) {
@@ -332,7 +381,18 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
 
             ISafeCheckCallType safe = game.getRule().getSafeCheckCallType();
-            if (!safe.isCallSafe(game, roleGameInfo)) {
+            // if (!safe.isCallSafe(game, roleGameInfo)) {
+            // game.logger.error("不是你的回合 玩家:{}", roleGameInfo.gameRoleId);
+            // SessionUtils.sc(
+            // roleGameInfo.roleId,
+            // SC.newBuilder()
+            // .setFightGenResponse(
+            // FightGenResponse.newBuilder().setErrorCode(ErrorCode.NOT_YOUR_TURN.getNumber()))
+            // .build());
+            // return;
+            // }
+
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
                 game.logger.error("不是你的回合 玩家:{}", roleGameInfo.gameRoleId);
                 SessionUtils.sc(
                         roleGameInfo.roleId,
@@ -399,22 +459,34 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             SessionUtils.sc(role.getRoleId(), SC.newBuilder().setFightBiggerResponse(response).build());
             return;
         }
+
         synchronized (game) {
             int seat = seatManager.getSeatByRoleId(game, role.getRoleId());
             RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
 
             ISafeCheckCallType safe = game.getRule().getSafeCheckCallType();
-            if (!safe.isCallSafe(game, roleGameInfo)) {
+            // if (!safe.isCallSafe(game, roleGameInfo)) {
+            // game.logger.error("不是你的回合 玩家:{}", roleGameInfo.gameRoleId);
+            // SessionUtils.sc(
+            // roleGameInfo.roleId,
+            // SC.newBuilder()
+            // .setFightBiggerResponse(
+            // FightBiggerResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
+            // .build());
+            // return;
+            // }
+
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
                 game.logger.error("不是你的回合 玩家:{}", roleGameInfo.gameRoleId);
                 SessionUtils.sc(
                         roleGameInfo.roleId,
                         SC.newBuilder()
                                 .setFightBiggerResponse(
-                                        FightBiggerResponse.newBuilder().setErrorCode(
-                                                ErrorCode.NOT_YOUR_TURN.getNumber()))
+                                        FightBiggerResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
                                 .build());
                 return;
             }
+
             // 赌注安全检查
             if (safe.checkBigger(roleGameInfo, game, bigMoney)) {
                 game.logger.error("{}<={} 不能大", roleGameInfo.chipMoney, bigMoney);
@@ -439,6 +511,7 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             processor.nextProcess(game, "flow_choose_call_type " + CallTypeEnum.BIGGER + " " + bigMoney);
             logger.info("{}", game);
         }
+
     }
 
     /**
@@ -457,28 +530,30 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             SessionUtils.sc(role.getRoleId(), scBetAll);
             return;
         }
-        synchronized (game) {
-            int seat = seatManager.getSeatByRoleId(game, role.getRoleId());
-            RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
+        SessionUtils.sc(
+                role.getRoleId(),
+                SC.newBuilder()
+                        .setFightBetAllResponse(FightBetAllResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
+                        .build());
 
-            ISafeCheckCallType safe = game.getRule().getSafeCheckCallType();
-            if (!safe.isCallSafe(game, roleGameInfo)) {
+        this.coreBetAll(game, roleGameInfoManager.getGameRoleId(game, role.getRoleId()));
+    }
+
+    @Override
+    public void coreBetAll(Game game, String gameRoleId) {
+        synchronized (game) {
+            RoleGameInfo roleGameInfo = game.getRoleIdMap().get(gameRoleId);
+
+            // ISafeCheckCallType safe = game.getRule().getSafeCheckCallType();
+            // if (!safe.isCallSafe(game, roleGameInfo)) {
+            // game.logger.error("不是你的回合 玩家:{}", roleGameInfo.gameRoleId);
+            // return;
+            // }
+
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
                 game.logger.error("不是你的回合 玩家:{}", roleGameInfo.gameRoleId);
-                SessionUtils.sc(
-                        roleGameInfo.roleId,
-                        SC.newBuilder()
-                                .setFightBetAllResponse(
-                                        FightBetAllResponse.newBuilder().setErrorCode(
-                                                ErrorCode.NOT_YOUR_TURN.getNumber()))
-                                .build());
                 return;
             }
-            SessionUtils.sc(
-                    roleGameInfo.roleId,
-                    SC.newBuilder()
-                            .setFightBetAllResponse(
-                                    FightBetAllResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
-                            .build());
 
             eventBus.post(new EventBetAllResponse(roleGameInfo.gameRoleId, game));
 
@@ -509,12 +584,22 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
 
             ISafeCheckCallType safe = game.getRule().getSafeCheckCallType();
-            if (!safe.isCallSafe(game, roleGameInfo)) {
-                FightGuoResponse response = FightGuoResponse.newBuilder()
-                        .setErrorCode(ErrorCode.NOT_YOUR_TURN.getNumber())
-                        .build();
-                SC scGuo = SC.newBuilder().setFightGuoResponse(response).build();
-                SessionUtils.sc(roleGameInfo.roleId, scGuo);
+            // if (!safe.isCallSafe(game, roleGameInfo)) {
+            // FightGuoResponse response = FightGuoResponse.newBuilder()
+            // .setErrorCode(ErrorCode.NOT_YOUR_TURN.getNumber())
+            // .build();
+            // SC scGuo = SC.newBuilder().setFightGuoResponse(response).build();
+            // SessionUtils.sc(roleGameInfo.roleId, scGuo);
+            // return;
+            // }
+
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
+                SessionUtils.sc(
+                        roleGameInfo.roleId,
+                        SC.newBuilder()
+                                .setFightGuoResponse(
+                                        FightGuoResponse.newBuilder().setErrorCode(ErrorCode.NOT_YOUR_TURN.getNumber()))
+                                .build());
                 return;
             }
             if (safe.checkGuo(roleGameInfo, game)) {
@@ -553,29 +638,33 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             SessionUtils.sc(role.getRoleId(), SC.newBuilder().setFightGiveUpResponse(response).build());
             return;
         }
+        SessionUtils.sc(
+                role.getRoleId(),
+                SC.newBuilder()
+                        .setFightGiveUpResponse(FightGiveUpResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
+                        .build());
+        String gameRoleId = roleGameInfoManager.getGameRoleId(game, role.getRoleId());
+
+        coreGiveUp(game, gameRoleId);
+    }
+
+    /**
+     * 玩家不操作代理做放弃操作
+     * 
+     * @param game
+     * @param roleGameInfo
+     */
+    public void coreGiveUp(Game game, String gameRoleId) {
         synchronized (game) {
-            int seat = seatManager.getSeatByRoleId(game, role.getRoleId());
-            RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
-            ISafeCheckCallType safe = game.getRule().getSafeCheckCallType();
-            if (!safe.isCallSafe(game, roleGameInfo)) {
-                SessionUtils.sc(
-                        roleGameInfo.roleId,
-                        SC.newBuilder()
-                                .setFightGiveUpResponse(
-                                        FightGiveUpResponse.newBuilder().setErrorCode(
-                                                ErrorCode.NOT_YOUR_TURN.getNumber()))
-                                .build());
+            RoleGameInfo roleGameInfo = game.getRoleIdMap().get(gameRoleId);
+            // ISafeCheckCallType safe = game.getRule().getSafeCheckCallType();
+            // if (!safe.isCallSafe(game, roleGameInfo)) {
+            // return;
+            // }
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
                 return;
             }
-            SessionUtils.sc(
-                    roleGameInfo.roleId,
-                    SC.newBuilder()
-                            .setFightGiveUpResponse(
-                                    FightGiveUpResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
-                            .build());
-
-            eventBus.post(new EventGiveUpResponse(roleGameInfo.gameRoleId, game));
-
+            eventBus.post(new EventGiveUpResponse(gameRoleId, game));
             logger.info("{}", game);
             processor.nextProcess(game, "flow_choose_call_type " + CallTypeEnum.GIVE_UP);
             logger.info("{}", game);
@@ -599,26 +688,27 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             SessionUtils.sc(role.getRoleId(), scResponse);
             return;
         }
-        int currentSeat = seatManager.getSeatByRoleId(game, role.getRoleId());
-        RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, currentSeat);
-        ISafeCheckCallType safe = game.getRule().getSafeCheckCallType();
-        if (!safe.isCallSafe(game, roleGameInfo)) {
+        synchronized (game) {
+            int currentSeat = seatManager.getSeatByRoleId(game, role.getRoleId());
+            RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, currentSeat);
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
+                SessionUtils.sc(
+                        roleGameInfo.roleId,
+                        SC.newBuilder()
+                                .setFightGiveUpResponse(
+                                        FightGiveUpResponse.newBuilder().setErrorCode(
+                                                ErrorCode.NOT_YOUR_TURN.getNumber()))
+                                .build());
+                return;
+            }
             SessionUtils.sc(
                     roleGameInfo.roleId,
                     SC.newBuilder()
-                            .setFightGiveUpResponse(
-                                    FightGiveUpResponse.newBuilder().setErrorCode(ErrorCode.NOT_YOUR_TURN.getNumber()))
+                            .setFightTwoResponse(FightTwoResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
                             .build());
-            return;
+            processor.nextProcess(game, "flow_choose_call_type " + CallTypeEnum.BATTLE + " " + seat);
         }
-        SessionUtils.sc(
-                roleGameInfo.roleId,
-                SC.newBuilder()
-                        .setFightTwoResponse(FightTwoResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
-                        .build());
-        processor.nextProcess(game, "flow_choose_call_type " + CallTypeEnum.BATTLE + " " + seat);
     }
-
 
     /**
      * 分牌
@@ -627,7 +717,6 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
      */
     @Override
     public void cutCards(Role role, List<Integer> cards) {
-
         Game game = gameManager.get(role.getGameId());
         if (game == null) {
             FightCutCardsResponse response = FightCutCardsResponse.newBuilder()
@@ -636,53 +725,31 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             SessionUtils.sc(role.getRoleId(), SC.newBuilder().setFightCutCardsResponse(response).build());
             return;
         }
+        SessionUtils.sc(
+                role.getRoleId(),
+                SC.newBuilder()
+                        .setFightCutCardsResponse(
+                                FightCutCardsResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
+                        .build());
+
+        this.coreCutCards(game, roleGameInfoManager.getGameRoleId(game, role.getRoleId()), cards);
+
+    }
+
+    @Override
+    public void coreCutCards(Game game, String gameRoleId, List<Integer> cards) {
         synchronized (game) {
-            int seat = seatManager.getSeatByRoleId(game, role.getRoleId());
-            RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
+            RoleGameInfo roleGameInfo = game.getRoleIdMap().get(gameRoleId);
+            if (!verifyManager.checkVerify(roleGameInfo.verify)) {
+                return;
+            }
 
             roleGameInfo.cards.clear();
             roleGameInfo.cards.addAll(cards);
 
-            SessionUtils.sc(
-                    roleGameInfo.roleId,
-                    SC.newBuilder()
-                            .setFightCutCardsResponse(
-                                    FightCutCardsResponse.newBuilder().setErrorCode(ErrorCode.OK.getNumber()))
-                            .build());
-
             processor.nextProcess(game, "role_cut_cards " + roleGameInfo.seat);
 
             eventBus.post(new EventCutCardsResponse(roleGameInfo.gameRoleId, game));
-        }
-    }
-
-    @Override
-    public void getGameSerialize(Role role) {
-        Game game = gameManager.get(role.getRoleId());
-
-        if (game == null) {
-            SessionUtils.sc(
-                    role.getRoleId(),
-                    SC.newBuilder()
-                            .setFightGetRoomDataResponse(
-                                    FightGetRoomDataResponse.newBuilder().setErrorCode(
-                                            ErrorCode.GAME_NOT_EXIST.getNumber()))
-                            .build());
-            return;
-        }
-
-        synchronized (game) {
-            Gson gson = new Gson();
-            String json = gson.toJson(game);
-            role.logger.info("断线重连数据/n {}", json);
-            SC sc = SC.newBuilder()
-                    .setFightGetRoomDataResponse(
-                            FightGetRoomDataResponse.newBuilder()
-                                    .setErrorCode(ErrorCode.OK.getNumber())
-                                    .setGameConfigData(game.getGameConfig())
-                                    .setGameJson(json))
-                    .build();
-            SessionUtils.sc(role.getRoleId(), sc);
         }
     }
 
@@ -704,6 +771,19 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
             IReconnector<Game, Role, Message> reconnector = game.getRule().getReconnector(game);
             Message reconnectData = reconnector.getReconnectData(game, role);
 
+            if (gameManager.isGoldMode(game)) {
+                SessionUtils.sc(
+                        role.getRoleId(),
+                        SC.newBuilder()
+                                .setFightReconnectDataResponse(
+                                        FightReconnectDataResponse.newBuilder().setErrorCode(
+                                                ErrorCode.IN_GAME.getNumber()))
+                                .build());
+                RoleGameInfo roleGameInfo = roleGameInfoManager.getByRoleId(game, role.getRoleId());
+                // 一局游戏结束后，把这个人踢出
+                roleGameInfo.leave = true;
+                return;
+            }
             FightReconnectDataResponse.Builder builder = FightReconnectDataResponse.newBuilder().setErrorCode(
                     ErrorCode.OK.getNumber());
 
@@ -718,4 +798,5 @@ public class FightServiceImpl extends ObserveBaseService implements FightService
         }
 
     }
+
 }

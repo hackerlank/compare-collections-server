@@ -571,32 +571,6 @@ public final class Fight {
     public boolean hasSeat() { return hasSeat; }
     public int getSeat() { return seat_; }
     
-    // repeated string account = 2;
-    public static final int ACCOUNT_FIELD_NUMBER = 2;
-    private java.util.List<java.lang.String> account_ =
-      java.util.Collections.emptyList();
-    public java.util.List<java.lang.String> getAccountList() {
-      return account_;
-    }
-    public int getAccountCount() { return account_.size(); }
-    public java.lang.String getAccount(int index) {
-      return account_.get(index);
-    }
-    
-    // optional string exitAccount = 3;
-    public static final int EXITACCOUNT_FIELD_NUMBER = 3;
-    private boolean hasExitAccount;
-    private java.lang.String exitAccount_ = "";
-    public boolean hasExitAccount() { return hasExitAccount; }
-    public java.lang.String getExitAccount() { return exitAccount_; }
-    
-    // optional string gameRoleId = 4;
-    public static final int GAMEROLEID_FIELD_NUMBER = 4;
-    private boolean hasGameRoleId;
-    private java.lang.String gameRoleId_ = "";
-    public boolean hasGameRoleId() { return hasGameRoleId; }
-    public java.lang.String getGameRoleId() { return gameRoleId_; }
-    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -608,15 +582,6 @@ public final class Fight {
       getSerializedSize();
       if (hasSeat()) {
         output.writeInt32(1, getSeat());
-      }
-      for (java.lang.String element : getAccountList()) {
-        output.writeString(2, element);
-      }
-      if (hasExitAccount()) {
-        output.writeString(3, getExitAccount());
-      }
-      if (hasGameRoleId()) {
-        output.writeString(4, getGameRoleId());
       }
       getUnknownFields().writeTo(output);
     }
@@ -630,23 +595,6 @@ public final class Fight {
       if (hasSeat()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, getSeat());
-      }
-      {
-        int dataSize = 0;
-        for (java.lang.String element : getAccountList()) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeStringSizeNoTag(element);
-        }
-        size += dataSize;
-        size += 1 * getAccountList().size();
-      }
-      if (hasExitAccount()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(3, getExitAccount());
-      }
-      if (hasGameRoleId()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(4, getGameRoleId());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -790,10 +738,6 @@ public final class Fight {
           throw new IllegalStateException(
             "build() has already been called on this Builder.");
         }
-        if (result.account_ != java.util.Collections.EMPTY_LIST) {
-          result.account_ =
-            java.util.Collections.unmodifiableList(result.account_);
-        }
         com.randioo.compare_collections_server.protocol.Fight.SCFightExitGame returnMe = result;
         result = null;
         return returnMe;
@@ -812,18 +756,6 @@ public final class Fight {
         if (other == com.randioo.compare_collections_server.protocol.Fight.SCFightExitGame.getDefaultInstance()) return this;
         if (other.hasSeat()) {
           setSeat(other.getSeat());
-        }
-        if (!other.account_.isEmpty()) {
-          if (result.account_.isEmpty()) {
-            result.account_ = new java.util.ArrayList<java.lang.String>();
-          }
-          result.account_.addAll(other.account_);
-        }
-        if (other.hasExitAccount()) {
-          setExitAccount(other.getExitAccount());
-        }
-        if (other.hasGameRoleId()) {
-          setGameRoleId(other.getGameRoleId());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -854,18 +786,6 @@ public final class Fight {
               setSeat(input.readInt32());
               break;
             }
-            case 18: {
-              addAccount(input.readString());
-              break;
-            }
-            case 26: {
-              setExitAccount(input.readString());
-              break;
-            }
-            case 34: {
-              setGameRoleId(input.readString());
-              break;
-            }
           }
         }
       }
@@ -886,88 +806,6 @@ public final class Fight {
       public Builder clearSeat() {
         result.hasSeat = false;
         result.seat_ = 0;
-        return this;
-      }
-      
-      // repeated string account = 2;
-      public java.util.List<java.lang.String> getAccountList() {
-        return java.util.Collections.unmodifiableList(result.account_);
-      }
-      public int getAccountCount() {
-        return result.getAccountCount();
-      }
-      public java.lang.String getAccount(int index) {
-        return result.getAccount(index);
-      }
-      public Builder setAccount(int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  result.account_.set(index, value);
-        return this;
-      }
-      public Builder addAccount(java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  if (result.account_.isEmpty()) {
-          result.account_ = new java.util.ArrayList<java.lang.String>();
-        }
-        result.account_.add(value);
-        return this;
-      }
-      public Builder addAllAccount(
-          java.lang.Iterable<? extends java.lang.String> values) {
-        if (result.account_.isEmpty()) {
-          result.account_ = new java.util.ArrayList<java.lang.String>();
-        }
-        super.addAll(values, result.account_);
-        return this;
-      }
-      public Builder clearAccount() {
-        result.account_ = java.util.Collections.emptyList();
-        return this;
-      }
-      
-      // optional string exitAccount = 3;
-      public boolean hasExitAccount() {
-        return result.hasExitAccount();
-      }
-      public java.lang.String getExitAccount() {
-        return result.getExitAccount();
-      }
-      public Builder setExitAccount(java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  result.hasExitAccount = true;
-        result.exitAccount_ = value;
-        return this;
-      }
-      public Builder clearExitAccount() {
-        result.hasExitAccount = false;
-        result.exitAccount_ = getDefaultInstance().getExitAccount();
-        return this;
-      }
-      
-      // optional string gameRoleId = 4;
-      public boolean hasGameRoleId() {
-        return result.hasGameRoleId();
-      }
-      public java.lang.String getGameRoleId() {
-        return result.getGameRoleId();
-      }
-      public Builder setGameRoleId(java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  result.hasGameRoleId = true;
-        result.gameRoleId_ = value;
-        return this;
-      }
-      public Builder clearGameRoleId() {
-        result.hasGameRoleId = false;
-        result.gameRoleId_ = getDefaultInstance().getGameRoleId();
         return this;
       }
       
@@ -28958,6 +28796,13 @@ public final class Fight {
       return gameRoleData_.get(index);
     }
     
+    // optional int32 mySeat = 2;
+    public static final int MYSEAT_FIELD_NUMBER = 2;
+    private boolean hasMySeat;
+    private int mySeat_ = 0;
+    public boolean hasMySeat() { return hasMySeat; }
+    public int getMySeat() { return mySeat_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -28969,6 +28814,9 @@ public final class Fight {
       getSerializedSize();
       for (com.randioo.compare_collections_server.protocol.Entity.GameRoleData element : getGameRoleDataList()) {
         output.writeMessage(1, element);
+      }
+      if (hasMySeat()) {
+        output.writeInt32(2, getMySeat());
       }
       getUnknownFields().writeTo(output);
     }
@@ -28982,6 +28830,10 @@ public final class Fight {
       for (com.randioo.compare_collections_server.protocol.Entity.GameRoleData element : getGameRoleDataList()) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, element);
+      }
+      if (hasMySeat()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, getMySeat());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -29151,6 +29003,9 @@ public final class Fight {
           }
           result.gameRoleData_.addAll(other.gameRoleData_);
         }
+        if (other.hasMySeat()) {
+          setMySeat(other.getMySeat());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -29180,6 +29035,10 @@ public final class Fight {
               com.randioo.compare_collections_server.protocol.Entity.GameRoleData.Builder subBuilder = com.randioo.compare_collections_server.protocol.Entity.GameRoleData.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addGameRoleData(subBuilder.buildPartial());
+              break;
+            }
+            case 16: {
+              setMySeat(input.readInt32());
               break;
             }
           }
@@ -29235,6 +29094,24 @@ public final class Fight {
       }
       public Builder clearGameRoleData() {
         result.gameRoleData_ = java.util.Collections.emptyList();
+        return this;
+      }
+      
+      // optional int32 mySeat = 2;
+      public boolean hasMySeat() {
+        return result.hasMySeat();
+      }
+      public int getMySeat() {
+        return result.getMySeat();
+      }
+      public Builder setMySeat(int value) {
+        result.hasMySeat = true;
+        result.mySeat_ = value;
+        return this;
+      }
+      public Builder clearMySeat() {
+        result.hasMySeat = false;
+        result.mySeat_ = 0;
         return this;
       }
       
@@ -29613,6 +29490,290 @@ public final class Fight {
     }
     
     // @@protoc_insertion_point(class_scope:com.randioo.compare_collections_server.protocol.SCFightBattleOutCards)
+  }
+  
+  public static final class SCFightGameStartCountdown extends
+      com.google.protobuf.GeneratedMessage {
+    // Use SCFightGameStartCountdown.newBuilder() to construct.
+    private SCFightGameStartCountdown() {
+      initFields();
+    }
+    private SCFightGameStartCountdown(boolean noInit) {}
+    
+    private static final SCFightGameStartCountdown defaultInstance;
+    public static SCFightGameStartCountdown getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public SCFightGameStartCountdown getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.randioo.compare_collections_server.protocol.Fight.internal_static_com_randioo_compare_collections_server_protocol_SCFightGameStartCountdown_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.randioo.compare_collections_server.protocol.Fight.internal_static_com_randioo_compare_collections_server_protocol_SCFightGameStartCountdown_fieldAccessorTable;
+    }
+    
+    // optional int32 countdown = 1;
+    public static final int COUNTDOWN_FIELD_NUMBER = 1;
+    private boolean hasCountdown;
+    private int countdown_ = 0;
+    public boolean hasCountdown() { return hasCountdown; }
+    public int getCountdown() { return countdown_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasCountdown()) {
+        output.writeInt32(1, getCountdown());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasCountdown()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, getCountdown());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown result;
+      
+      // Construct using com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown();
+        return builder;
+      }
+      
+      protected com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.getDescriptor();
+      }
+      
+      public com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown getDefaultInstanceForType() {
+        return com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown) {
+          return mergeFrom((com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown other) {
+        if (other == com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.getDefaultInstance()) return this;
+        if (other.hasCountdown()) {
+          setCountdown(other.getCountdown());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setCountdown(input.readInt32());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional int32 countdown = 1;
+      public boolean hasCountdown() {
+        return result.hasCountdown();
+      }
+      public int getCountdown() {
+        return result.getCountdown();
+      }
+      public Builder setCountdown(int value) {
+        result.hasCountdown = true;
+        result.countdown_ = value;
+        return this;
+      }
+      public Builder clearCountdown() {
+        result.hasCountdown = false;
+        result.countdown_ = 0;
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:com.randioo.compare_collections_server.protocol.SCFightGameStartCountdown)
+    }
+    
+    static {
+      defaultInstance = new SCFightGameStartCountdown(true);
+      com.randioo.compare_collections_server.protocol.Fight.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:com.randioo.compare_collections_server.protocol.SCFightGameStartCountdown)
   }
   
   private static com.google.protobuf.Descriptors.Descriptor
@@ -30085,6 +30246,11 @@ public final class Fight {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_com_randioo_compare_collections_server_protocol_SCFightBattleOutCards_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_randioo_compare_collections_server_protocol_SCFightGameStartCountdown_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_com_randioo_compare_collections_server_protocol_SCFightGameStartCountdown_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -30097,152 +30263,152 @@ public final class Fight {
       "\n\013Fight.proto\022/com.randioo.compare_colle" +
       "ctions_server.protocol\032\014Entity.proto\"\026\n\024" +
       "FightExitGameRequest\"-\n\025FightExitGameRes" +
-      "ponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"Y\n\017SCFightEx" +
-      "itGame\022\014\n\004seat\030\001 \001(\005\022\017\n\007account\030\002 \003(\t\022\023\n" +
-      "\013exitAccount\030\003 \001(\t\022\022\n\ngameRoleId\030\004 \001(\t\"\033" +
-      "\n\031FightApplyExitGameRequest\"\207\001\n\032FightApp" +
-      "lyExitGameResponse\022\024\n\terrorCode\030\001 \001(\005:\0011" +
-      "\022S\n\014gameRoleData\030\002 \003(\0132=.com.randioo.com" +
-      "pare_collections_server.protocol.GameRol",
-      "eData\"\024\n\022SCFightRoomDismiss\"\035\n\033FightConf" +
-      "irmGameOverRequest\"\036\n\034FightConfirmGameOv" +
-      "erResponse\"\241\001\n\024SCFightApplyExitGame\022\014\n\004s" +
-      "eat\030\001 \001(\005\022S\n\014gameRoleData\030\002 \003(\0132=.com.ra" +
-      "ndioo.compare_collections_server.protoco" +
-      "l.GameRoleData\022\021\n\tcountDown\030\003 \001(\005\022\023\n\013app" +
-      "lyExitId\030\004 \001(\005\"L\n\031FightAgreeExitGameRequ" +
-      "est\022\032\n\022fightVoteApplyExit\030\001 \001(\005\022\023\n\013apply" +
-      "ExitId\030\002 \001(\005\"2\n\032FightAgreeExitGameRespon" +
-      "se\022\024\n\terrorCode\030\001 \001(\005:\0011\"\240\001\n\026SCFightAppl",
-      "yExitResult\022\022\n\nrejectSeat\030\001 \003(\005\022\021\n\tagree" +
-      "Seat\030\002 \003(\005\022_\n\022resultGameOverData\030\003 \001(\0132C" +
-      ".com.randioo.compare_collections_server." +
-      "protocol.ResultGameOverData\"4\n\026SCFightNo" +
-      "ticeAgreeExit\022\014\n\004seat\030\001 \001(\005\022\014\n\004vote\030\002 \001(" +
-      "\005\"\024\n\022SCFightClearRoomId\"\025\n\023SCFightLoadRe" +
-      "source\"\023\n\021FightReadyRequest\"*\n\022FightRead" +
-      "yResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"\024\n\022SCFig" +
-      "htNoticeReady\"\034\n\014SCFightReady\022\014\n\004seat\030\001 " +
-      "\001(\005\"\032\n\030FightGetlastRoundRequest\"{\n\031Fight",
-      "GetlastRoundResponse\022\024\n\terrorCode\030\001 \001(\005:" +
-      "\0011\022H\n\007records\030\002 \003(\01327.com.randioo.compar" +
-      "e_collections_server.protocol.Record\"\027\n\025" +
-      "FightGameStartRequest\".\n\026FightGameStartR" +
-      "esponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"\234\001\n\014SCFigh" +
-      "tStart\022\027\n\017remainCardCount\030\002 \001(\005\022\022\n\nzhuan" +
-      "gSeat\030\003 \001(\005\022\020\n\010startBet\030\004 \001(\005\022\027\n\017current" +
-      "RoundNum\030\007 \001(\005\022\020\n\010maxRound\030\010 \001(\005\022\020\n\010maxC" +
-      "ount\030\t \001(\005\022\020\n\010minCount\030\n \001(\005\"\233\002\n\020SCFight" +
-      "RoundOver\022e\n\025roleRoundOverInfoData\030\003 \003(\013",
-      "2F.com.randioo.compare_collections_serve" +
-      "r.protocol.RoleRoundOverInfoData\022\016\n\006room" +
-      "Id\030\004 \001(\t\022\030\n\020finishRoundCount\030\005 \001(\005\022\025\n\rma" +
-      "xRoundCount\030\006 \001(\005\022_\n\022resultGameOverData\030" +
-      "\007 \001(\0132C.com.randioo.compare_collections_" +
-      "server.protocol.ResultGameOverData\"\267\001\n\017S" +
-      "CFightGameOver\022c\n\024roleGameOverInfoData\030\001" +
-      " \003(\0132E.com.randioo.compare_collections_s" +
-      "erver.protocol.RoleGameOverInfoData\022\016\n\006r" +
-      "oomId\030\002 \001(\t\022\030\n\020finishRoundCount\030\003 \001(\005\022\025\n",
-      "\rmaxRoundCount\030\004 \001(\005\"%\n\025SCFightNoticeSen" +
-      "dCard\022\014\n\004seat\030\001 \001(\005\"@\n\024FightSendCardRequ" +
-      "est\022\014\n\004card\030\001 \001(\005\022\032\n\013isTouchCard\030\002 \001(\010:\005" +
-      "false\"-\n\025FightSendCardResponse\022\024\n\terrorC" +
-      "ode\030\001 \001(\005:\0011\"B\n\017SCFightSendCard\022\014\n\004card\030" +
-      "\001 \001(\005\022\014\n\004seat\030\002 \001(\005\022\023\n\013isTouchCard\030\003 \001(\010" +
-      "\"L\n\020SCFightTouchCard\022\014\n\004seat\030\001 \001(\005\022\021\n\tto" +
-      "uchCard\030\002 \001(\005\022\027\n\017remainCardCount\030\003 \001(\005\"%" +
-      "\n\020SCFightCountdown\022\021\n\tcountdown\030\001 \001(\005\"(\n" +
-      "\017FightGuoRequest\022\025\n\rtempGameCount\030\001 \001(\005\"",
-      "(\n\020FightGuoResponse\022\024\n\terrorCode\030\001 \001(\005:\001" +
-      "1\"\032\n\nSCFightGuo\022\014\n\004seat\030\001 \001(\005\":\n\022FightBe" +
-      "tAllRequest\022\025\n\rtempGameCount\030\001 \001(\005\022\r\n\005mo" +
-      "ney\030\002 \001(\005\"+\n\023FightBetAllResponse\022\024\n\terro" +
-      "rCode\030\001 \001(\005:\0011\"+\n\rSCFightBetAll\022\014\n\004seat\030" +
-      "\001 \001(\005\022\014\n\004bets\030\002 \001(\005\"7\n\020SCFightPointSeat\022" +
-      "\014\n\004seat\030\001 \001(\005\022\025\n\rtempGameCount\030\002 \001(\005\"!\n\021" +
-      "SCFightDisconnect\022\014\n\004seat\030\001 \001(\005\"]\n\014SCFig" +
-      "htScore\022M\n\tscoreData\030\001 \003(\0132:.com.randioo" +
-      ".compare_collections_server.protocol.Sco",
-      "reData\"\035\n\033FightQueryGameConfigRequest\"\251\001" +
-      "\n\034FightQueryGameConfigResponse\022\024\n\terrorC" +
-      "ode\030\001 \001(\005:\0011\022W\n\016gameConfigData\030\002 \001(\0132?.c" +
+      "ponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"\037\n\017SCFightEx" +
+      "itGame\022\014\n\004seat\030\001 \001(\005\"\033\n\031FightApplyExitGa" +
+      "meRequest\"\207\001\n\032FightApplyExitGameResponse" +
+      "\022\024\n\terrorCode\030\001 \001(\005:\0011\022S\n\014gameRoleData\030\002" +
+      " \003(\0132=.com.randioo.compare_collections_s" +
+      "erver.protocol.GameRoleData\"\024\n\022SCFightRo" +
+      "omDismiss\"\035\n\033FightConfirmGameOverRequest",
+      "\"\036\n\034FightConfirmGameOverResponse\"\241\001\n\024SCF" +
+      "ightApplyExitGame\022\014\n\004seat\030\001 \001(\005\022S\n\014gameR" +
+      "oleData\030\002 \003(\0132=.com.randioo.compare_coll" +
+      "ections_server.protocol.GameRoleData\022\021\n\t" +
+      "countDown\030\003 \001(\005\022\023\n\013applyExitId\030\004 \001(\005\"L\n\031" +
+      "FightAgreeExitGameRequest\022\032\n\022fightVoteAp" +
+      "plyExit\030\001 \001(\005\022\023\n\013applyExitId\030\002 \001(\005\"2\n\032Fi" +
+      "ghtAgreeExitGameResponse\022\024\n\terrorCode\030\001 " +
+      "\001(\005:\0011\"\240\001\n\026SCFightApplyExitResult\022\022\n\nrej" +
+      "ectSeat\030\001 \003(\005\022\021\n\tagreeSeat\030\002 \003(\005\022_\n\022resu",
+      "ltGameOverData\030\003 \001(\0132C.com.randioo.compa" +
+      "re_collections_server.protocol.ResultGam" +
+      "eOverData\"4\n\026SCFightNoticeAgreeExit\022\014\n\004s" +
+      "eat\030\001 \001(\005\022\014\n\004vote\030\002 \001(\005\"\024\n\022SCFightClearR" +
+      "oomId\"\025\n\023SCFightLoadResource\"\023\n\021FightRea" +
+      "dyRequest\"*\n\022FightReadyResponse\022\024\n\terror" +
+      "Code\030\001 \001(\005:\0011\"\024\n\022SCFightNoticeReady\"\034\n\014S" +
+      "CFightReady\022\014\n\004seat\030\001 \001(\005\"\032\n\030FightGetlas" +
+      "tRoundRequest\"{\n\031FightGetlastRoundRespon" +
+      "se\022\024\n\terrorCode\030\001 \001(\005:\0011\022H\n\007records\030\002 \003(",
+      "\01327.com.randioo.compare_collections_serv" +
+      "er.protocol.Record\"\027\n\025FightGameStartRequ" +
+      "est\".\n\026FightGameStartResponse\022\024\n\terrorCo" +
+      "de\030\001 \001(\005:\0011\"\234\001\n\014SCFightStart\022\027\n\017remainCa" +
+      "rdCount\030\002 \001(\005\022\022\n\nzhuangSeat\030\003 \001(\005\022\020\n\010sta" +
+      "rtBet\030\004 \001(\005\022\027\n\017currentRoundNum\030\007 \001(\005\022\020\n\010" +
+      "maxRound\030\010 \001(\005\022\020\n\010maxCount\030\t \001(\005\022\020\n\010minC" +
+      "ount\030\n \001(\005\"\233\002\n\020SCFightRoundOver\022e\n\025roleR" +
+      "oundOverInfoData\030\003 \003(\0132F.com.randioo.com" +
+      "pare_collections_server.protocol.RoleRou",
+      "ndOverInfoData\022\016\n\006roomId\030\004 \001(\t\022\030\n\020finish" +
+      "RoundCount\030\005 \001(\005\022\025\n\rmaxRoundCount\030\006 \001(\005\022" +
+      "_\n\022resultGameOverData\030\007 \001(\0132C.com.randio" +
+      "o.compare_collections_server.protocol.Re" +
+      "sultGameOverData\"\267\001\n\017SCFightGameOver\022c\n\024" +
+      "roleGameOverInfoData\030\001 \003(\0132E.com.randioo" +
+      ".compare_collections_server.protocol.Rol" +
+      "eGameOverInfoData\022\016\n\006roomId\030\002 \001(\t\022\030\n\020fin" +
+      "ishRoundCount\030\003 \001(\005\022\025\n\rmaxRoundCount\030\004 \001" +
+      "(\005\"%\n\025SCFightNoticeSendCard\022\014\n\004seat\030\001 \001(",
+      "\005\"@\n\024FightSendCardRequest\022\014\n\004card\030\001 \001(\005\022" +
+      "\032\n\013isTouchCard\030\002 \001(\010:\005false\"-\n\025FightSend" +
+      "CardResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"B\n\017SC" +
+      "FightSendCard\022\014\n\004card\030\001 \001(\005\022\014\n\004seat\030\002 \001(" +
+      "\005\022\023\n\013isTouchCard\030\003 \001(\010\"L\n\020SCFightTouchCa" +
+      "rd\022\014\n\004seat\030\001 \001(\005\022\021\n\ttouchCard\030\002 \001(\005\022\027\n\017r" +
+      "emainCardCount\030\003 \001(\005\"%\n\020SCFightCountdown" +
+      "\022\021\n\tcountdown\030\001 \001(\005\"(\n\017FightGuoRequest\022\025" +
+      "\n\rtempGameCount\030\001 \001(\005\"(\n\020FightGuoRespons" +
+      "e\022\024\n\terrorCode\030\001 \001(\005:\0011\"\032\n\nSCFightGuo\022\014\n",
+      "\004seat\030\001 \001(\005\":\n\022FightBetAllRequest\022\025\n\rtem" +
+      "pGameCount\030\001 \001(\005\022\r\n\005money\030\002 \001(\005\"+\n\023Fight" +
+      "BetAllResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"+\n\r" +
+      "SCFightBetAll\022\014\n\004seat\030\001 \001(\005\022\014\n\004bets\030\002 \001(" +
+      "\005\"7\n\020SCFightPointSeat\022\014\n\004seat\030\001 \001(\005\022\025\n\rt" +
+      "empGameCount\030\002 \001(\005\"!\n\021SCFightDisconnect\022" +
+      "\014\n\004seat\030\001 \001(\005\"]\n\014SCFightScore\022M\n\tscoreDa" +
+      "ta\030\001 \003(\0132:.com.randioo.compare_collectio" +
+      "ns_server.protocol.ScoreData\"\035\n\033FightQue" +
+      "ryGameConfigRequest\"\251\001\n\034FightQueryGameCo",
+      "nfigResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\022W\n\016ga" +
+      "meConfigData\030\002 \001(\0132?.com.randioo.compare" +
+      "_collections_server.protocol.GameConfigD" +
+      "ata\022\032\n\022currentRoundNumber\030\003 \001(\005\"h\n\032Fight" +
+      "ClientDispatchRequest\022J\n\005cards\030\001 \003(\0132;.c" +
       "om.randioo.compare_collections_server.pr" +
-      "otocol.GameConfigData\022\032\n\022currentRoundNum" +
-      "ber\030\003 \001(\005\"h\n\032FightClientDispatchRequest\022" +
-      "J\n\005cards\030\001 \003(\0132;.com.randioo.compare_col" +
-      "lections_server.protocol.ClientCard\"0\n\033F" +
-      "ightClientDispatchResponse\022\021\n\terrorCode\030" +
-      "\001 \001(\005\"+\n\033FightClientTouchCardRequest\022\014\n\004",
-      "card\030\001 \001(\005\"1\n\034FightClientTouchCardRespon" +
-      "se\022\021\n\terrorCode\030\001 \001(\005\" \n\020SCFightNoticeBe" +
-      "t\022\014\n\004seat\030\001 \001(\005\" \n\017FightBetRequest\022\r\n\005sc" +
-      "ore\030\001 \001(\005\"%\n\020FightBetResponse\022\021\n\terrorCo" +
-      "de\030\001 \001(\005\".\n\017SCFightBetScore\022\014\n\004seat\030\001 \001(" +
-      "\005\022\r\n\005score\030\002 \001(\005\"f\n\017SCFightDispatch\022S\n\014r" +
-      "oleCardData\030\001 \003(\0132=.com.randioo.compare_" +
-      "collections_server.protocol.RoleCardData" +
-      "\",\n\016SCFightAddCard\022\014\n\004seat\030\001 \001(\005\022\014\n\004card" +
-      "\030\002 \003(\005\"$\n\024SCFightChooseAddCard\022\014\n\004seat\030\001",
-      " \001(\005\".\n\031FightChooseAddCardRequest\022\021\n\tisA" +
-      "ddCard\030\001 \001(\010\"/\n\032FightChooseAddCardRespon" +
-      "se\022\021\n\terrorCode\030\001 \001(\005\"7\n\017FightGenRequest" +
-      "\022\025\n\rtempGameCount\030\001 \001(\005\022\r\n\005stall\030\002 \001(\005\"(" +
-      "\n\020FightGenResponse\022\024\n\terrorCode\030\001 \001(\005:\0011" +
-      "\"(\n\nSCFightGen\022\014\n\004seat\030\001 \001(\005\022\014\n\004bets\030\002 \001" +
-      "(\005\":\n\022FightBiggerRequest\022\025\n\rtempGameCoun" +
-      "t\030\001 \001(\005\022\r\n\005stall\030\002 \001(\005\"+\n\023FightBiggerRes" +
-      "ponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"+\n\rSCFightBi" +
-      "gger\022\014\n\004seat\030\001 \001(\005\022\014\n\004bets\030\002 \001(\005\"+\n\022Figh",
-      "tGiveUpRequest\022\025\n\rtempGameCount\030\001 \001(\005\"+\n" +
-      "\023FightGiveUpResponse\022\024\n\terrorCode\030\001 \001(\005:" +
-      "\0011\"\035\n\rSCFightGiveUp\022\014\n\004seat\030\001 \001(\005\",\n\023Fig" +
-      "htLookPaiRequest\022\025\n\rtempGameCount\030\001 \001(\005\"" +
-      ";\n\024FightLookPaiResponse\022\024\n\terrorCode\030\001 \001" +
-      "(\005:\0011\022\r\n\005cards\030\002 \003(\005\"!\n\021SCFightWatchCard" +
-      "s\022\014\n\004seat\030\001 \001(\005\",\n\016SCFightAutoBet\022\014\n\004cas" +
-      "h\030\001 \001(\005\022\014\n\004seat\030\002 \001(\005\"$\n\023SCFightBiggerBu" +
-      "tton\022\r\n\005stall\030\001 \001(\005\"6\n\017FightTwoRequest\022\025" +
-      "\n\rtempGameCount\030\001 \001(\005\022\014\n\004seat\030\002 \001(\005\"(\n\020F",
-      "ightTwoResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"K\n" +
-      "\nSCFightTwo\022\017\n\007allSeat\030\001 \003(\005\022\014\n\004seat\030\002 \001" +
-      "(\005\022\013\n\003pay\030\003 \001(\005\022\021\n\tfirstSeat\030\004 \001(\005\"-\n\016SC" +
-      "FightMingPai\022\014\n\004seat\030\001 \001(\005\022\r\n\005cards\030\002 \003(" +
-      "\005\"#\n\023SCFightNoticeBattle\022\014\n\004seat\030\001 \003(\005\"\036" +
-      "\n\016SCFightAllSeat\022\014\n\004seat\030\001 \001(\005\"\"\n\021SCFigh" +
-      "tRoundCount\022\r\n\005count\030\001 \001(\005\"\030\n\026SCFightBut" +
-      "tonDisappear\"\037\n\017SCFightCutCards\022\014\n\004seat\030" +
-      "\001 \001(\005\"%\n\024FightCutCardsRequest\022\r\n\005cards\030\001" +
-      " \003(\005\"-\n\025FightCutCardsResponse\022\024\n\terrorCo",
-      "de\030\001 \001(\005:\0011\"5\n\026SCFightOpenCardsResult\022\014\n" +
-      "\004seat\030\001 \001(\005\022\r\n\005cards\030\002 \003(\005\"e\n\025SCFightRou" +
-      "ndOverScore\022\014\n\004seat\030\001 \001(\005\022\r\n\005score\030\002 \001(\005" +
-      "\022\030\n\020finishRoundCount\030\003 \001(\005\022\025\n\rmaxRoundCo" +
-      "unt\030\004 \001(\005\"\037\n\017SCFightPlayTalk\022\014\n\004seat\030\001 \001" +
-      "(\005\"4\n\025SCFightNoticeCallType\022\r\n\005types\030\001 \003" +
-      "(\005\022\014\n\004seat\030\002 \001(\005\"#\n\022SCFightPublicScore\022\r" +
-      "\n\005score\030\001 \001(\005\"1\n\017SCFightCardType\022\014\n\004seat" +
-      "\030\001 \001(\005\022\020\n\010cardType\030\002 \001(\005\"\031\n\027FightGetRoom" +
-      "DataRequest\"\263\001\n\030FightGetRoomDataResponse",
-      "\022\024\n\terrorCode\030\001 \001(\005:\0011\022W\n\016gameConfigData" +
-      "\030\002 \001(\0132?.com.randioo.compare_collections" +
-      "_server.protocol.GameConfigData\022\020\n\010gameJ" +
-      "son\030\003 \001(\t\022\026\n\016lastestCommand\030\004 \001(\014\"\033\n\031Fig" +
-      "htReconnectDataRequest\"\316\002\n\032FightReconnec" +
-      "tDataResponse\022\021\n\terrorCode\030\001 \001(\005\022[\n\017cxRe" +
-      "connectData\030\002 \001(\0132B.com.randioo.compare_" +
-      "collections_server.protocol.CxReconnecte" +
-      "dData\022_\n\022zjhReconnectedData\030\003 \001(\0132C.com." +
-      "randioo.compare_collections_server.proto",
-      "col.ZjhReconnectedData\022_\n\022sdbReconnected" +
-      "Data\030\004 \001(\0132C.com.randioo.compare_collect" +
-      "ions_server.protocol.SdbReconnectedData\"" +
-      " \n\rSCFightMaxBet\022\017\n\007maxbets\030\001 \001(\005\"j\n\023SCF" +
-      "ightGameRoleData\022S\n\014gameRoleData\030\001 \003(\0132=" +
-      ".com.randioo.compare_collections_server." +
-      "protocol.GameRoleData\":\n\025SCFightBattleOu" +
-      "tCards\022\023\n\013playerCards\030\001 \003(\005\022\014\n\004seat\030\002 \001(" +
-      "\005"
+      "otocol.ClientCard\"0\n\033FightClientDispatch" +
+      "Response\022\021\n\terrorCode\030\001 \001(\005\"+\n\033FightClie" +
+      "ntTouchCardRequest\022\014\n\004card\030\001 \001(\005\"1\n\034Figh" +
+      "tClientTouchCardResponse\022\021\n\terrorCode\030\001 ",
+      "\001(\005\" \n\020SCFightNoticeBet\022\014\n\004seat\030\001 \001(\005\" \n" +
+      "\017FightBetRequest\022\r\n\005score\030\001 \001(\005\"%\n\020Fight" +
+      "BetResponse\022\021\n\terrorCode\030\001 \001(\005\".\n\017SCFigh" +
+      "tBetScore\022\014\n\004seat\030\001 \001(\005\022\r\n\005score\030\002 \001(\005\"f" +
+      "\n\017SCFightDispatch\022S\n\014roleCardData\030\001 \003(\0132" +
+      "=.com.randioo.compare_collections_server" +
+      ".protocol.RoleCardData\",\n\016SCFightAddCard" +
+      "\022\014\n\004seat\030\001 \001(\005\022\014\n\004card\030\002 \003(\005\"$\n\024SCFightC" +
+      "hooseAddCard\022\014\n\004seat\030\001 \001(\005\".\n\031FightChoos" +
+      "eAddCardRequest\022\021\n\tisAddCard\030\001 \001(\010\"/\n\032Fi",
+      "ghtChooseAddCardResponse\022\021\n\terrorCode\030\001 " +
+      "\001(\005\"7\n\017FightGenRequest\022\025\n\rtempGameCount\030" +
+      "\001 \001(\005\022\r\n\005stall\030\002 \001(\005\"(\n\020FightGenResponse" +
+      "\022\024\n\terrorCode\030\001 \001(\005:\0011\"(\n\nSCFightGen\022\014\n\004" +
+      "seat\030\001 \001(\005\022\014\n\004bets\030\002 \001(\005\":\n\022FightBiggerR" +
+      "equest\022\025\n\rtempGameCount\030\001 \001(\005\022\r\n\005stall\030\002" +
+      " \001(\005\"+\n\023FightBiggerResponse\022\024\n\terrorCode" +
+      "\030\001 \001(\005:\0011\"+\n\rSCFightBigger\022\014\n\004seat\030\001 \001(\005" +
+      "\022\014\n\004bets\030\002 \001(\005\"+\n\022FightGiveUpRequest\022\025\n\r" +
+      "tempGameCount\030\001 \001(\005\"+\n\023FightGiveUpRespon",
+      "se\022\024\n\terrorCode\030\001 \001(\005:\0011\"\035\n\rSCFightGiveU" +
+      "p\022\014\n\004seat\030\001 \001(\005\",\n\023FightLookPaiRequest\022\025" +
+      "\n\rtempGameCount\030\001 \001(\005\";\n\024FightLookPaiRes" +
+      "ponse\022\024\n\terrorCode\030\001 \001(\005:\0011\022\r\n\005cards\030\002 \003" +
+      "(\005\"!\n\021SCFightWatchCards\022\014\n\004seat\030\001 \001(\005\",\n" +
+      "\016SCFightAutoBet\022\014\n\004cash\030\001 \001(\005\022\014\n\004seat\030\002 " +
+      "\001(\005\"$\n\023SCFightBiggerButton\022\r\n\005stall\030\001 \001(" +
+      "\005\"6\n\017FightTwoRequest\022\025\n\rtempGameCount\030\001 " +
+      "\001(\005\022\014\n\004seat\030\002 \001(\005\"(\n\020FightTwoResponse\022\024\n" +
+      "\terrorCode\030\001 \001(\005:\0011\"K\n\nSCFightTwo\022\017\n\007all",
+      "Seat\030\001 \003(\005\022\014\n\004seat\030\002 \001(\005\022\013\n\003pay\030\003 \001(\005\022\021\n" +
+      "\tfirstSeat\030\004 \001(\005\"-\n\016SCFightMingPai\022\014\n\004se" +
+      "at\030\001 \001(\005\022\r\n\005cards\030\002 \003(\005\"#\n\023SCFightNotice" +
+      "Battle\022\014\n\004seat\030\001 \003(\005\"\036\n\016SCFightAllSeat\022\014" +
+      "\n\004seat\030\001 \001(\005\"\"\n\021SCFightRoundCount\022\r\n\005cou" +
+      "nt\030\001 \001(\005\"\030\n\026SCFightButtonDisappear\"\037\n\017SC" +
+      "FightCutCards\022\014\n\004seat\030\001 \001(\005\"%\n\024FightCutC" +
+      "ardsRequest\022\r\n\005cards\030\001 \003(\005\"-\n\025FightCutCa" +
+      "rdsResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"5\n\026SCF" +
+      "ightOpenCardsResult\022\014\n\004seat\030\001 \001(\005\022\r\n\005car",
+      "ds\030\002 \003(\005\"e\n\025SCFightRoundOverScore\022\014\n\004sea" +
+      "t\030\001 \001(\005\022\r\n\005score\030\002 \001(\005\022\030\n\020finishRoundCou" +
+      "nt\030\003 \001(\005\022\025\n\rmaxRoundCount\030\004 \001(\005\"\037\n\017SCFig" +
+      "htPlayTalk\022\014\n\004seat\030\001 \001(\005\"4\n\025SCFightNotic" +
+      "eCallType\022\r\n\005types\030\001 \003(\005\022\014\n\004seat\030\002 \001(\005\"#" +
+      "\n\022SCFightPublicScore\022\r\n\005score\030\001 \001(\005\"1\n\017S" +
+      "CFightCardType\022\014\n\004seat\030\001 \001(\005\022\020\n\010cardType" +
+      "\030\002 \001(\005\"\031\n\027FightGetRoomDataRequest\"\263\001\n\030Fi" +
+      "ghtGetRoomDataResponse\022\024\n\terrorCode\030\001 \001(" +
+      "\005:\0011\022W\n\016gameConfigData\030\002 \001(\0132?.com.randi",
+      "oo.compare_collections_server.protocol.G" +
+      "ameConfigData\022\020\n\010gameJson\030\003 \001(\t\022\026\n\016laste" +
+      "stCommand\030\004 \001(\014\"\033\n\031FightReconnectDataReq" +
+      "uest\"\316\002\n\032FightReconnectDataResponse\022\021\n\te" +
+      "rrorCode\030\001 \001(\005\022[\n\017cxReconnectData\030\002 \001(\0132" +
+      "B.com.randioo.compare_collections_server" +
+      ".protocol.CxReconnectedData\022_\n\022zjhReconn" +
+      "ectedData\030\003 \001(\0132C.com.randioo.compare_co" +
+      "llections_server.protocol.ZjhReconnected" +
+      "Data\022_\n\022sdbReconnectedData\030\004 \001(\0132C.com.r",
+      "andioo.compare_collections_server.protoc" +
+      "ol.SdbReconnectedData\" \n\rSCFightMaxBet\022\017" +
+      "\n\007maxbets\030\001 \001(\005\"z\n\023SCFightGameRoleData\022S" +
+      "\n\014gameRoleData\030\001 \003(\0132=.com.randioo.compa" +
+      "re_collections_server.protocol.GameRoleD" +
+      "ata\022\016\n\006mySeat\030\002 \001(\005\":\n\025SCFightBattleOutC" +
+      "ards\022\023\n\013playerCards\030\001 \003(\005\022\014\n\004seat\030\002 \001(\005\"" +
+      ".\n\031SCFightGameStartCountdown\022\021\n\tcountdow" +
+      "n\030\001 \001(\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -30270,7 +30436,7 @@ public final class Fight {
           internal_static_com_randioo_compare_collections_server_protocol_SCFightExitGame_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_SCFightExitGame_descriptor,
-              new java.lang.String[] { "Seat", "Account", "ExitAccount", "GameRoleId", },
+              new java.lang.String[] { "Seat", },
               com.randioo.compare_collections_server.protocol.Fight.SCFightExitGame.class,
               com.randioo.compare_collections_server.protocol.Fight.SCFightExitGame.Builder.class);
           internal_static_com_randioo_compare_collections_server_protocol_FightApplyExitGameRequest_descriptor =
@@ -30990,7 +31156,7 @@ public final class Fight {
           internal_static_com_randioo_compare_collections_server_protocol_SCFightGameRoleData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_SCFightGameRoleData_descriptor,
-              new java.lang.String[] { "GameRoleData", },
+              new java.lang.String[] { "GameRoleData", "MySeat", },
               com.randioo.compare_collections_server.protocol.Fight.SCFightGameRoleData.class,
               com.randioo.compare_collections_server.protocol.Fight.SCFightGameRoleData.Builder.class);
           internal_static_com_randioo_compare_collections_server_protocol_SCFightBattleOutCards_descriptor =
@@ -31001,6 +31167,14 @@ public final class Fight {
               new java.lang.String[] { "PlayerCards", "Seat", },
               com.randioo.compare_collections_server.protocol.Fight.SCFightBattleOutCards.class,
               com.randioo.compare_collections_server.protocol.Fight.SCFightBattleOutCards.Builder.class);
+          internal_static_com_randioo_compare_collections_server_protocol_SCFightGameStartCountdown_descriptor =
+            getDescriptor().getMessageTypes().get(94);
+          internal_static_com_randioo_compare_collections_server_protocol_SCFightGameStartCountdown_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_com_randioo_compare_collections_server_protocol_SCFightGameStartCountdown_descriptor,
+              new java.lang.String[] { "Countdown", },
+              com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.class,
+              com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.Builder.class);
           return null;
         }
       };

@@ -756,6 +756,13 @@ public final class ServerMessage {
     public boolean hasSCFightBattleOutCards() { return hasSCFightBattleOutCards; }
     public com.randioo.compare_collections_server.protocol.Fight.SCFightBattleOutCards getSCFightBattleOutCards() { return sCFightBattleOutCards_; }
     
+    // optional .com.randioo.compare_collections_server.protocol.SCFightGameStartCountdown SCFightGameStartCountdown = 104;
+    public static final int SCFIGHTGAMESTARTCOUNTDOWN_FIELD_NUMBER = 104;
+    private boolean hasSCFightGameStartCountdown;
+    private com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown sCFightGameStartCountdown_;
+    public boolean hasSCFightGameStartCountdown() { return hasSCFightGameStartCountdown; }
+    public com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown getSCFightGameStartCountdown() { return sCFightGameStartCountdown_; }
+    
     private void initFields() {
       heartResponse_ = com.randioo.compare_collections_server.protocol.Heart.HeartResponse.getDefaultInstance();
       sCHeart_ = com.randioo.compare_collections_server.protocol.Heart.SCHeart.getDefaultInstance();
@@ -860,6 +867,7 @@ public final class ServerMessage {
       sCMatchResult_ = com.randioo.compare_collections_server.protocol.Match.SCMatchResult.getDefaultInstance();
       sCMatchKickGame_ = com.randioo.compare_collections_server.protocol.Match.SCMatchKickGame.getDefaultInstance();
       sCFightBattleOutCards_ = com.randioo.compare_collections_server.protocol.Fight.SCFightBattleOutCards.getDefaultInstance();
+      sCFightGameStartCountdown_ = com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.getDefaultInstance();
     }
     public final boolean isInitialized() {
       return true;
@@ -1176,6 +1184,9 @@ public final class ServerMessage {
       }
       if (hasSCFightBattleOutCards()) {
         output.writeMessage(103, getSCFightBattleOutCards());
+      }
+      if (hasSCFightGameStartCountdown()) {
+        output.writeMessage(104, getSCFightGameStartCountdown());
       }
       getUnknownFields().writeTo(output);
     }
@@ -1597,6 +1608,10 @@ public final class ServerMessage {
       if (hasSCFightBattleOutCards()) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(103, getSCFightBattleOutCards());
+      }
+      if (hasSCFightGameStartCountdown()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(104, getSCFightGameStartCountdown());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2064,6 +2079,9 @@ public final class ServerMessage {
         }
         if (other.hasSCFightBattleOutCards()) {
           mergeSCFightBattleOutCards(other.getSCFightBattleOutCards());
+        }
+        if (other.hasSCFightGameStartCountdown()) {
+          mergeSCFightGameStartCountdown(other.getSCFightGameStartCountdown());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -3015,6 +3033,15 @@ public final class ServerMessage {
               }
               input.readMessage(subBuilder, extensionRegistry);
               setSCFightBattleOutCards(subBuilder.buildPartial());
+              break;
+            }
+            case 834: {
+              com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.Builder subBuilder = com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.newBuilder();
+              if (hasSCFightGameStartCountdown()) {
+                subBuilder.mergeFrom(getSCFightGameStartCountdown());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setSCFightGameStartCountdown(subBuilder.buildPartial());
               break;
             }
           }
@@ -6833,6 +6860,43 @@ public final class ServerMessage {
         return this;
       }
       
+      // optional .com.randioo.compare_collections_server.protocol.SCFightGameStartCountdown SCFightGameStartCountdown = 104;
+      public boolean hasSCFightGameStartCountdown() {
+        return result.hasSCFightGameStartCountdown();
+      }
+      public com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown getSCFightGameStartCountdown() {
+        return result.getSCFightGameStartCountdown();
+      }
+      public Builder setSCFightGameStartCountdown(com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasSCFightGameStartCountdown = true;
+        result.sCFightGameStartCountdown_ = value;
+        return this;
+      }
+      public Builder setSCFightGameStartCountdown(com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.Builder builderForValue) {
+        result.hasSCFightGameStartCountdown = true;
+        result.sCFightGameStartCountdown_ = builderForValue.build();
+        return this;
+      }
+      public Builder mergeSCFightGameStartCountdown(com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown value) {
+        if (result.hasSCFightGameStartCountdown() &&
+            result.sCFightGameStartCountdown_ != com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.getDefaultInstance()) {
+          result.sCFightGameStartCountdown_ =
+            com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.newBuilder(result.sCFightGameStartCountdown_).mergeFrom(value).buildPartial();
+        } else {
+          result.sCFightGameStartCountdown_ = value;
+        }
+        result.hasSCFightGameStartCountdown = true;
+        return this;
+      }
+      public Builder clearSCFightGameStartCountdown() {
+        result.hasSCFightGameStartCountdown = false;
+        result.sCFightGameStartCountdown_ = com.randioo.compare_collections_server.protocol.Fight.SCFightGameStartCountdown.getDefaultInstance();
+        return this;
+      }
+      
       // @@protoc_insertion_point(builder_scope:com.randioo.compare_collections_server.protocol.SC)
     }
     
@@ -6863,7 +6927,7 @@ public final class ServerMessage {
       "re_collections_server.protocol\032\013Login.pr" +
       "oto\032\nRole.proto\032\013Match.proto\032\013Fight.prot" +
       "o\032\016Settings.proto\032\nRace.proto\032\013Heart.pro" +
-      "to\032\010Gm.proto\"\243N\n\002SC\022U\n\rHeartResponse\030\001 \001" +
+      "to\032\010Gm.proto\"\222O\n\002SC\022U\n\rHeartResponse\030\001 \001" +
       "(\0132>.com.randioo.compare_collections_ser" +
       "ver.protocol.HeartResponse\022I\n\007SCHeart\030\002 " +
       "\001(\01328.com.randioo.compare_collections_se" +
@@ -7113,7 +7177,10 @@ public final class ServerMessage {
       "compare_collections_server.protocol.SCMa" +
       "tchKickGame\022e\n\025SCFightBattleOutCards\030g \001" +
       "(\0132F.com.randioo.compare_collections_ser" +
-      "ver.protocol.SCFightBattleOutCards"
+      "ver.protocol.SCFightBattleOutCards\022m\n\031SC" +
+      "FightGameStartCountdown\030h \001(\0132J.com.rand" +
+      "ioo.compare_collections_server.protocol." +
+      "SCFightGameStartCountdown"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7125,7 +7192,7 @@ public final class ServerMessage {
           internal_static_com_randioo_compare_collections_server_protocol_SC_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_SC_descriptor,
-              new java.lang.String[] { "HeartResponse", "SCHeart", "LoginGetRoleDataResponse", "SCLoginOtherSide", "RoleRenameResponse", "RoleGetRoleDataResponse", "SCRoleRandiooCoinChange", "MatchCreateGameResponse", "MatchJoinGameResponse", "SCMatchJoinGame", "SCMatchMineInfo", "SCMatchCreateGame", "MatchPreJoinResponse", "SCFightNoticeReady", "FightReadyResponse", "SCFightReady", "SCFightStart", "FightExitGameResponse", "SCFightExitGame", "SCFightClearRoomId", "SCFightLoadResource", "SCFightNoticeSendCard", "FightSendCardResponse", "FightApplyExitGameResponse", "SCFightApplyExitGame", "FightAgreeExitGameResponse", "SCFightNoticeAgreeExit", "SCFightApplyExitResult", "SCFightSendCard", "SCFightRoundOver", "SCFightGameOver", "FightGetlastRoundResponse", "SCFightTouchCard", "FightGuoResponse", "SCFightGuo", "SCFightCountdown", "SCFightPointSeat", "SCFightDisconnect", "SCFightPublicScore", "SCFightScore", "FightQueryGameConfigResponse", "FightClientDispatchResponse", "FightClientTouchCardResponse", "SCFightRoomDismiss", "FightConfirmGameOverResponse", "FightGetRoomDataResponse", "SettingsResponse", "SettingsShowResponse", "RaceJoinRaceResponse", "SCRaceJoinRace", "RaceShowQueueResponse", "SCRaceQueueChange", "MatchCheckRoomResponse", "SCFightNoticeBet", "FightBetResponse", "SCFightBetScore", "SCFightDispatch", "SCFightAddCard", "SCFightChooseAddCard", "FightChooseAddCardResponse", "SCFightCardType", "GmEnvVarsResponse", "GmGameInfoResponse", "GmDispatchCardResponse", "GmRoundResponse", "SCFightWatchCards", "FightLookPaiResponse", "FightGenResponse", "SCFightAutoBet", "SCFightBigger", "FightBiggerResponse", "FightGiveUpResponse", "FightTwoResponse", "SCFightTwo", "SCFightGiveUp", "SCFightGen", "SCFightButtonDisappear", "SCFightMingPai", "SCFightAllSeat", "SCFightBiggerButton", "SCFightRoundCount", "SCMatchExitGame", "MatchExitGameResponse", "SCMatchJoinInGame", "MatchJoinInGameResponse", "SCFightBetAll", "FightBetAllResponse", "FightGameStartResponse", "SCFightPlayTalk", "SCFightNoticeCallType", "FightCutCardsResponse", "SCFightCutCards", "SCFightOpenCardsResult", "SCFightRoundOverScore", "SCFightNoticeBattle", "FightReconnectDataResponse", "SCFightMaxBet", "MatchResponse", "MatchCancelResponse", "SCFightGameRoleData", "SCMatchResult", "SCMatchKickGame", "SCFightBattleOutCards", },
+              new java.lang.String[] { "HeartResponse", "SCHeart", "LoginGetRoleDataResponse", "SCLoginOtherSide", "RoleRenameResponse", "RoleGetRoleDataResponse", "SCRoleRandiooCoinChange", "MatchCreateGameResponse", "MatchJoinGameResponse", "SCMatchJoinGame", "SCMatchMineInfo", "SCMatchCreateGame", "MatchPreJoinResponse", "SCFightNoticeReady", "FightReadyResponse", "SCFightReady", "SCFightStart", "FightExitGameResponse", "SCFightExitGame", "SCFightClearRoomId", "SCFightLoadResource", "SCFightNoticeSendCard", "FightSendCardResponse", "FightApplyExitGameResponse", "SCFightApplyExitGame", "FightAgreeExitGameResponse", "SCFightNoticeAgreeExit", "SCFightApplyExitResult", "SCFightSendCard", "SCFightRoundOver", "SCFightGameOver", "FightGetlastRoundResponse", "SCFightTouchCard", "FightGuoResponse", "SCFightGuo", "SCFightCountdown", "SCFightPointSeat", "SCFightDisconnect", "SCFightPublicScore", "SCFightScore", "FightQueryGameConfigResponse", "FightClientDispatchResponse", "FightClientTouchCardResponse", "SCFightRoomDismiss", "FightConfirmGameOverResponse", "FightGetRoomDataResponse", "SettingsResponse", "SettingsShowResponse", "RaceJoinRaceResponse", "SCRaceJoinRace", "RaceShowQueueResponse", "SCRaceQueueChange", "MatchCheckRoomResponse", "SCFightNoticeBet", "FightBetResponse", "SCFightBetScore", "SCFightDispatch", "SCFightAddCard", "SCFightChooseAddCard", "FightChooseAddCardResponse", "SCFightCardType", "GmEnvVarsResponse", "GmGameInfoResponse", "GmDispatchCardResponse", "GmRoundResponse", "SCFightWatchCards", "FightLookPaiResponse", "FightGenResponse", "SCFightAutoBet", "SCFightBigger", "FightBiggerResponse", "FightGiveUpResponse", "FightTwoResponse", "SCFightTwo", "SCFightGiveUp", "SCFightGen", "SCFightButtonDisappear", "SCFightMingPai", "SCFightAllSeat", "SCFightBiggerButton", "SCFightRoundCount", "SCMatchExitGame", "MatchExitGameResponse", "SCMatchJoinInGame", "MatchJoinInGameResponse", "SCFightBetAll", "FightBetAllResponse", "FightGameStartResponse", "SCFightPlayTalk", "SCFightNoticeCallType", "FightCutCardsResponse", "SCFightCutCards", "SCFightOpenCardsResult", "SCFightRoundOverScore", "SCFightNoticeBattle", "FightReconnectDataResponse", "SCFightMaxBet", "MatchResponse", "MatchCancelResponse", "SCFightGameRoleData", "SCMatchResult", "SCMatchKickGame", "SCFightBattleOutCards", "SCFightGameStartCountdown", },
               com.randioo.compare_collections_server.protocol.ServerMessage.SC.class,
               com.randioo.compare_collections_server.protocol.ServerMessage.SC.Builder.class);
           return null;

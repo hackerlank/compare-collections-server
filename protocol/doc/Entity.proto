@@ -31,7 +31,7 @@ message GameConfigData {
     //optional PayMode payMode = 13; //付费模式
     optional int32 payMode = 13; //付费模式
     optional int32 gameType = 14; //游戏类型
-	repeated int32 battleList = 16;//扎金花加注列表
+    repeated int32 battleList = 16; //扎金花加注列表
 }
 
 /**付费模式*/
@@ -93,6 +93,7 @@ message GameRoleData {
     optional bool online = 9;
     optional string platformRoleId = 10;
     optional bool master = 11; //是不是房主
+    optional bool audience = 12; //是不是观众
 }
 
 enum GameState {
@@ -209,6 +210,7 @@ message CxReconnectedData {
     /**回合结束*/
     repeated RoleRoundOverInfoData roleRoundOverInfoData = 17;
     optional int32 exitApplyId = 18; //解散Id
+    optional int32 countdown = 19; //倒计时
 }
 
 /**扎金花重连数据*/
@@ -255,6 +257,8 @@ message SdbReconnectedData {
     /**回合结束*/
     repeated RoleRoundOverInfoData roleRoundOverInfoData = 19;
     optional int32 exitApplyId = 20; //解散Id
+
+    optional int32 countdown = 21; //倒计时
 
 }
 
