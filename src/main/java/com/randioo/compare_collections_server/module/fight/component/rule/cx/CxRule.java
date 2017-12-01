@@ -41,7 +41,6 @@ import com.randioo.compare_collections_server.module.fight.service.FightService;
 import com.randioo.compare_collections_server.protocol.Entity;
 import com.randioo.compare_collections_server.protocol.Entity.GameType;
 import com.randioo.compare_collections_server.protocol.Entity.RoleRoundOverInfoData.Builder;
-import com.randioo.randioo_server_base.cache.RoleCache;
 import com.randioo.randioo_server_base.collections8.Maps8;
 
 /**
@@ -137,6 +136,14 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
 
     @Override
     public List<String> afterCommandExecute(Game game, String flowName, String[] params) {
+        if (gameManager.isGoldMode(game)) {
+            return gold(game, flowName, params);
+        } else {
+            return room(game, flowName, params);
+        }
+    }
+
+    private List<String> room(Game game, String flowName, String[] params) {
         List<String> list = new ArrayList<>();
         switch (flowName) {
         case "role_game_ready":
@@ -160,16 +167,6 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
             list.add("FlowNoticePublicScore");
             list.add("FlowDispatch " + game.getRoleIdMap().size() + " 2 false false true false");// 发牌,每个人发2张牌,并且不排序
             list.add("FlowSeat 1");// 下一个人
-            break;
-        case "FlowGameStart": {
-            // 金币场时筹码就是玩家自己所有的金币
-            if (gameManager.isGoldMode(game)) {
-                for (RoleGameInfo roleGameInfo : game.getRoleIdMap().values()) {
-                    Role role = RoleCache.getRoleById(roleGameInfo.roleId);
-                    roleGameInfo.chipMoney = role.getGold();
-                }
-            }
-        }
             break;
         case "FlowSeat":
             if (params[0].equals("1")) {
@@ -442,14 +439,7 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
             // }
             if (!isGameOver(game)) {
                 // 如果是金币场,则永远不会结束，添加流程
-                if (gameManager.isGoldMode(game)) {
-                    list.add("FlowKickByGold");
-                    list.add("FlowAddAudience " + audienceManager.getAudiences(game.getGameId()).size());
-                    list.add("FlowNoticeGameRoleData");
-                    list.add("FlowTimedStart");
-                } else {
-                    list.add("FlowNoticeReady");
-                }
+                list.add("FlowNoticeReady");
                 list.add(WAIT);
             } else {
                 list.add("FlowGameOver");
@@ -459,8 +449,319 @@ public class CxRule extends CompareGameRuleAdapter<Game> {
         default:
             break;
         }
-        return list;
 
+        return list;
+    }
+
+    private List<String> gold(Game game, String flowName, String[] params) {
+        List<String> list = new ArrayList<>();
+        switch (flowName) {
+        case "role_game_ready":
+            // 第一把在点击游戏开始的时候来检测是否准备
+            if (game.getFinishRoundCount() != 0) {
+                if (fightService.checkAllReady(game)) {
+                    list.add("role_game_start");
+                } else {
+                    list.add(WAIT);
+                }
+            } else {
+                list.add(WAIT);
+            }
+            break;
+        case "role_game_start":
+            list.add("FlowZhuang");
+            list.add("FlowGameStart_Gold");
+            list.add("FlowNoticeGameStart");
+            list.add("FlowAutoBet true");
+            list.add("FlowNoticeScore_Gold");
+            list.add("FlowNoticePublicScore");
+            list.add("FlowDispatch " + game.getRoleIdMap().size() + " 2 false false true false");// 发牌,每个人发2张牌,并且不排序
+            list.add("FlowSeat 1");// 下一个人
+            break;
+        case "FlowSeat":
+            if (params[0].equals("1")) {
+                List<Integer> runningSeat = game.actionSeat.get(runningTag);
+                for (int i = 0; i < game.getRoleIdMap().size(); i++) {
+                    runningSeat.add(i);
+                }
+                Collections.sort(runningSeat,
+                        new SeatComparator(game.getRoleIdMap().size(), seatManager.getNext(game, game.getZhuangSeat())));
+            }
+            list.add("FlowCheckCallTypes");// 检查叫牌
+            list.add("FlowCheckNextSeat");// 获取下一个喊话人的位置
+            list.add("FlowSeat 3");// 跳转到指定的人1
+            break;
+        case "FlowCheckNextSeat":// 获取下一个喊话人的位置
+            // 检查是否还有正在喊话的人
+            List<Integer> runningSeat = game.actionSeat.get(runningTag);
+            if (runningSeat.size() > 0) {// 如果还有正在喊话的人了
+                game.setCurrentSeat(runningSeat.get(0));
+            } else {// 没有继续喊话的人
+                List<Integer> guo = game.actionSeat.get(guoTag);
+                List<Integer> candidates = game.actionSeat.get(candidatesTag);
+                List<Integer> betAll = game.actionSeat.get(betAllTag);
+                List<Integer> step = game.actionSeat.get(stepTag);
+
+                // 检查下注是否均衡,不均衡则继续喊话
+                this.checkChipMoneyBalance(game);// 检查下注均衡
+                if (runningSeat.size() == 0) {// 检查完下注均衡后如果没有需要执行的玩家
+                    // 进入下一轮,如果轮数已满,则进入比较阶段
+                    // 进入下一阶段条件是摸到第四张牌
+                    // 将过的人也加入
+                    candidates.addAll(guo);
+                    guo.clear();
+
+                    // 随便找一个还没有弃牌的玩家，如果牌数等于4，则进入下一阶段
+                    RoleGameInfo roleGameInfo = roleGameInfoManager.get(game,
+                            betAll.size() > 0 ? betAll.get(0) : candidates.get(0));
+                    if (roleGameInfo.cards.size() == 4) {
+                        step.add(分牌阶段);
+
+                        game.getCmdStack().clear();// 栈清空
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < candidates.size(); i++) {
+                            sb.append(candidates.get(i)).append(" ");
+                        }
+
+                        for (int i = 0; i < betAll.size(); i++) {
+                            sb.append(betAll.get(i)).append(" ");
+                        }
+                        // 所有赌注入赌池
+                        for (RoleGameInfo info : game.getRoleIdMap().values()) {
+                            game.betPool += info.betScore;
+                            info.betScore = 0;
+                        }
+
+                        list.add("FlowNoticeBetScore");
+                        list.add("FlowNoticePublicScore");
+                        list.add("FlowAdjustCards " + sb);// 进入牌组调整阶段
+                        list.add(WAIT);
+                    } else {// 继续下一轮发牌
+                        StringBuilder touchCardTargetSeats = new StringBuilder();
+                        if (candidates.size() > 0) {
+                            runningSeat.addAll(candidates);
+                            candidates.clear();
+                            // 继续游戏的玩家排序
+                            // 每次都是庄家的下一个人开始
+                            Collections.sort(
+                                    runningSeat,
+                                    new SeatComparator(game.getRoleIdMap().size(), seatManager.getNext(game,
+                                            game.getZhuangSeat())));
+
+                            game.setCurrentSeat(runningSeat.get(0));
+
+                            for (int seat : runningSeat) {// 接下来的执行者要再给一张牌
+                                touchCardTargetSeats.append(seat).append(" ");
+
+                                RoleGameInfo info = roleGameInfoManager.get(game, seat);
+                                game.betPool += info.betScore;
+                                info.betScore = 0;
+                            }
+                        }
+
+                        List<Integer> betAllSeat = game.actionSeat.get(betAllTag);
+
+                        for (int seat : betAllSeat) {// 已经赌了所有牌的玩家要再给一张牌
+                            touchCardTargetSeats.append(seat).append(" ");
+
+                            RoleGameInfo info = roleGameInfoManager.get(game, seat);
+                            game.betPool += info.betScore;
+                            info.betScore = 0;
+                        }
+
+                        // 仍然在游戏的每个人的赌注在到下一次发牌时加入到底池
+                        game.maxChipMoney = 0;
+
+                        // 只剩下敲的人,则直接一次性发剩余的牌
+                        if (runningSeat.size() == 0 && betAllSeat.size() > 0) {
+                            step.add(分牌阶段);
+
+                            int currentCardCount = roleGameInfo.cards.size();
+                            game.getCmdStack().clear();
+                            list.add("FlowNoticeBetScore");
+                            // 通知底池分
+                            list.add("FlowNoticePublicScore");
+                            // 候选人加牌
+                            int addCard = 4 - currentCardCount;
+                            list.add("FlowAddCard " + touchCardTargetSeats + addCard);
+                            list.add("FlowAdjustCards " + touchCardTargetSeats);// 进入牌组调整阶段
+
+                        } else {
+                            list.add("FlowNoticeBetScore");
+                            // 通知底池分
+                            list.add("FlowNoticePublicScore");
+                            // 候选人加牌
+                            list.add("FlowAddCard " + touchCardTargetSeats + "1");
+                        }
+
+                    }
+                } else {// 检查完下注均衡后如果有需要执行的玩家
+                    // 定位到第一个
+                    game.setCurrentSeat(runningSeat.get(0));
+                }
+            }
+            break;
+        case "FlowCheckCallTypes":
+            // 如果有叫牌则通知玩家叫牌
+            if (game.callTypeList.size() > 0) {
+                list.add("FlowNoticeCxCallType");
+                list.add(WAIT);
+            }
+            break;
+        case "flow_choose_call_type":// 已经做出了选择
+            verifyManager.accumlate(roleGameInfoManager.current(game).verify);
+
+            String callTypeEnumStr = params[0];
+            CallTypeEnum callTypeEnum = CallTypeEnum.valueOf(callTypeEnumStr);
+
+            switch (callTypeEnum) {
+            case BET_ALL:
+                list.add("FlowBetAll");
+                break;
+            case BIGGER:
+                list.add("FlowBigger " + params[1]);
+                break;
+            case FOLLOW:
+                list.add("FlowFollow");
+                break;
+            case GIVE_UP:
+                list.add("FlowGiveUp");
+                break;
+            case GUO:
+                list.add("FlowGuo");
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+        case "FlowFollow": {
+            int seat = game.actionSeat.get(runningTag).remove(0);
+            RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
+            if (roleGameInfo.chipMoney == 0) {// 如果已经没有赌注了
+                game.actionSeat.get(betAllTag).add(seat);
+            } else {
+                game.actionSeat.get(candidatesTag).add(seat);
+            }
+            list.add("FlowNoticeScore_Gold");
+        }
+            break;
+        case "FlowBigger": {
+            int seat = game.actionSeat.get(runningTag).remove(0);
+            RoleGameInfo roleGameInfo = roleGameInfoManager.get(game, seat);
+            if (roleGameInfo.chipMoney == 0) {// 如果已经没有赌注了
+                game.actionSeat.get(betAllTag).add(seat);
+            } else {
+                game.actionSeat.get(candidatesTag).add(seat);
+            }
+            game.actionSeat.get(candidatesTag).addAll(game.actionSeat.get(guoTag));
+            game.actionSeat.get(guoTag).clear();
+            list.add("FlowNoticeScore_Gold");
+        }
+            break;
+        case "FlowBetAll": {
+            int seat = game.actionSeat.get(runningTag).remove(0);
+            game.actionSeat.get(betAllTag).add(seat);
+            game.actionSeat.get(candidatesTag).addAll(game.actionSeat.get(guoTag));
+            game.actionSeat.get(guoTag).clear();
+            list.add("FlowNoticeScore_Gold");
+        }
+            break;
+        case "FlowGuo": {
+            int seat = game.actionSeat.get(runningTag).remove(0);
+            game.actionSeat.get(guoTag).add(seat);
+        }
+            break;
+        case "FlowGiveUp": {
+            game.actionSeat.get(giveUpTag).add(roleGameInfoManager.current(game).seat);
+            game.actionSeat.get(runningTag).remove(0);
+            List<Integer> guo = game.actionSeat.get(guoTag);
+            List<Integer> candidates = game.actionSeat.get(candidatesTag);
+            List<Integer> betAll = game.actionSeat.get(betAllTag);
+            List<Integer> running = game.actionSeat.get(runningTag);
+            List<Integer> step = game.actionSeat.get(stepTag);
+            // 检查是否只剩下最后一个人，是的话直接就算这个人赢，并结算
+            if (guo.size() + candidates.size() + betAll.size() + running.size() == 1) {
+                step.add(游戏回合结束);
+
+                game.getCmdStack().clear();
+                list.add("FlowRoundOver_Gold false");
+
+            } else {
+                list.add("FlowNoticePublicScore");
+            }
+
+        }
+            break;
+
+        case "role_cut_cards": {// 分牌
+            int cutCardSeat = Integer.parseInt(params[0]);
+            List<Integer> cutCards = game.actionSeat.get(cutCardTag);
+            List<Integer> candidates = game.actionSeat.get(candidatesTag);
+            List<Integer> betAll = game.actionSeat.get(betAllTag);
+            List<Integer> step = game.actionSeat.get(stepTag);
+            // 头牌必须比尾牌大
+            this.checkHeadBigger(game, cutCardSeat);
+            // 已经操作
+            verifyManager.accumlate(roleGameInfoManager.get(game, cutCardSeat).verify);
+
+            if (cutCards.contains(cutCardSeat)) {// 如果此人已经分牌则不再进行操作
+                list.add(WAIT);
+                return list;
+            }
+
+            cutCards.add(cutCardSeat);
+            System.out.println(game.actionSeat);
+            System.out.println("cutCards" + cutCards);
+            System.out.println("candidates" + candidates);
+            System.out.println("betAll" + betAll);
+            List<Integer> allPlayer = new ArrayList<>();
+            allPlayer.addAll(candidates);
+            allPlayer.addAll(betAll);
+            if (cutCards.containsAll(allPlayer)) {// 如果所有人都已经分牌了
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < candidates.size(); i++) {
+                    sb.append(candidates.get(i)).append(" ");
+                }
+                for (int i = 0; i < betAll.size(); i++) {
+                    sb.append(betAll.get(i)).append(" ");
+                }
+                list.add("FlowOpenCards " + sb);// 主推所有人的牌给所有玩家
+                step.add(分牌完成);
+            } else {
+                list.add(WAIT);
+            }
+        }
+            break;
+        case "FlowOpenCards":
+            List<Integer> step = game.actionSeat.get(stepTag);
+            step.add(游戏回合结束);
+            list.add("FlowRoundOver_Gold true");// 回合结束
+            break;
+        case "FlowRoundOver_Gold": {
+            list.add("FlowNoticeScore_Gold");
+            // if (isGameOver(game)) {
+            // list.add("FlowGameOver");
+            // } else {
+            // list.add("FlowNoticeReady");
+            // list.add(WAIT);
+            // }
+            // 如果是金币场,则永远不会结束，添加流程
+            list.add("FlowKickByGold");
+            list.add("FlowAddAudience " + audienceManager.getAudiences(game.getGameId()).size());
+            list.add("FlowNoticeGameRoleData");
+            list.add("FlowTimedStart");
+
+            list.add(WAIT);
+
+        }
+            break;
+        default:
+            break;
+        }
+
+        return list;
     }
 
     /**

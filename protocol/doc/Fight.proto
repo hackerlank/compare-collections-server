@@ -150,6 +150,7 @@ message SCFightTouchCard {
 
 message SCFightCountdown {
     optional int32 countdown = 1;
+    optional int32 seat = 2;
 }
 
 message FightGuoRequest {

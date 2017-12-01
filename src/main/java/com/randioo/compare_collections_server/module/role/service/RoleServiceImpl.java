@@ -183,6 +183,7 @@ public class RoleServiceImpl extends ObserveBaseService implements RoleService {
         role.setSex(sex);
         role.setRoomCard(roomCard);
         role.setGold(gold);
+        role.setGold(1000);
         if (GlobleMap.Boolean(GlobleConstant.ARGS_PLATFORM_HEAD_IMAGE_URL)) {
             role.setHeadImgUrl(headImageUrl);
             role.setName(StringUtils.isNullOrEmpty(name) ? ServiceConstant.GUEST_PREFIX_NAME + role.getRoleId() : name);

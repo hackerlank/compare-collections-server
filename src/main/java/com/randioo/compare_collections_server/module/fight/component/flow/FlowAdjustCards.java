@@ -14,6 +14,7 @@ import com.randioo.compare_collections_server.module.fight.component.manager.Rol
 import com.randioo.compare_collections_server.module.fight.component.manager.VerifyManager;
 import com.randioo.compare_collections_server.module.fight.component.parser.CountdownProtoParser;
 import com.randioo.compare_collections_server.module.fight.component.timeevent.CutCardsTimeEvent;
+import com.randioo.compare_collections_server.protocol.Fight.SCFightCountdown;
 import com.randioo.compare_collections_server.protocol.Fight.SCFightCutCards;
 import com.randioo.compare_collections_server.protocol.ServerMessage.SC;
 import com.randioo.randioo_server_base.config.GlobleClass;
@@ -46,9 +47,6 @@ public class FlowAdjustCards implements Flow {
     private GameBroadcast gameBroadcast;
 
     @Autowired
-    private CountdownProtoParser countdownProtoParser;
-
-    @Autowired
     private VerifyManager verifyManager;
 
     @Override
@@ -71,10 +69,17 @@ public class FlowAdjustCards implements Flow {
                         roleGameInfo.verify.verifyId);
                 event.setEndTime(TimeUtils.getNowTime() + 8);
 
-                eventScheduler.addEvent(event);
+//                eventScheduler.addEvent(event);
 
                 gameManager.recordCountdown(game);
-                gameBroadcast.broadcast(game, countdownProtoParser.parse(GlobleClass._G.wait_time));
+                gameBroadcast.broadcast(
+                        game,
+                        SC.newBuilder()
+                                .setSCFightCountdown(
+                                        SCFightCountdown.newBuilder()
+                                                .setCountdown(GlobleClass._G.wait_time)
+                                                .setSeat(seat))
+                                .build());
             }
         }
     }

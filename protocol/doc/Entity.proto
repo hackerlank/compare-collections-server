@@ -68,6 +68,7 @@ message ScoreData {
     optional int32 seat = 1;
     optional int32 score = 2;
     optional int32 chipMoney = 3;
+    optional int32 gold = 4;
 }
 
 message Record {
@@ -94,6 +95,7 @@ message GameRoleData {
     optional string platformRoleId = 10;
     optional bool master = 11; //是不是房主
     optional bool audience = 12; //是不是观众
+    optional int32 gold = 13;//金币
 }
 
 enum GameState {
@@ -120,6 +122,7 @@ message RoleRoundOverInfoData {
     optional bool zhuang = 6; //是不是庄主
     optional int32 betMoney = 7; //押的注
     optional int32 roleId = 8;
+    optional int32 gold = 9;//金币
 }
 message CardData {
     repeated int32 cards = 1; //手牌

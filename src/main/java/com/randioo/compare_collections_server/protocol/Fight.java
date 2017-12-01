@@ -9845,6 +9845,13 @@ public final class Fight {
     public boolean hasCountdown() { return hasCountdown; }
     public int getCountdown() { return countdown_; }
     
+    // optional int32 seat = 2;
+    public static final int SEAT_FIELD_NUMBER = 2;
+    private boolean hasSeat;
+    private int seat_ = 0;
+    public boolean hasSeat() { return hasSeat; }
+    public int getSeat() { return seat_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -9856,6 +9863,9 @@ public final class Fight {
       getSerializedSize();
       if (hasCountdown()) {
         output.writeInt32(1, getCountdown());
+      }
+      if (hasSeat()) {
+        output.writeInt32(2, getSeat());
       }
       getUnknownFields().writeTo(output);
     }
@@ -9869,6 +9879,10 @@ public final class Fight {
       if (hasCountdown()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, getCountdown());
+      }
+      if (hasSeat()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, getSeat());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -10031,6 +10045,9 @@ public final class Fight {
         if (other.hasCountdown()) {
           setCountdown(other.getCountdown());
         }
+        if (other.hasSeat()) {
+          setSeat(other.getSeat());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -10060,6 +10077,10 @@ public final class Fight {
               setCountdown(input.readInt32());
               break;
             }
+            case 16: {
+              setSeat(input.readInt32());
+              break;
+            }
           }
         }
       }
@@ -10080,6 +10101,24 @@ public final class Fight {
       public Builder clearCountdown() {
         result.hasCountdown = false;
         result.countdown_ = 0;
+        return this;
+      }
+      
+      // optional int32 seat = 2;
+      public boolean hasSeat() {
+        return result.hasSeat();
+      }
+      public int getSeat() {
+        return result.getSeat();
+      }
+      public Builder setSeat(int value) {
+        result.hasSeat = true;
+        result.seat_ = value;
+        return this;
+      }
+      public Builder clearSeat() {
+        result.hasSeat = false;
+        result.seat_ = 0;
         return this;
       }
       
@@ -30316,99 +30355,99 @@ public final class Fight {
       "FightSendCard\022\014\n\004card\030\001 \001(\005\022\014\n\004seat\030\002 \001(" +
       "\005\022\023\n\013isTouchCard\030\003 \001(\010\"L\n\020SCFightTouchCa" +
       "rd\022\014\n\004seat\030\001 \001(\005\022\021\n\ttouchCard\030\002 \001(\005\022\027\n\017r" +
-      "emainCardCount\030\003 \001(\005\"%\n\020SCFightCountdown" +
-      "\022\021\n\tcountdown\030\001 \001(\005\"(\n\017FightGuoRequest\022\025" +
-      "\n\rtempGameCount\030\001 \001(\005\"(\n\020FightGuoRespons" +
-      "e\022\024\n\terrorCode\030\001 \001(\005:\0011\"\032\n\nSCFightGuo\022\014\n",
-      "\004seat\030\001 \001(\005\":\n\022FightBetAllRequest\022\025\n\rtem" +
-      "pGameCount\030\001 \001(\005\022\r\n\005money\030\002 \001(\005\"+\n\023Fight" +
-      "BetAllResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"+\n\r" +
-      "SCFightBetAll\022\014\n\004seat\030\001 \001(\005\022\014\n\004bets\030\002 \001(" +
-      "\005\"7\n\020SCFightPointSeat\022\014\n\004seat\030\001 \001(\005\022\025\n\rt" +
-      "empGameCount\030\002 \001(\005\"!\n\021SCFightDisconnect\022" +
-      "\014\n\004seat\030\001 \001(\005\"]\n\014SCFightScore\022M\n\tscoreDa" +
-      "ta\030\001 \003(\0132:.com.randioo.compare_collectio" +
-      "ns_server.protocol.ScoreData\"\035\n\033FightQue" +
-      "ryGameConfigRequest\"\251\001\n\034FightQueryGameCo",
-      "nfigResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\022W\n\016ga" +
-      "meConfigData\030\002 \001(\0132?.com.randioo.compare" +
-      "_collections_server.protocol.GameConfigD" +
-      "ata\022\032\n\022currentRoundNumber\030\003 \001(\005\"h\n\032Fight" +
-      "ClientDispatchRequest\022J\n\005cards\030\001 \003(\0132;.c" +
-      "om.randioo.compare_collections_server.pr" +
-      "otocol.ClientCard\"0\n\033FightClientDispatch" +
-      "Response\022\021\n\terrorCode\030\001 \001(\005\"+\n\033FightClie" +
-      "ntTouchCardRequest\022\014\n\004card\030\001 \001(\005\"1\n\034Figh" +
-      "tClientTouchCardResponse\022\021\n\terrorCode\030\001 ",
-      "\001(\005\" \n\020SCFightNoticeBet\022\014\n\004seat\030\001 \001(\005\" \n" +
-      "\017FightBetRequest\022\r\n\005score\030\001 \001(\005\"%\n\020Fight" +
-      "BetResponse\022\021\n\terrorCode\030\001 \001(\005\".\n\017SCFigh" +
-      "tBetScore\022\014\n\004seat\030\001 \001(\005\022\r\n\005score\030\002 \001(\005\"f" +
-      "\n\017SCFightDispatch\022S\n\014roleCardData\030\001 \003(\0132" +
-      "=.com.randioo.compare_collections_server" +
-      ".protocol.RoleCardData\",\n\016SCFightAddCard" +
-      "\022\014\n\004seat\030\001 \001(\005\022\014\n\004card\030\002 \003(\005\"$\n\024SCFightC" +
-      "hooseAddCard\022\014\n\004seat\030\001 \001(\005\".\n\031FightChoos" +
-      "eAddCardRequest\022\021\n\tisAddCard\030\001 \001(\010\"/\n\032Fi",
-      "ghtChooseAddCardResponse\022\021\n\terrorCode\030\001 " +
-      "\001(\005\"7\n\017FightGenRequest\022\025\n\rtempGameCount\030" +
-      "\001 \001(\005\022\r\n\005stall\030\002 \001(\005\"(\n\020FightGenResponse" +
-      "\022\024\n\terrorCode\030\001 \001(\005:\0011\"(\n\nSCFightGen\022\014\n\004" +
-      "seat\030\001 \001(\005\022\014\n\004bets\030\002 \001(\005\":\n\022FightBiggerR" +
-      "equest\022\025\n\rtempGameCount\030\001 \001(\005\022\r\n\005stall\030\002" +
-      " \001(\005\"+\n\023FightBiggerResponse\022\024\n\terrorCode" +
-      "\030\001 \001(\005:\0011\"+\n\rSCFightBigger\022\014\n\004seat\030\001 \001(\005" +
-      "\022\014\n\004bets\030\002 \001(\005\"+\n\022FightGiveUpRequest\022\025\n\r" +
-      "tempGameCount\030\001 \001(\005\"+\n\023FightGiveUpRespon",
-      "se\022\024\n\terrorCode\030\001 \001(\005:\0011\"\035\n\rSCFightGiveU" +
-      "p\022\014\n\004seat\030\001 \001(\005\",\n\023FightLookPaiRequest\022\025" +
-      "\n\rtempGameCount\030\001 \001(\005\";\n\024FightLookPaiRes" +
-      "ponse\022\024\n\terrorCode\030\001 \001(\005:\0011\022\r\n\005cards\030\002 \003" +
-      "(\005\"!\n\021SCFightWatchCards\022\014\n\004seat\030\001 \001(\005\",\n" +
-      "\016SCFightAutoBet\022\014\n\004cash\030\001 \001(\005\022\014\n\004seat\030\002 " +
-      "\001(\005\"$\n\023SCFightBiggerButton\022\r\n\005stall\030\001 \001(" +
-      "\005\"6\n\017FightTwoRequest\022\025\n\rtempGameCount\030\001 " +
-      "\001(\005\022\014\n\004seat\030\002 \001(\005\"(\n\020FightTwoResponse\022\024\n" +
-      "\terrorCode\030\001 \001(\005:\0011\"K\n\nSCFightTwo\022\017\n\007all",
-      "Seat\030\001 \003(\005\022\014\n\004seat\030\002 \001(\005\022\013\n\003pay\030\003 \001(\005\022\021\n" +
-      "\tfirstSeat\030\004 \001(\005\"-\n\016SCFightMingPai\022\014\n\004se" +
-      "at\030\001 \001(\005\022\r\n\005cards\030\002 \003(\005\"#\n\023SCFightNotice" +
-      "Battle\022\014\n\004seat\030\001 \003(\005\"\036\n\016SCFightAllSeat\022\014" +
-      "\n\004seat\030\001 \001(\005\"\"\n\021SCFightRoundCount\022\r\n\005cou" +
-      "nt\030\001 \001(\005\"\030\n\026SCFightButtonDisappear\"\037\n\017SC" +
-      "FightCutCards\022\014\n\004seat\030\001 \001(\005\"%\n\024FightCutC" +
-      "ardsRequest\022\r\n\005cards\030\001 \003(\005\"-\n\025FightCutCa" +
-      "rdsResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"5\n\026SCF" +
-      "ightOpenCardsResult\022\014\n\004seat\030\001 \001(\005\022\r\n\005car",
-      "ds\030\002 \003(\005\"e\n\025SCFightRoundOverScore\022\014\n\004sea" +
-      "t\030\001 \001(\005\022\r\n\005score\030\002 \001(\005\022\030\n\020finishRoundCou" +
-      "nt\030\003 \001(\005\022\025\n\rmaxRoundCount\030\004 \001(\005\"\037\n\017SCFig" +
-      "htPlayTalk\022\014\n\004seat\030\001 \001(\005\"4\n\025SCFightNotic" +
-      "eCallType\022\r\n\005types\030\001 \003(\005\022\014\n\004seat\030\002 \001(\005\"#" +
-      "\n\022SCFightPublicScore\022\r\n\005score\030\001 \001(\005\"1\n\017S" +
-      "CFightCardType\022\014\n\004seat\030\001 \001(\005\022\020\n\010cardType" +
-      "\030\002 \001(\005\"\031\n\027FightGetRoomDataRequest\"\263\001\n\030Fi" +
-      "ghtGetRoomDataResponse\022\024\n\terrorCode\030\001 \001(" +
-      "\005:\0011\022W\n\016gameConfigData\030\002 \001(\0132?.com.randi",
-      "oo.compare_collections_server.protocol.G" +
-      "ameConfigData\022\020\n\010gameJson\030\003 \001(\t\022\026\n\016laste" +
-      "stCommand\030\004 \001(\014\"\033\n\031FightReconnectDataReq" +
-      "uest\"\316\002\n\032FightReconnectDataResponse\022\021\n\te" +
-      "rrorCode\030\001 \001(\005\022[\n\017cxReconnectData\030\002 \001(\0132" +
-      "B.com.randioo.compare_collections_server" +
-      ".protocol.CxReconnectedData\022_\n\022zjhReconn" +
-      "ectedData\030\003 \001(\0132C.com.randioo.compare_co" +
-      "llections_server.protocol.ZjhReconnected" +
-      "Data\022_\n\022sdbReconnectedData\030\004 \001(\0132C.com.r",
+      "emainCardCount\030\003 \001(\005\"3\n\020SCFightCountdown" +
+      "\022\021\n\tcountdown\030\001 \001(\005\022\014\n\004seat\030\002 \001(\005\"(\n\017Fig" +
+      "htGuoRequest\022\025\n\rtempGameCount\030\001 \001(\005\"(\n\020F" +
+      "ightGuoResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"\032\n",
+      "\nSCFightGuo\022\014\n\004seat\030\001 \001(\005\":\n\022FightBetAll" +
+      "Request\022\025\n\rtempGameCount\030\001 \001(\005\022\r\n\005money\030" +
+      "\002 \001(\005\"+\n\023FightBetAllResponse\022\024\n\terrorCod" +
+      "e\030\001 \001(\005:\0011\"+\n\rSCFightBetAll\022\014\n\004seat\030\001 \001(" +
+      "\005\022\014\n\004bets\030\002 \001(\005\"7\n\020SCFightPointSeat\022\014\n\004s" +
+      "eat\030\001 \001(\005\022\025\n\rtempGameCount\030\002 \001(\005\"!\n\021SCFi" +
+      "ghtDisconnect\022\014\n\004seat\030\001 \001(\005\"]\n\014SCFightSc" +
+      "ore\022M\n\tscoreData\030\001 \003(\0132:.com.randioo.com" +
+      "pare_collections_server.protocol.ScoreDa" +
+      "ta\"\035\n\033FightQueryGameConfigRequest\"\251\001\n\034Fi",
+      "ghtQueryGameConfigResponse\022\024\n\terrorCode\030" +
+      "\001 \001(\005:\0011\022W\n\016gameConfigData\030\002 \001(\0132?.com.r" +
       "andioo.compare_collections_server.protoc" +
-      "ol.SdbReconnectedData\" \n\rSCFightMaxBet\022\017" +
-      "\n\007maxbets\030\001 \001(\005\"z\n\023SCFightGameRoleData\022S" +
-      "\n\014gameRoleData\030\001 \003(\0132=.com.randioo.compa" +
-      "re_collections_server.protocol.GameRoleD" +
-      "ata\022\016\n\006mySeat\030\002 \001(\005\":\n\025SCFightBattleOutC" +
-      "ards\022\023\n\013playerCards\030\001 \003(\005\022\014\n\004seat\030\002 \001(\005\"" +
-      ".\n\031SCFightGameStartCountdown\022\021\n\tcountdow" +
-      "n\030\001 \001(\005"
+      "ol.GameConfigData\022\032\n\022currentRoundNumber\030" +
+      "\003 \001(\005\"h\n\032FightClientDispatchRequest\022J\n\005c" +
+      "ards\030\001 \003(\0132;.com.randioo.compare_collect" +
+      "ions_server.protocol.ClientCard\"0\n\033Fight" +
+      "ClientDispatchResponse\022\021\n\terrorCode\030\001 \001(" +
+      "\005\"+\n\033FightClientTouchCardRequest\022\014\n\004card" +
+      "\030\001 \001(\005\"1\n\034FightClientTouchCardResponse\022\021",
+      "\n\terrorCode\030\001 \001(\005\" \n\020SCFightNoticeBet\022\014\n" +
+      "\004seat\030\001 \001(\005\" \n\017FightBetRequest\022\r\n\005score\030" +
+      "\001 \001(\005\"%\n\020FightBetResponse\022\021\n\terrorCode\030\001" +
+      " \001(\005\".\n\017SCFightBetScore\022\014\n\004seat\030\001 \001(\005\022\r\n" +
+      "\005score\030\002 \001(\005\"f\n\017SCFightDispatch\022S\n\014roleC" +
+      "ardData\030\001 \003(\0132=.com.randioo.compare_coll" +
+      "ections_server.protocol.RoleCardData\",\n\016" +
+      "SCFightAddCard\022\014\n\004seat\030\001 \001(\005\022\014\n\004card\030\002 \003" +
+      "(\005\"$\n\024SCFightChooseAddCard\022\014\n\004seat\030\001 \001(\005" +
+      "\".\n\031FightChooseAddCardRequest\022\021\n\tisAddCa",
+      "rd\030\001 \001(\010\"/\n\032FightChooseAddCardResponse\022\021" +
+      "\n\terrorCode\030\001 \001(\005\"7\n\017FightGenRequest\022\025\n\r" +
+      "tempGameCount\030\001 \001(\005\022\r\n\005stall\030\002 \001(\005\"(\n\020Fi" +
+      "ghtGenResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"(\n\n" +
+      "SCFightGen\022\014\n\004seat\030\001 \001(\005\022\014\n\004bets\030\002 \001(\005\":" +
+      "\n\022FightBiggerRequest\022\025\n\rtempGameCount\030\001 " +
+      "\001(\005\022\r\n\005stall\030\002 \001(\005\"+\n\023FightBiggerRespons" +
+      "e\022\024\n\terrorCode\030\001 \001(\005:\0011\"+\n\rSCFightBigger" +
+      "\022\014\n\004seat\030\001 \001(\005\022\014\n\004bets\030\002 \001(\005\"+\n\022FightGiv" +
+      "eUpRequest\022\025\n\rtempGameCount\030\001 \001(\005\"+\n\023Fig",
+      "htGiveUpResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"\035" +
+      "\n\rSCFightGiveUp\022\014\n\004seat\030\001 \001(\005\",\n\023FightLo" +
+      "okPaiRequest\022\025\n\rtempGameCount\030\001 \001(\005\";\n\024F" +
+      "ightLookPaiResponse\022\024\n\terrorCode\030\001 \001(\005:\001" +
+      "1\022\r\n\005cards\030\002 \003(\005\"!\n\021SCFightWatchCards\022\014\n" +
+      "\004seat\030\001 \001(\005\",\n\016SCFightAutoBet\022\014\n\004cash\030\001 " +
+      "\001(\005\022\014\n\004seat\030\002 \001(\005\"$\n\023SCFightBiggerButton" +
+      "\022\r\n\005stall\030\001 \001(\005\"6\n\017FightTwoRequest\022\025\n\rte" +
+      "mpGameCount\030\001 \001(\005\022\014\n\004seat\030\002 \001(\005\"(\n\020Fight" +
+      "TwoResponse\022\024\n\terrorCode\030\001 \001(\005:\0011\"K\n\nSCF",
+      "ightTwo\022\017\n\007allSeat\030\001 \003(\005\022\014\n\004seat\030\002 \001(\005\022\013" +
+      "\n\003pay\030\003 \001(\005\022\021\n\tfirstSeat\030\004 \001(\005\"-\n\016SCFigh" +
+      "tMingPai\022\014\n\004seat\030\001 \001(\005\022\r\n\005cards\030\002 \003(\005\"#\n" +
+      "\023SCFightNoticeBattle\022\014\n\004seat\030\001 \003(\005\"\036\n\016SC" +
+      "FightAllSeat\022\014\n\004seat\030\001 \001(\005\"\"\n\021SCFightRou" +
+      "ndCount\022\r\n\005count\030\001 \001(\005\"\030\n\026SCFightButtonD" +
+      "isappear\"\037\n\017SCFightCutCards\022\014\n\004seat\030\001 \001(" +
+      "\005\"%\n\024FightCutCardsRequest\022\r\n\005cards\030\001 \003(\005" +
+      "\"-\n\025FightCutCardsResponse\022\024\n\terrorCode\030\001" +
+      " \001(\005:\0011\"5\n\026SCFightOpenCardsResult\022\014\n\004sea",
+      "t\030\001 \001(\005\022\r\n\005cards\030\002 \003(\005\"e\n\025SCFightRoundOv" +
+      "erScore\022\014\n\004seat\030\001 \001(\005\022\r\n\005score\030\002 \001(\005\022\030\n\020" +
+      "finishRoundCount\030\003 \001(\005\022\025\n\rmaxRoundCount\030" +
+      "\004 \001(\005\"\037\n\017SCFightPlayTalk\022\014\n\004seat\030\001 \001(\005\"4" +
+      "\n\025SCFightNoticeCallType\022\r\n\005types\030\001 \003(\005\022\014" +
+      "\n\004seat\030\002 \001(\005\"#\n\022SCFightPublicScore\022\r\n\005sc" +
+      "ore\030\001 \001(\005\"1\n\017SCFightCardType\022\014\n\004seat\030\001 \001" +
+      "(\005\022\020\n\010cardType\030\002 \001(\005\"\031\n\027FightGetRoomData" +
+      "Request\"\263\001\n\030FightGetRoomDataResponse\022\024\n\t" +
+      "errorCode\030\001 \001(\005:\0011\022W\n\016gameConfigData\030\002 \001",
+      "(\0132?.com.randioo.compare_collections_ser" +
+      "ver.protocol.GameConfigData\022\020\n\010gameJson\030" +
+      "\003 \001(\t\022\026\n\016lastestCommand\030\004 \001(\014\"\033\n\031FightRe" +
+      "connectDataRequest\"\316\002\n\032FightReconnectDat" +
+      "aResponse\022\021\n\terrorCode\030\001 \001(\005\022[\n\017cxReconn" +
+      "ectData\030\002 \001(\0132B.com.randioo.compare_coll" +
+      "ections_server.protocol.CxReconnectedDat" +
+      "a\022_\n\022zjhReconnectedData\030\003 \001(\0132C.com.rand" +
+      "ioo.compare_collections_server.protocol." +
+      "ZjhReconnectedData\022_\n\022sdbReconnectedData",
+      "\030\004 \001(\0132C.com.randioo.compare_collections" +
+      "_server.protocol.SdbReconnectedData\" \n\rS" +
+      "CFightMaxBet\022\017\n\007maxbets\030\001 \001(\005\"z\n\023SCFight" +
+      "GameRoleData\022S\n\014gameRoleData\030\001 \003(\0132=.com" +
+      ".randioo.compare_collections_server.prot" +
+      "ocol.GameRoleData\022\016\n\006mySeat\030\002 \001(\005\":\n\025SCF" +
+      "ightBattleOutCards\022\023\n\013playerCards\030\001 \003(\005\022" +
+      "\014\n\004seat\030\002 \001(\005\".\n\031SCFightGameStartCountdo" +
+      "wn\022\021\n\tcountdown\030\001 \001(\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -30668,7 +30707,7 @@ public final class Fight {
           internal_static_com_randioo_compare_collections_server_protocol_SCFightCountdown_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_randioo_compare_collections_server_protocol_SCFightCountdown_descriptor,
-              new java.lang.String[] { "Countdown", },
+              new java.lang.String[] { "Countdown", "Seat", },
               com.randioo.compare_collections_server.protocol.Fight.SCFightCountdown.class,
               com.randioo.compare_collections_server.protocol.Fight.SCFightCountdown.Builder.class);
           internal_static_com_randioo_compare_collections_server_protocol_FightGuoRequest_descriptor =
