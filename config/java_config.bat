@@ -16,7 +16,8 @@ set ZIP_FILE_PREFIX=tbl
 set source_dir=.\out
 
 rem 生成代码和数据
-java -Dfile.encoding=utf-8 -jar .\randioo-excel-0.0.1-SNAPSHOT.jar %TARGET%
+rem java -Dfile.encoding=utf-8 -jar .\randioo-excel-0.0.1-SNAPSHOT.jar %TARGET%
+java -Dfile.encoding=utf-8 -jar .\randioo-excel-1.0.1.jar %TARGET%
 
 if not exist out\*.tbl (
 	echo no files product.

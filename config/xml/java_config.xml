@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<data>
+<data package="com.randioo.compare_collections_server">
 	<!-- 注意:excel文件的不需要写路径了.都会在命令行中统一加上table的目录;(当然如果有额外的子目录请加上) constant.xlsx 
 		注意这个文件是程序用的特殊处理过的,不会加上目录前缀的; node节点: type=编程语言类型，命名根据lang文件夹下的名字 xlsx=xlsx文件路径+名字; 
 		page=里面的工作表(页); key=获取单条数据时的索引(例如生成英雄数据时,会将所有英雄数据写到一个dictionary中,同时使用key定义的变量作为索引; 
